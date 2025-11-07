@@ -258,6 +258,17 @@ TypeScript strict mode is enabled. Key type invariants:
 - `depth` is always a number >= 0
 - `children` array is never null (use empty array)
 
+## Hydration Warning Suppression
+
+The `<body>` tag in `src/app/layout.tsx` includes `suppressHydrationWarning` to prevent false hydration warnings from browser extensions (password managers, form fillers like ClickUp, etc.) that inject attributes before React hydrates.
+
+**Pattern**:
+```tsx
+<body className={inter.className} suppressHydrationWarning>
+```
+
+This is intentional and safe - browser extensions commonly inject attributes into `<body>` tags, causing harmless mismatches that would otherwise flood the console with warnings.
+
 ## Performance Considerations
 
 - **Crawling**: ~1-3 seconds per page with Playwright (headless browser overhead)

@@ -13,13 +13,13 @@ A Next.js application that crawls localhost apps and generates interactive hiera
 
 ## Tech Stack
 
-- **Framework**: Next.js 14 (App Router)
-- **Language**: TypeScript (strict mode)
-- **Visualization**: React Flow
-- **Crawler**: Crawlee with Playwright
+- **Framework**: Next.js 15 (App Router) with React 19
+- **Language**: TypeScript 5.6 (strict mode)
+- **Visualization**: @xyflow/react v12 (React Flow)
+- **Crawler**: @crawlee/playwright v3
 - **Layout Engine**: Dagre (hierarchical graph layout)
-- **State Management**: Zustand
-- **UI Components**: shadcn/ui with Tailwind CSS
+- **State Management**: Zustand v5
+- **UI Components**: shadcn/ui with Tailwind CSS v3
 - **Icons**: Lucide React
 
 ## Project Structure
