@@ -1,4 +1,4 @@
-import { PlaywrightCrawler, Dataset } from 'crawlee';
+import { PlaywrightCrawler } from '@crawlee/playwright';
 import { CrawlerOptions, PageInfo } from './types';
 import { shouldCrawlUrl, extractLinks } from './link-validator';
 import { normalizeUrl } from '../utils';
@@ -23,10 +23,16 @@ export class SitemapCrawler {
     this.visitedUrls.clear();
     this.pageInfos = [];
 
+    // Capture instance variables for use in callbacks
+    const pageInfos = this.pageInfos;
+    const visitedUrls = this.visitedUrls;
+    const baseUrl = this.baseUrl;
+    const options = this.options;
+
     const crawler = new PlaywrightCrawler({
-      maxRequestsPerCrawl: this.options.maxPages,
+      maxRequestsPerCrawl: options.maxPages,
       maxConcurrency: 5,
-      requestHandlerTimeoutSecs: this.options.timeout / 1000,
+      requestHandlerTimeoutSecs: options.timeout / 1000,
 
       async requestHandler({ request, page, enqueueLinks, log }) {
         const url = normalizeUrl(request.url);
@@ -36,7 +42,7 @@ export class SitemapCrawler {
         try {
           // Wait for page to load
           await page.waitForLoadState('networkidle', {
-            timeout: this.options.timeout
+            timeout: options.timeout
           });
 
           // Get page title
@@ -51,7 +57,7 @@ export class SitemapCrawler {
           // Get status code from response
           const response = await page.goto(url, {
             waitUntil: 'networkidle',
-            timeout: this.options.timeout
+            timeout: options.timeout
           });
           const statusCode = response?.status() ?? 200;
 
@@ -65,14 +71,14 @@ export class SitemapCrawler {
             parentUrl: request.userData.parentUrl,
           };
 
-          this.pageInfos.push(pageInfo);
-          this.visitedUrls.add(url);
+          pageInfos.push(pageInfo);
+          visitedUrls.add(url);
 
           // Enqueue links if within depth limit
           const currentDepth = request.userData.depth ?? 0;
-          if (currentDepth < this.options.maxDepth) {
+          if (currentDepth < options.maxDepth) {
             for (const link of links) {
-              if (shouldCrawlUrl(link, this.baseUrl, this.visitedUrls)) {
+              if (shouldCrawlUrl(link, baseUrl, visitedUrls)) {
                 await enqueueLinks({
                   urls: [link],
                   userData: {
@@ -87,7 +93,7 @@ export class SitemapCrawler {
           log.error(`Error crawling ${url}:`, { error });
 
           // Still store the page with error info
-          this.pageInfos.push({
+          pageInfos.push({
             url,
             title: 'Error',
             statusCode: 500,
@@ -103,7 +109,7 @@ export class SitemapCrawler {
         log.error(`Request ${request.url} failed:`, { error });
 
         // Store failed request
-        this.pageInfos.push({
+        pageInfos.push({
           url: normalizeUrl(request.url),
           title: 'Failed',
           statusCode: 500,

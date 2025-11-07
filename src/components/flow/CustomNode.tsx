@@ -1,12 +1,17 @@
 'use client';
 
 import { memo } from 'react';
-import { Handle, Position, NodeProps } from 'reactflow';
+import { Handle, Position } from '@xyflow/react';
 import { CustomNodeData } from '@/types/flow';
-import { ExternalLink, AlertCircle, CheckCircle, XCircle } from 'lucide-react';
+import { AlertCircle, CheckCircle, XCircle } from 'lucide-react';
 import { getStatusColor } from '@/lib/utils';
 
-function CustomNodeComponent({ data, selected }: NodeProps<CustomNodeData>) {
+interface CustomNodeProps {
+  data: CustomNodeData;
+  selected?: boolean;
+}
+
+function CustomNodeComponent({ data, selected }: CustomNodeProps) {
   const statusColor = getStatusColor(data.statusCode);
   const isRoot = data.depth === 0;
 

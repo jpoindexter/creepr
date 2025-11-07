@@ -1,8 +1,7 @@
-import { Node, Edge } from 'reactflow';
-import { SitemapNode } from './sitemap';
+import { Node, Edge } from '@xyflow/react';
 
 // Custom node data
-export interface CustomNodeData {
+export interface CustomNodeData extends Record<string, unknown> {
   label: string;
   url: string;
   statusCode: number;
@@ -15,7 +14,7 @@ export interface CustomNodeData {
 export type CustomNode = Node<CustomNodeData>;
 
 // Custom edge data
-export interface CustomEdgeData {
+export interface CustomEdgeData extends Record<string, unknown> {
   isBroken: boolean;
 }
 

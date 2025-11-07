@@ -1,7 +1,8 @@
 'use client';
 
 import { useCallback, useMemo } from 'react';
-import ReactFlow, {
+import {
+  ReactFlow,
   MiniMap,
   Controls,
   Background,
@@ -11,12 +12,12 @@ import ReactFlow, {
   NodeTypes,
   FitViewOptions,
   Panel,
-} from 'reactflow';
-import 'reactflow/dist/style.css';
+} from '@xyflow/react';
+import '@xyflow/react/dist/style.css';
 
 import { CustomNode } from './CustomNode';
 import { CustomNode as CustomNodeType, CustomEdge } from '@/types/flow';
-import { Download, Maximize2 } from 'lucide-react';
+import { Download } from 'lucide-react';
 
 interface SitemapFlowProps {
   nodes: CustomNodeType[];

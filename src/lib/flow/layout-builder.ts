@@ -1,5 +1,5 @@
 import dagre from 'dagre';
-import { Node, Edge } from 'reactflow';
+import { Node, Edge } from '@xyflow/react';
 import { SitemapNode } from '@/types/sitemap';
 import { CustomNodeData, CustomEdgeData, FlowData, LayoutOptions } from '@/types/flow';
 import { createFlowNode } from './node-factory';
