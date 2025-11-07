@@ -4,7 +4,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**Creepr** (Sitemap Visualizer) is a Next.js application that crawls localhost applications and generates interactive hierarchical visual sitemaps using React Flow. It's designed specifically for developers to understand and visualize their application structure.
+**Creepr** (Sitemap Visualizer) is a Next.js 15 application that crawls localhost applications and generates interactive hierarchical visual sitemaps using React Flow. It's designed specifically for developers to understand and visualize their application structure.
+
+**Tech Stack**:
+- Next.js 15 (App Router) with React 19
+- @xyflow/react v12 (React Flow) for visualization
+- @crawlee/playwright v3 for web crawling
+- TypeScript 5.6 (strict mode)
+- Tailwind CSS v3 with shadcn/ui components
+- Zustand v5 for state management
 
 **Core Workflow**:
 1. User enters localhost URL
@@ -25,10 +33,12 @@ npm run build           # Build for production
 npm start               # Start production server
 
 # Code Quality
-npm run lint            # Run ESLint
+npm run lint            # Run ESLint (ESLint 9 with flat config)
 ```
 
-**IMPORTANT**: You must run `npx playwright install` after `npm install` on first setup. Playwright browsers are required for the crawler to function.
+**IMPORTANT**:
+- You must run `npx playwright install` after `npm install` on first setup. Playwright browsers are required for the crawler to function.
+- This project uses **ESLint 9** with flat config format (`eslint.config.mjs`). Do not use `.eslintrc.json`.
 
 ## Architecture
 
@@ -117,6 +127,8 @@ src/
 
 ### Crawlee Configuration
 
+**Package**: Uses `@crawlee/playwright` (not the general `crawlee` package) to avoid unnecessary Puppeteer dependencies.
+
 `SitemapCrawler` is configured with these defaults:
 - `maxRequestsPerCrawl`: 100 pages
 - `maxConcurrency`: 5 simultaneous page loads
@@ -124,6 +136,8 @@ src/
 - `waitForLoadState`: 'networkidle' (waits for all network requests to finish)
 
 **Why 'networkidle'**: Next.js apps use client-side routing and dynamic imports. Waiting for network idle ensures all client-side JavaScript has executed and links are visible in the DOM.
+
+**Context Capture Pattern**: The crawler captures instance variables (`pageInfos`, `visitedUrls`, `baseUrl`, `options`) in local constants before creating the `PlaywrightCrawler`, since callbacks don't have access to `this` context.
 
 ### Playwright Page Handling
 
@@ -140,7 +154,15 @@ This is intentional - Crawlee's implicit navigation doesn't provide response sta
 2. **Orphaned nodes**: Nodes without valid parents are attached directly to root
 3. **Circular references**: Prevented by checking `!parent.children.find(child => child.id === node.id)` before adding
 
-### React Flow Layout
+### React Flow v12 Layout
+
+**Package**: Uses `@xyflow/react` v12 (new package name, replaces `reactflow`)
+
+**Breaking Changes from v11**:
+- `ReactFlow` is now a **named export** (not default): `import { ReactFlow } from '@xyflow/react'`
+- CSS import path changed: `import '@xyflow/react/dist/style.css'`
+- Node/Edge data types must extend `Record<string, unknown>`
+- Custom node components receive `{ data, selected }` props, not `NodeProps<T>`
 
 Dagre layout configuration in `buildFlowFromTree()`:
 - `rankdir: 'TB'` (top-to-bottom hierarchical layout)
@@ -148,6 +170,8 @@ Dagre layout configuration in `buildFlowFromTree()`:
 - `nodesep: 80` (horizontal spacing between nodes)
 
 **Performance note**: Dagre layout is synchronous and can block the UI for large graphs (100+ nodes). Consider adding a loading state or web worker for very large sites.
+
+**Type Safety**: All custom data interfaces (`CustomNodeData`, `CustomEdgeData`) extend `Record<string, unknown>` to satisfy React Flow v12 constraints.
 
 ### State Management Pattern
 
