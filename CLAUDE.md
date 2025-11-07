@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**Creepr** (Sitemap Visualizer) is a Next.js 15 application that crawls localhost applications and generates interactive hierarchical visual sitemaps using React Flow. It's designed specifically for developers to understand and visualize their application structure.
+**creepr** is a Next.js 15 application that crawls localhost applications and generates interactive hierarchical visual sitemaps using React Flow. It's designed specifically for developers to understand and visualize their application structure.
 
 **Tech Stack**:
 - Next.js 15 (App Router) with React 19

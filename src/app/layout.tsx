@@ -5,8 +5,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Sitemap Visualizer",
-  description: "Crawl and visualize your Next.js app structure",
+  title: "creepr",
+  description: "Crawl and visualize your app structure",
 };
 
 export default function RootLayout({

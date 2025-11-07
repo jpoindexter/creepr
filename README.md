@@ -1,6 +1,6 @@
-# Sitemap Visualizer
+# creepr
 
-A Next.js application that crawls localhost Next.js apps and generates interactive hierarchical visual sitemaps using React Flow.
+A Next.js application that crawls localhost apps and generates interactive hierarchical visual sitemaps using React Flow.
 
 ## Features
 
@@ -25,7 +25,7 @@ A Next.js application that crawls localhost Next.js apps and generates interacti
 ## Project Structure
 
 ```
-sitemap-visualizer/
+creepr/
 ├── src/
 │   ├── app/
 │   │   ├── api/crawl/route.ts    # Crawling API endpoint
@@ -108,7 +108,7 @@ npm start
 
 1. **Start your target application**: Make sure the Next.js app you want to crawl is running on localhost (e.g., `http://localhost:3001`)
 
-2. **Enter the URL**: In the Sitemap Visualizer, enter the localhost URL in the input field
+2. **Enter the URL**: In creepr, enter the localhost URL in the input field
 
 3. **Start crawling**: Click the "Start Crawl" button to begin crawling
 
