@@ -16,6 +16,7 @@ yarn-error.log*
 out/
 build
 dist
+.turbo/
 
 # Production
 *.tsbuildinfo
@@ -49,10 +50,20 @@ test-results/
 *.swp
 *.swo
 *~
+.cursor/
+.continue/
+.windsurf/
+.aider*
 
 # OS
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
+Desktop.ini
 
 # Crawlee storage
 storage/
@@ -60,3 +71,9 @@ crawlee_storage/
 
 # Local development
 .cache/
+*.local
+
+# Package manager alternative lock files
+yarn.lock
+pnpm-lock.yaml
+bun.lockb
