@@ -40,6 +40,34 @@ npm run lint            # Run ESLint (ESLint 9 with flat config)
 - You must run `npx playwright install` after `npm install` on first setup. Playwright browsers are required for the crawler to function.
 - This project uses **ESLint 9** with flat config format (`eslint.config.mjs`). Do not use `.eslintrc.json`.
 
+## shadcn/ui MCP Server
+
+This project includes the shadcn MCP server for AI-assisted component installation.
+
+**Configuration**: `.mcp.json`
+```json
+{
+  "mcpServers": {
+    "shadcn": {
+      "command": "npx",
+      "args": ["shadcn@latest", "mcp"]
+    }
+  }
+}
+```
+
+**Available Commands** (after restarting Claude Code):
+- "List all available shadcn components"
+- "Add the dialog and badge components"
+- "Find me a login form from the registry"
+
+The server provides three tools:
+1. **Browse Components** - List all components in the shadcn/ui registry
+2. **Search Registries** - Find specific component patterns
+3. **Install Components** - Add components using natural language
+
+Existing components are in `src/components/ui/` (button, card, input).
+
 ## Architecture
 
 ### Three-Stage Pipeline
