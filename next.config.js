@@ -1,6 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // Externalize Playwright and Crawlee packages (native Node.js modules)
+  serverExternalPackages: [
+    "playwright",
+    "playwright-core",
+    "@crawlee/playwright",
+    "@crawlee/browser-pool",
+    "@crawlee/browser",
+  ],
   webpack: (config, { isServer }) => {
     // Exclude puppeteer and other unnecessary browser automation tools
     config.resolve.alias = {
