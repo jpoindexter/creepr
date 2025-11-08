@@ -1,6 +1,6 @@
 import { PlaywrightCrawler } from "@crawlee/playwright";
 import { CrawlerOptions, PageInfo } from "./types";
-import { shouldCrawlUrl, extractLinks } from "./link-validator";
+import { shouldCrawlUrl } from "./link-validator";
 import { normalizeUrl } from "../utils";
 
 export class SitemapCrawler {
@@ -34,13 +34,16 @@ export class SitemapCrawler {
       maxConcurrency: 5,
       requestHandlerTimeoutSecs: options.timeout / 1000,
 
-      async requestHandler({ request, page, enqueueLinks, log }) {
+      async requestHandler({ request, page, enqueueLinks, log, response }) {
         const url = normalizeUrl(request.url);
 
         log.info(`Crawling: ${url}`);
 
         try {
-          // Wait for page to load
+          // Get status code from initial navigation (Crawlee already loaded the page!)
+          const statusCode = response?.status() ?? 200;
+
+          // Wait for client-side JavaScript and network to settle
           await page.waitForLoadState("networkidle", {
             timeout: options.timeout,
           });
@@ -48,25 +51,41 @@ export class SitemapCrawler {
           // Get page title
           const title = await page.title();
 
-          // Get page content
-          const content = await page.content();
+          // Extract links using Playwright (captures JS-rendered links!)
+          const linkElements = await page.locator("a[href]").all();
+          const links: string[] = [];
 
-          // Extract links
-          const links = extractLinks(content, url);
+          for (const linkElement of linkElements) {
+            try {
+              const href = await linkElement.getAttribute("href");
+              if (href) {
+                // Resolve relative URLs
+                const absoluteUrl = new URL(href, url);
+                // Remove hash fragments
+                absoluteUrl.hash = "";
+                // Normalize trailing slashes
+                let pathname = absoluteUrl.pathname;
+                if (pathname.endsWith("/") && pathname.length > 1) {
+                  pathname = pathname.slice(0, -1);
+                }
+                absoluteUrl.pathname = pathname;
+                links.push(normalizeUrl(absoluteUrl.toString()));
+              }
+            } catch {
+              // Skip invalid URLs
+              continue;
+            }
+          }
 
-          // Get status code from response
-          const response = await page.goto(url, {
-            waitUntil: "networkidle",
-            timeout: options.timeout,
-          });
-          const statusCode = response?.status() ?? 200;
+          // Remove duplicates
+          const uniqueLinks = Array.from(new Set(links));
 
           // Store page info
           const pageInfo: PageInfo = {
             url,
             title: title || "Untitled",
             statusCode,
-            links,
+            links: uniqueLinks,
             depth: request.userData.depth ?? 0,
             parentUrl: request.userData.parentUrl,
           };
@@ -77,7 +96,7 @@ export class SitemapCrawler {
           // Enqueue links if within depth limit
           const currentDepth = request.userData.depth ?? 0;
           if (currentDepth < options.maxDepth) {
-            for (const link of links) {
+            for (const link of uniqueLinks) {
               if (shouldCrawlUrl(link, baseUrl, visitedUrls)) {
                 await enqueueLinks({
                   urls: [link],
