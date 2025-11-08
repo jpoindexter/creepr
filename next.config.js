@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // Explicitly set project root to avoid lockfile confusion
+  outputFileTracingRoot: __dirname,
   // Externalize Playwright and Crawlee packages (native Node.js modules)
   serverExternalPackages: [
     "playwright",
