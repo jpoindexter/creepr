@@ -91,16 +91,16 @@ Run the development server:
 npm run dev
 ```
 
-The server will start on **port 3002** by default: [http://localhost:3002](http://localhost:3002)
+The server will start on **port 3500** by default: [http://localhost:3500](http://localhost:3500)
 
 **Available dev commands:**
 
-- `npm run dev` - Start dev server on port 3002
-- `npm run dev:kill` - Kill any process running on port 3002
+- `npm run dev` - Start dev server on port 3500
+- `npm run dev:kill` - Kill any process running on port 3500
 - `npm run dev:restart` - Kill and restart dev server
 
 **Running alongside other projects:**
-The dev server runs on port 3002 (not 3000) to avoid conflicts with other localhost projects. This allows you to run multiple Next.js apps simultaneously.
+The dev server runs on port 3500 to avoid conflicts with other localhost projects. This allows you to run multiple Next.js apps simultaneously.
 
 ### Build
 
@@ -110,7 +110,7 @@ Build for production:
 npm run build
 ```
 
-Start production server (also runs on port 3002):
+Start production server (also runs on port 3500):
 
 ```bash
 npm start
