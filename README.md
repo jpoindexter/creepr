@@ -13,8 +13,11 @@ A Next.js application that crawls localhost apps and generates interactive hiera
 
 ## Tech Stack
 
-- **Framework**: Next.js 15 (App Router) with React 19
-- **Language**: TypeScript 5.6 (strict mode)
+- **Framework**: Next.js 16 (App Router) with React 19.2
+  - Turbopack (stable) - 2-5x faster builds, up to 10x faster Fast Refresh
+  - Enhanced routing with layout deduplication
+  - Improved caching APIs
+- **Language**: TypeScript 5.7 (strict mode)
 - **Visualization**: @xyflow/react v12 (React Flow)
 - **Crawler**: @crawlee/playwright v3
 - **Layout Engine**: Dagre (hierarchical graph layout)
@@ -63,7 +66,7 @@ creepr/
 
 ### Prerequisites
 
-- Node.js 18+ installed
+- Node.js 20.9+ installed (required for Next.js 16)
 - npm or yarn package manager
 
 ### Installation
