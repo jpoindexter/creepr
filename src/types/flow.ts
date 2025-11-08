@@ -8,6 +8,7 @@ export interface CustomNodeData extends Record<string, unknown> {
   isBroken: boolean;
   depth: number;
   title: string;
+  childCount: number; // Number of child nodes
 }
 
 // Custom node type

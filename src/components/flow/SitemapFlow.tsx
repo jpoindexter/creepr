@@ -79,7 +79,7 @@ export function SitemapFlow({
   }, [nodes, edges]);
 
   return (
-    <div className="h-full w-full bg-gray-50">
+    <div className="h-full w-full bg-white">
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -95,21 +95,33 @@ export function SitemapFlow({
           type: "smoothstep",
           animated: false,
         }}
+        className="bg-gradient-to-br from-white to-purple-50/30"
       >
-        <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
-        <Controls />
+        {/* Professional dot grid background */}
+        <Background variant={BackgroundVariant.Dots} gap={16} size={1} color="#e5e7eb" />
+
+        {/* Zoom/pan controls */}
+        <Controls
+          className="!border-2 !border-purple-200 !bg-white !shadow-lg"
+          showInteractive={false}
+        />
+
+        {/* Minimap with purple theme */}
         <MiniMap
           nodeColor={(node) => {
-            if (node.data?.isBroken) return "#ef4444";
-            if (node.data?.depth === 0) return "#3b82f6";
-            return "#94a3b8";
+            if (node.data?.isBroken) return "#DC2626"; // Red
+            if (node.data?.depth === 0) return "#9945FF"; // Purple
+            return "#CBD5E0"; // Light gray
           }}
-          className="!border-2 !border-gray-300 !bg-white"
+          className="!border-2 !border-purple-200 !bg-white !shadow-lg"
+          maskColor="rgba(153, 69, 255, 0.1)"
         />
+
+        {/* Export button panel */}
         <Panel position="top-right" className="flex gap-2">
           <button
             onClick={handleDownload}
-            className="flex items-center gap-2 rounded-lg border-2 border-gray-300 bg-white px-3 py-2 text-sm shadow-sm transition-colors hover:bg-gray-50"
+            className="flex items-center gap-2 rounded-lg border-2 border-purple-500 bg-white px-4 py-2 text-sm font-medium text-purple-700 shadow-lg transition-all hover:bg-purple-50 hover:shadow-xl"
           >
             <Download className="h-4 w-4" />
             Export JSON

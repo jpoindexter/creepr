@@ -3,16 +3,18 @@
 import { memo } from "react";
 import { Handle, Position } from "@xyflow/react";
 import { CustomNodeData } from "@/types/flow";
-import { AlertCircle, CheckCircle, XCircle } from "lucide-react";
-import { getStatusColor } from "@/lib/utils";
 
 interface CustomNodeProps {
   data: CustomNodeData;
   selected?: boolean;
 }
 
+/**
+ * Professional sitemap node component
+ * Styling is controlled by node-factory.ts
+ * This component focuses on content layout only
+ */
 function CustomNodeComponent({ data, selected }: CustomNodeProps) {
-  const statusColor = getStatusColor(data.statusCode);
   const isRoot = data.depth === 0;
 
   // Extract path from URL for display
@@ -25,45 +27,63 @@ function CustomNodeComponent({ data, selected }: CustomNodeProps) {
     }
   };
 
-  const StatusIcon = () => {
-    if (data.isBroken) {
-      return <XCircle className="h-4 w-4 text-red-500" />;
-    }
-    if (data.statusCode >= 300 && data.statusCode < 400) {
-      return <AlertCircle className="h-4 w-4 text-orange-500" />;
-    }
-    return <CheckCircle className="h-4 w-4 text-green-500" />;
-  };
-
   return (
     <div
-      className={`min-w-[200px] max-w-[300px] rounded-lg border-2 bg-white px-4 py-3 shadow-md transition-all duration-200 ${selected ? "ring-2 ring-blue-400" : ""} ${data.isBroken ? "border-red-400 bg-red-50" : "border-gray-300"} ${isRoot ? "border-blue-500 bg-blue-50 font-semibold" : ""} hover:shadow-lg`}
-      style={{
-        borderLeftWidth: 4,
-        borderLeftColor: statusColor,
-      }}
+      className={`transition-all duration-200 ${selected ? "ring-2 ring-purple-500 ring-offset-2" : ""} hover:scale-[1.02] hover:shadow-lg`}
     >
-      <Handle type="target" position={Position.Top} className="h-3 w-3 !bg-blue-500" />
+      {/* Connection handles - invisible but functional */}
+      <Handle
+        type="target"
+        position={Position.Top}
+        className="!h-2 !w-2 !border-2 !border-purple-500 !bg-white opacity-0 hover:opacity-100"
+      />
 
-      <div className="flex items-start gap-2">
-        <StatusIcon />
-        <div className="min-w-0 flex-1">
-          <div className="truncate text-sm font-medium text-gray-900">{data.title}</div>
-          <div className="mt-1 truncate text-xs text-gray-500">{getPath(data.url)}</div>
-          <div className="mt-1 flex items-center gap-2">
+      {/* Node content - two-part design */}
+      <div className="flex flex-col">
+        {/* Header: Title */}
+        <div className={`truncate ${isRoot ? "text-current" : "text-gray-900"}`}>{data.title}</div>
+
+        {/* Body: URL path */}
+        <div
+          className={`mt-1 truncate text-xs ${isRoot ? "text-current opacity-90" : "text-gray-500"}`}
+        >
+          {getPath(data.url)}
+        </div>
+
+        {/* Footer: Status badge and child count */}
+        <div className="mt-2 flex items-center gap-2">
+          {/* Status code badge */}
+          <span
+            className={`rounded px-1.5 py-0.5 text-xs font-semibold ${
+              data.isBroken || data.statusCode >= 400
+                ? "bg-red-100 text-red-700"
+                : data.statusCode >= 300 && data.statusCode < 400
+                  ? "bg-orange-100 text-orange-700"
+                  : isRoot
+                    ? "bg-white/20 text-white"
+                    : "bg-purple-100 text-purple-700"
+            }`}
+          >
+            {data.statusCode}
+          </span>
+
+          {/* Child count badge */}
+          {data.childCount > 0 && (
             <span
-              className={`rounded px-1.5 py-0.5 text-xs ${data.isBroken ? "bg-red-100 text-red-700" : "bg-gray-100 text-gray-600"} `}
+              className={`rounded px-1.5 py-0.5 text-xs font-semibold ${isRoot ? "bg-white/20 text-white" : "bg-gray-100 text-gray-600"}`}
             >
-              {data.statusCode}
+              {data.childCount} {data.childCount === 1 ? "page" : "pages"}
             </span>
-            {isRoot && (
-              <span className="rounded bg-blue-100 px-1.5 py-0.5 text-xs text-blue-700">Root</span>
-            )}
-          </div>
+          )}
         </div>
       </div>
 
-      <Handle type="source" position={Position.Bottom} className="h-3 w-3 !bg-blue-500" />
+      {/* Bottom connection handle */}
+      <Handle
+        type="source"
+        position={Position.Bottom}
+        className="!h-2 !w-2 !border-2 !border-purple-500 !bg-white opacity-0 hover:opacity-100"
+      />
     </div>
   );
 }

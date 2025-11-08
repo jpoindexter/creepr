@@ -5,11 +5,16 @@ import { CustomNodeData, CustomEdgeData, FlowElements, LayoutOptions } from "@/t
 import { createFlowNode } from "./node-factory";
 import { createFlowEdge } from "./edge-factory";
 import { flattenTree } from "./tree-builder";
+import { SITEMAP_SPACING } from "./constants";
 
+/**
+ * Professional sitemap layout configuration
+ * Uses spacing values optimized for hierarchical tree visualization
+ */
 const defaultLayoutOptions: LayoutOptions = {
-  direction: "TB",
-  nodeSpacing: 100,
-  rankSpacing: 150,
+  direction: "TB", // Top-to-bottom hierarchy
+  nodeSpacing: SITEMAP_SPACING.nodeSeparation, // Horizontal spacing between siblings
+  rankSpacing: SITEMAP_SPACING.rankSeparation, // Vertical spacing between levels
 };
 
 export function buildFlowData(
@@ -48,13 +53,16 @@ function getLayoutedElements(
   const dagreGraph = new dagre.graphlib.Graph();
   dagreGraph.setDefaultEdgeLabel(() => ({}));
 
-  const nodeWidth = 200;
-  const nodeHeight = 80;
+  // Use professional sitemap node dimensions
+  const nodeWidth = SITEMAP_SPACING.regularNode.minWidth;
+  const nodeHeight = 80; // Fixed height for consistent layout
 
   dagreGraph.setGraph({
     rankdir: options.direction,
     nodesep: options.nodeSpacing,
     ranksep: options.rankSpacing,
+    marginx: SITEMAP_SPACING.marginX,
+    marginy: SITEMAP_SPACING.marginY,
   });
 
   // Add nodes to dagre
