@@ -135,3 +135,24 @@ export const SITEMAP_EFFECTS = {
     easing: "ease-out",
   },
 } as const;
+
+/**
+ * Layout presets for different use cases
+ */
+export const LAYOUT_PRESETS = {
+  compact: {
+    nodeSpacing: 20,
+    rankSpacing: 40,
+    description: "Tight spacing for large sitemaps (100+ nodes)",
+  },
+  balanced: {
+    nodeSpacing: 40,
+    rankSpacing: 60,
+    description: "Default balanced spacing",
+  },
+  spacious: {
+    nodeSpacing: 80,
+    rankSpacing: 100,
+    description: "Generous spacing for presentations",
+  },
+} as const;

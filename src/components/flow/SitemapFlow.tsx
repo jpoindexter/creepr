@@ -16,7 +16,9 @@ import {
 import "@xyflow/react/dist/style.css";
 
 import { CustomNode } from "./CustomNode";
+import { LayoutControls } from "./LayoutControls";
 import { CustomNode as CustomNodeType, CustomEdge } from "@/types/flow";
+import { useAppStore } from "@/lib/store";
 import { Download } from "lucide-react";
 
 interface SitemapFlowProps {
@@ -38,6 +40,7 @@ export function SitemapFlow({
   edges: initialEdges,
   onNodeClick,
 }: SitemapFlowProps) {
+  const { snapToGrid } = useAppStore();
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
@@ -91,6 +94,8 @@ export function SitemapFlow({
         fitViewOptions={fitViewOptions}
         minZoom={0.1}
         maxZoom={2}
+        snapToGrid={snapToGrid}
+        snapGrid={[20, 20]}
         defaultEdgeOptions={{
           type: "smoothstep",
           animated: false,
@@ -134,8 +139,11 @@ export function SitemapFlow({
           zoomable
         />
 
+        {/* Layout Controls (direction, spacing, re-layout, snap-to-grid) */}
+        <LayoutControls />
+
         {/* Export button panel */}
-        <Panel position="top-right" className="flex gap-2">
+        <Panel position="top-left" className="flex gap-2">
           <button
             onClick={handleDownload}
             className="flex items-center gap-2 rounded-lg border-2 border-purple-500 bg-white px-4 py-2 text-sm font-medium text-purple-700 shadow-lg transition-all hover:bg-purple-50 hover:shadow-xl"
