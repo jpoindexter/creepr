@@ -1,7 +1,7 @@
-import { PlaywrightCrawler } from '@crawlee/playwright';
-import { CrawlerOptions, PageInfo } from './types';
-import { shouldCrawlUrl, extractLinks } from './link-validator';
-import { normalizeUrl } from '../utils';
+import { PlaywrightCrawler } from "@crawlee/playwright";
+import { CrawlerOptions, PageInfo } from "./types";
+import { shouldCrawlUrl, extractLinks } from "./link-validator";
+import { normalizeUrl } from "../utils";
 
 export class SitemapCrawler {
   private visitedUrls = new Set<string>();
@@ -15,7 +15,7 @@ export class SitemapCrawler {
       maxDepth: options.maxDepth ?? 10,
       maxPages: options.maxPages ?? 100,
       timeout: options.timeout ?? 30000,
-      userAgent: options.userAgent ?? 'SitemapCrawler/1.0',
+      userAgent: options.userAgent ?? "SitemapCrawler/1.0",
     };
   }
 
@@ -41,8 +41,8 @@ export class SitemapCrawler {
 
         try {
           // Wait for page to load
-          await page.waitForLoadState('networkidle', {
-            timeout: options.timeout
+          await page.waitForLoadState("networkidle", {
+            timeout: options.timeout,
           });
 
           // Get page title
@@ -56,15 +56,15 @@ export class SitemapCrawler {
 
           // Get status code from response
           const response = await page.goto(url, {
-            waitUntil: 'networkidle',
-            timeout: options.timeout
+            waitUntil: "networkidle",
+            timeout: options.timeout,
           });
           const statusCode = response?.status() ?? 200;
 
           // Store page info
           const pageInfo: PageInfo = {
             url,
-            title: title || 'Untitled',
+            title: title || "Untitled",
             statusCode,
             links,
             depth: request.userData.depth ?? 0,
@@ -72,7 +72,7 @@ export class SitemapCrawler {
           };
 
           pageInfos.push(pageInfo);
-          visitedUrls.add(url);
+          visitedUrls.add(normalizeUrl(url));
 
           // Enqueue links if within depth limit
           const currentDepth = request.userData.depth ?? 0;
@@ -95,12 +95,12 @@ export class SitemapCrawler {
           // Still store the page with error info
           pageInfos.push({
             url,
-            title: 'Error',
+            title: "Error",
             statusCode: 500,
             links: [],
             depth: request.userData.depth ?? 0,
             parentUrl: request.userData.parentUrl,
-            error: error instanceof Error ? error.message : 'Unknown error',
+            error: error instanceof Error ? error.message : "Unknown error",
           });
         }
       },
@@ -111,7 +111,7 @@ export class SitemapCrawler {
         // Store failed request
         pageInfos.push({
           url: normalizeUrl(request.url),
-          title: 'Failed',
+          title: "Failed",
           statusCode: 500,
           links: [],
           depth: request.userData.depth ?? 0,
@@ -133,7 +133,7 @@ export class SitemapCrawler {
   }
 
   getVisitedUrls(): Set<string> {
-    return new Set(this.visitedUrls);
+    return new Set(Array.from(this.visitedUrls).map(normalizeUrl));
   }
 
   getPageCount(): number {

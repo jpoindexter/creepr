@@ -1,4 +1,4 @@
-import { Node, Edge } from '@xyflow/react';
+import { Node, Edge } from "@xyflow/react";
 
 // Custom node data
 export interface CustomNodeData extends Record<string, unknown> {
@@ -21,15 +21,15 @@ export interface CustomEdgeData extends Record<string, unknown> {
 // Custom edge type
 export type CustomEdge = Edge<CustomEdgeData>;
 
-// Flow data
-export interface FlowData {
+// Flow elements (nodes and edges)
+export interface FlowElements {
   nodes: CustomNode[];
   edges: CustomEdge[];
 }
 
 // Layout options
 export interface LayoutOptions {
-  direction: 'TB' | 'LR' | 'BT' | 'RL'; // Top-Bottom, Left-Right, etc.
+  direction: "TB" | "LR" | "BT" | "RL"; // Top-Bottom, Left-Right, etc.
   nodeSpacing: number;
   rankSpacing: number;
 }

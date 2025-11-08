@@ -1,5 +1,5 @@
-import { Edge } from '@xyflow/react';
-import { CustomEdgeData } from '@/types/flow';
+import { Edge } from "@xyflow/react";
+import { CustomEdgeData } from "@/types/flow";
 
 export function createFlowEdge(
   sourceId: string,
@@ -10,14 +10,14 @@ export function createFlowEdge(
     id: `${sourceId}-${targetId}`,
     source: sourceId,
     target: targetId,
-    type: 'smoothstep',
+    type: "smoothstep",
     animated: false,
     data: {
       isBroken,
     },
-    className: isBroken ? 'broken' : '',
+    className: isBroken ? "broken" : "",
     style: {
-      stroke: isBroken ? '#ef4444' : '#94a3b8',
+      stroke: isBroken ? "#ef4444" : "#94a3b8",
       strokeWidth: 2,
     },
   };

@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Build outputs
+.next/
+dist/
+out/
+build/
+
+# Playwright & Crawlee
+playwright-report/
+test-results/
+storage/
+crawlee_storage/
+
+# Git
+.git/
+.husky/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+
+# OS
+.DS_Store

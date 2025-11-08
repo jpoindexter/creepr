@@ -5,8 +5,8 @@ const nextConfig = {
     // Exclude puppeteer and other unnecessary browser automation tools
     config.resolve.alias = {
       ...config.resolve.alias,
-      'puppeteer/package.json': false,
-      'puppeteer': false,
+      "puppeteer/package.json": false,
+      puppeteer: false,
     };
 
     if (!isServer) {
@@ -25,6 +25,6 @@ const nextConfig = {
     // Allow production builds to successfully complete even if there are ESLint warnings
     ignoreDuringBuilds: false,
   },
-}
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;

@@ -125,6 +125,7 @@ npm start
 ### Crawler Configuration
 
 The crawler is configured with the following defaults:
+
 - **Max Depth**: 10 levels deep
 - **Max Pages**: 100 pages
 - **Timeout**: 30 seconds per page
@@ -152,6 +153,7 @@ This project uses TypeScript strict mode for maximum type safety. All type defin
 ### State Management
 
 Application state is managed with Zustand (`src/lib/store.ts`):
+
 - Crawl status (idle, crawling, completed, error)
 - Crawl results and statistics
 - React Flow nodes and edges
@@ -166,11 +168,13 @@ The project uses Tailwind CSS with shadcn/ui components for consistent styling. 
 ### Crawler Issues
 
 **Problem**: Crawl fails immediately
+
 - Ensure the target localhost URL is accessible
 - Check that the server is running
 - Verify CORS settings if applicable
 
 **Problem**: Some pages aren't discovered
+
 - Check if pages are linked in the HTML
 - Verify that links are using proper href attributes
 - Ensure JavaScript-rendered links are visible in the DOM
@@ -178,6 +182,7 @@ The project uses Tailwind CSS with shadcn/ui components for consistent styling. 
 ### Performance
 
 **Problem**: Large sites are slow
+
 - Reduce `maxPages` in the crawl request
 - Decrease `maxDepth` to limit recursion
 - Consider implementing pagination
@@ -185,6 +190,7 @@ The project uses Tailwind CSS with shadcn/ui components for consistent styling. 
 ## Future Enhancements
 
 Potential improvements:
+
 - [ ] Export as PNG/SVG
 - [ ] Filter by status code
 - [ ] Search functionality

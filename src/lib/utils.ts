@@ -1,8 +1,8 @@
-import { type ClassValue, clsx } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 
 // URL utilities
@@ -29,9 +29,9 @@ export function normalizeUrl(url: string): string {
   try {
     const u = new URL(url);
     // Remove trailing slash and hash
-    u.hash = '';
+    u.hash = "";
     let pathname = u.pathname;
-    if (pathname.endsWith('/') && pathname.length > 1) {
+    if (pathname.endsWith("/") && pathname.length > 1) {
       pathname = pathname.slice(0, -1);
     }
     u.pathname = pathname;
@@ -43,11 +43,11 @@ export function normalizeUrl(url: string): string {
 
 // Status code utilities
 export function getStatusColor(statusCode: number): string {
-  if (statusCode >= 200 && statusCode < 300) return '#10b981'; // Green
-  if (statusCode >= 300 && statusCode < 400) return '#f59e0b'; // Orange
-  if (statusCode >= 400 && statusCode < 500) return '#ef4444'; // Red
-  if (statusCode >= 500) return '#dc2626'; // Dark red
-  return '#6b7280'; // Gray
+  if (statusCode >= 200 && statusCode < 300) return "#10b981"; // Green
+  if (statusCode >= 300 && statusCode < 400) return "#f59e0b"; // Orange
+  if (statusCode >= 400 && statusCode < 500) return "#ef4444"; // Red
+  if (statusCode >= 500) return "#dc2626"; // Dark red
+  return "#6b7280"; // Gray
 }
 
 export function isBrokenLink(statusCode: number): boolean {

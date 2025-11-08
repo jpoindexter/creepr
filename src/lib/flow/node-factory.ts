@@ -1,6 +1,6 @@
-import { Node } from '@xyflow/react';
-import { SitemapNode } from '@/types/sitemap';
-import { CustomNodeData } from '@/types/flow';
+import { Node } from "@xyflow/react";
+import { SitemapNode } from "@/types/sitemap";
+import { CustomNodeData } from "@/types/flow";
 
 export function createFlowNode(
   sitemapNode: SitemapNode,
@@ -10,7 +10,7 @@ export function createFlowNode(
 
   return {
     id: sitemapNode.id,
-    type: 'custom',
+    type: "custom",
     position,
     data: {
       label: sitemapNode.title,
@@ -20,6 +20,6 @@ export function createFlowNode(
       depth: sitemapNode.depth,
       title: sitemapNode.title,
     },
-    className: `${sitemapNode.isBroken ? 'broken' : ''} ${isRoot ? 'root' : ''}`,
+    className: `${sitemapNode.isBroken ? "broken" : ""} ${isRoot ? "root" : ""}`,
   };
 }

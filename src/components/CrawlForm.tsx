@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
-import { Loader2, Search } from 'lucide-react';
+import { useState } from "react";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
+import { Loader2, Search } from "lucide-react";
 
 interface CrawlFormProps {
   onSubmit: (url: string) => void;
@@ -12,7 +12,7 @@ interface CrawlFormProps {
 }
 
 export function CrawlForm({ onSubmit, isLoading }: CrawlFormProps) {
-  const [url, setUrl] = useState('http://localhost:3000');
+  const [url, setUrl] = useState("http://localhost:3000");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,19 +49,15 @@ export function CrawlForm({ onSubmit, isLoading }: CrawlFormProps) {
             </p>
           </div>
 
-          <Button
-            type="submit"
-            disabled={isLoading || !url.trim()}
-            className="w-full"
-          >
+          <Button type="submit" disabled={isLoading || !url.trim()} className="w-full">
             {isLoading ? (
               <>
-                <Loader2 className="w-4 h-4 animate-spin" />
+                <Loader2 className="h-4 w-4 animate-spin" />
                 Crawling...
               </>
             ) : (
               <>
-                <Search className="w-4 h-4" />
+                <Search className="h-4 w-4" />
                 Start Crawl
               </>
             )}

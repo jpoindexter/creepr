@@ -7,6 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 **creepr** is a Next.js 15 application that crawls localhost applications and generates interactive hierarchical visual sitemaps using React Flow. It's designed specifically for developers to understand and visualize their application structure.
 
 **Tech Stack**:
+
 - Next.js 15 (App Router) with React 19
 - @xyflow/react v12 (React Flow) for visualization
 - @crawlee/playwright v3 for web crawling
@@ -15,6 +16,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Zustand v5 for state management
 
 **Core Workflow**:
+
 1. User enters localhost URL
 2. Crawlee (with Playwright) crawls the site, discovering all pages and links
 3. Crawler builds flat list of pages with parent-child relationships
@@ -37,6 +39,7 @@ npm run lint            # Run ESLint (ESLint 9 with flat config)
 ```
 
 **IMPORTANT**:
+
 - You must run `npx playwright install` after `npm install` on first setup. Playwright browsers are required for the crawler to function.
 - This project uses **ESLint 9** with flat config format (`eslint.config.mjs`). Do not use `.eslintrc.json`.
 
@@ -45,6 +48,7 @@ npm run lint            # Run ESLint (ESLint 9 with flat config)
 This project includes the shadcn MCP server for AI-assisted component installation.
 
 **Configuration**: `.mcp.json`
+
 ```json
 {
   "mcpServers": {
@@ -57,11 +61,13 @@ This project includes the shadcn MCP server for AI-assisted component installati
 ```
 
 **Available Commands** (after restarting Claude Code):
+
 - "List all available shadcn components"
 - "Add the dialog and badge components"
 - "Find me a login form from the registry"
 
 The server provides three tools:
+
 1. **Browse Components** - List all components in the shadcn/ui registry
 2. **Search Registries** - Find specific component patterns
 3. **Install Components** - Add components using natural language
@@ -75,6 +81,7 @@ Existing components are in `src/components/ui/` (button, card, input).
 The application follows a clear three-stage data transformation pipeline:
 
 **Stage 1: Crawling** (`lib/crawler/`)
+
 - `SitemapCrawler` uses Crawlee's PlaywrightCrawler to navigate pages
 - Extracts links from HTML content using `extractLinks()`
 - Tracks visited URLs to prevent infinite loops
@@ -82,12 +89,14 @@ The application follows a clear three-stage data transformation pipeline:
 - Returns flat array of `PageInfo` objects with parent-child relationships
 
 **Stage 2: Tree Building** (`lib/flow/tree-builder.ts`)
+
 - `buildSitemapTree()` converts flat page list to hierarchical `SitemapNode` tree
 - Uses parent-child URL relationships to build tree structure
 - Orphaned nodes (no parent) are automatically attached to root
 - `getTreeStats()` calculates statistics (total pages, broken links, max depth)
 
 **Stage 3: React Flow Visualization** (`lib/flow/layout-builder.ts`)
+
 - `buildFlowFromTree()` converts tree to React Flow nodes and edges
 - Applies Dagre layout algorithm for hierarchical positioning
 - `nodeFactory` and `edgeFactory` create styled React Flow elements
@@ -104,6 +113,7 @@ buildSitemapTree() → SitemapNode → buildFlowFromTree() →
 ### URL Normalization (CRITICAL)
 
 All URLs are normalized using `normalizeUrl()` in `lib/utils.ts`:
+
 - Removes trailing slashes
 - Removes hash fragments
 - Converts to lowercase
@@ -114,6 +124,7 @@ All URLs are normalized using `normalizeUrl()` in `lib/utils.ts`:
 ### Status Code Handling
 
 Links are categorized by HTTP status codes:
+
 - **200-299**: Success (green)
 - **300-399**: Redirect (orange)
 - **400-599**: Broken (red background)
@@ -158,6 +169,7 @@ src/
 **Package**: Uses `@crawlee/playwright` (not the general `crawlee` package) to avoid unnecessary Puppeteer dependencies.
 
 `SitemapCrawler` is configured with these defaults:
+
 - `maxRequestsPerCrawl`: 100 pages
 - `maxConcurrency`: 5 simultaneous page loads
 - `requestHandlerTimeoutSecs`: 30 seconds per page
@@ -170,6 +182,7 @@ src/
 ### Playwright Page Handling
 
 The crawler calls `page.goto()` TWICE per page:
+
 1. First in the request handler (implicit)
 2. Second explicitly to get the response object for status code
 
@@ -178,6 +191,7 @@ This is intentional - Crawlee's implicit navigation doesn't provide response sta
 ### Tree Building Edge Cases
 
 `buildSitemapTree()` handles several edge cases:
+
 1. **Missing root**: If root URL wasn't crawled successfully, creates a default root node
 2. **Orphaned nodes**: Nodes without valid parents are attached directly to root
 3. **Circular references**: Prevented by checking `!parent.children.find(child => child.id === node.id)` before adding
@@ -187,12 +201,14 @@ This is intentional - Crawlee's implicit navigation doesn't provide response sta
 **Package**: Uses `@xyflow/react` v12 (new package name, replaces `reactflow`)
 
 **Breaking Changes from v11**:
+
 - `ReactFlow` is now a **named export** (not default): `import { ReactFlow } from '@xyflow/react'`
 - CSS import path changed: `import '@xyflow/react/dist/style.css'`
 - Node/Edge data types must extend `Record<string, unknown>`
 - Custom node components receive `{ data, selected }` props, not `NodeProps<T>`
 
 Dagre layout configuration in `buildFlowFromTree()`:
+
 - `rankdir: 'TB'` (top-to-bottom hierarchical layout)
 - `ranksep: 100` (vertical spacing between ranks)
 - `nodesep: 80` (horizontal spacing between nodes)
@@ -204,6 +220,7 @@ Dagre layout configuration in `buildFlowFromTree()`:
 ### State Management Pattern
 
 Zustand store (`lib/store.ts`) manages four pieces of state:
+
 1. `crawlStatus`: 'idle' | 'crawling' | 'completed' | 'error'
 2. `crawlResult`: Full crawl data (pages, tree, stats)
 3. `flowData`: React Flow nodes and edges (derived from tree)
@@ -216,6 +233,7 @@ Zustand store (`lib/store.ts`) manages four pieces of state:
 ### Adding a New Crawler Option
 
 To add a new option (e.g., `followExternalLinks`):
+
 1. Add to `CrawlerOptions` in `lib/crawler/types.ts`
 2. Update `SitemapCrawler` constructor default in `sitemap-crawler.ts`
 3. Modify `shouldCrawlUrl()` logic in `link-validator.ts`
@@ -226,6 +244,7 @@ To add a new option (e.g., `followExternalLinks`):
 ### Adding a New Node Type
 
 To add a new node type (e.g., "API Endpoint"):
+
 1. Add type to `SitemapNode` in `types/sitemap.ts`
 2. Detect type in `buildSitemapTree()` (e.g., check if URL contains `/api/`)
 3. Add styling case in `createStyledNode()` in `node-factory.ts`
@@ -234,6 +253,7 @@ To add a new node type (e.g., "API Endpoint"):
 ### Changing Layout Algorithm
 
 To switch from Dagre to ELK:
+
 1. Replace `dagre` dependency with `elkjs` in `package.json`
 2. Replace layout logic in `buildFlowFromTree()` in `layout-builder.ts`
 3. Update `ranksep`/`nodesep` config for ELK's API format
@@ -245,6 +265,7 @@ To switch from Dagre to ELK:
 **Symptom**: Crawl request never completes or takes >30 seconds per page
 
 **Common causes**:
+
 1. Target site uses infinite scroll or infinite redirects
 2. Pages have very large DOM or many network requests
 3. Playwright not installed (`npx playwright install`)
@@ -274,6 +295,7 @@ To switch from Dagre to ELK:
 **Cause**: Too many nodes (>200) or Dagre layout blocking main thread
 
 **Solution**:
+
 1. Reduce `maxPages` in crawl request
 2. Add `nodesDraggable={false}` to reduce re-renders
 3. Implement virtualization (only render visible nodes)
@@ -281,6 +303,7 @@ To switch from Dagre to ELK:
 ## Type Safety
 
 TypeScript strict mode is enabled. Key type invariants:
+
 - All URLs in `PageInfo` and `SitemapNode` must be strings (normalized)
 - `statusCode` is always a number (default to 200 if unknown)
 - `depth` is always a number >= 0
@@ -291,6 +314,7 @@ TypeScript strict mode is enabled. Key type invariants:
 The `<body>` tag in `src/app/layout.tsx` includes `suppressHydrationWarning` to prevent false hydration warnings from browser extensions (password managers, form fillers like ClickUp, etc.) that inject attributes before React hydrates.
 
 **Pattern**:
+
 ```tsx
 <body className={inter.className} suppressHydrationWarning>
 ```
@@ -305,6 +329,7 @@ This is intentional and safe - browser extensions commonly inject attributes int
 - **Rendering**: React Flow handles up to ~500 nodes smoothly
 
 For sites with >100 pages, consider implementing:
+
 1. Incremental crawling (stream results as pages are discovered)
 2. Server-side layout calculation
 3. Pagination or virtualization in React Flow

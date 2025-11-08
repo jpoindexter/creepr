@@ -1,13 +1,13 @@
-import dagre from 'dagre';
-import { Node, Edge } from '@xyflow/react';
-import { SitemapNode } from '@/types/sitemap';
-import { CustomNodeData, CustomEdgeData, FlowData, LayoutOptions } from '@/types/flow';
-import { createFlowNode } from './node-factory';
-import { createFlowEdge } from './edge-factory';
-import { flattenTree } from './tree-builder';
+import dagre from "dagre";
+import { Node, Edge } from "@xyflow/react";
+import { SitemapNode } from "@/types/sitemap";
+import { CustomNodeData, CustomEdgeData, FlowElements, LayoutOptions } from "@/types/flow";
+import { createFlowNode } from "./node-factory";
+import { createFlowEdge } from "./edge-factory";
+import { flattenTree } from "./tree-builder";
 
 const defaultLayoutOptions: LayoutOptions = {
-  direction: 'TB',
+  direction: "TB",
   nodeSpacing: 100,
   rankSpacing: 150,
 };
@@ -15,33 +15,27 @@ const defaultLayoutOptions: LayoutOptions = {
 export function buildFlowData(
   root: SitemapNode,
   options: Partial<LayoutOptions> = {}
-): FlowData {
+): FlowElements {
   const layoutOptions = { ...defaultLayoutOptions, ...options };
 
   // Flatten tree to get all nodes
   const allNodes = flattenTree(root);
 
   // Create initial flow nodes (without positions)
-  const flowNodes: Node<CustomNodeData>[] = allNodes.map(node =>
+  const flowNodes: Node<CustomNodeData>[] = allNodes.map((node) =>
     createFlowNode(node, { x: 0, y: 0 })
   );
 
   // Create edges based on parent-child relationships
   const flowEdges: Edge<CustomEdgeData>[] = [];
-  allNodes.forEach(node => {
+  allNodes.forEach((node) => {
     if (node.parentId) {
-      flowEdges.push(
-        createFlowEdge(node.parentId, node.id, node.isBroken)
-      );
+      flowEdges.push(createFlowEdge(node.parentId, node.id, node.isBroken));
     }
   });
 
   // Apply dagre layout
-  const layoutedData = getLayoutedElements(
-    flowNodes,
-    flowEdges,
-    layoutOptions
-  );
+  const layoutedData = getLayoutedElements(flowNodes, flowEdges, layoutOptions);
 
   return layoutedData;
 }
@@ -50,7 +44,7 @@ function getLayoutedElements(
   nodes: Node<CustomNodeData>[],
   edges: Edge<CustomEdgeData>[],
   options: LayoutOptions
-): FlowData {
+): FlowElements {
   const dagreGraph = new dagre.graphlib.Graph();
   dagreGraph.setDefaultEdgeLabel(() => ({}));
 
@@ -64,12 +58,12 @@ function getLayoutedElements(
   });
 
   // Add nodes to dagre
-  nodes.forEach(node => {
+  nodes.forEach((node) => {
     dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight });
   });
 
   // Add edges to dagre
-  edges.forEach(edge => {
+  edges.forEach((edge) => {
     dagreGraph.setEdge(edge.source, edge.target);
   });
 
@@ -77,7 +71,7 @@ function getLayoutedElements(
   dagre.layout(dagreGraph);
 
   // Apply positions to nodes
-  const layoutedNodes = nodes.map(node => {
+  const layoutedNodes = nodes.map((node) => {
     const nodeWithPosition = dagreGraph.node(node.id);
 
     return {
@@ -99,7 +93,7 @@ export function relayoutFlow(
   nodes: Node<CustomNodeData>[],
   edges: Edge<CustomEdgeData>[],
   options: Partial<LayoutOptions> = {}
-): FlowData {
+): FlowElements {
   const layoutOptions = { ...defaultLayoutOptions, ...options };
   return getLayoutedElements(nodes, edges, layoutOptions);
 }

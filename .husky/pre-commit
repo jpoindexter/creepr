@@ -1,0 +1,61 @@
+echo "🔍 Running pre-commit checks..."
+echo ""
+
+# Track if any check fails
+FAILED=0
+
+# 1. Run lint-staged (ESLint + Prettier on staged files)
+echo "1️⃣  Running lint-staged (ESLint + Prettier)..."
+npx lint-staged || FAILED=1
+echo ""
+
+# 2. Console.log detection
+echo "2️⃣  Checking for console.log statements..."
+node scripts/git-hooks/validate-console-log.js || FAILED=1
+
+# 3. File size validation
+echo "3️⃣  Validating file sizes (300 line limit)..."
+node scripts/git-hooks/validate-file-size.js || FAILED=1
+
+# 4. Security validation
+echo "4️⃣  Scanning for security issues..."
+node scripts/git-hooks/validate-security.js || FAILED=1
+
+# 5. Import validation
+echo "5️⃣  Validating imports (circular deps, deep paths)..."
+node scripts/git-hooks/validate-imports.js || FAILED=1
+
+# 6. React Flow validation
+echo "6️⃣  Validating React Flow v12 usage..."
+node scripts/git-hooks/validate-react-flow.js || FAILED=1
+
+# 7. Crawlee validation
+echo "7️⃣  Validating Crawlee configuration..."
+node scripts/git-hooks/validate-crawlee.js || FAILED=1
+
+# 8. Component validation ('use client' directive)
+echo "8️⃣  Validating component directives..."
+node scripts/git-hooks/validate-components.js || FAILED=1
+
+# 9. SEO metadata validation
+echo "9️⃣  Validating SEO metadata..."
+node scripts/git-hooks/validate-metadata.js || FAILED=1
+
+# 10. URL normalization validation
+echo "🔟 Validating URL normalization..."
+node scripts/git-hooks/validate-url-normalization.js || FAILED=1
+
+# 11. TypeScript type checking (entire project)
+echo "1️⃣1️⃣ Running TypeScript type check..."
+npm run typecheck || FAILED=1
+echo ""
+
+# Check if any validation failed
+if [ $FAILED -eq 1 ]; then
+  echo "❌ Pre-commit checks failed. Please fix the issues above and try again."
+  echo ""
+  exit 1
+fi
+
+echo "✅ All pre-commit checks passed!"
+echo ""

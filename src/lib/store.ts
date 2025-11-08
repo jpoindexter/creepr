@@ -1,10 +1,10 @@
-import { create } from 'zustand';
-import { CrawlResult, SitemapNode } from '@/types/sitemap';
-import { CustomNode, CustomEdge } from '@/types/flow';
+import { create } from "zustand";
+import { CrawlResult } from "@/types/sitemap";
+import { CustomNode, CustomEdge } from "@/types/flow";
 
 interface AppState {
   // Crawl state
-  crawlStatus: 'idle' | 'crawling' | 'completed' | 'error';
+  crawlStatus: "idle" | "crawling" | "completed" | "error";
   crawlError: string | null;
 
   // Crawl results
@@ -18,7 +18,7 @@ interface AppState {
   selectedNodeId: string | null;
 
   // Actions
-  setCrawlStatus: (status: 'idle' | 'crawling' | 'completed' | 'error') => void;
+  setCrawlStatus: (status: "idle" | "crawling" | "completed" | "error") => void;
   setCrawlError: (error: string | null) => void;
   setCrawlResult: (result: CrawlResult) => void;
   setFlowData: (nodes: CustomNode[], edges: CustomEdge[]) => void;
@@ -28,7 +28,7 @@ interface AppState {
 
 export const useAppStore = create<AppState>((set) => ({
   // Initial state
-  crawlStatus: 'idle',
+  crawlStatus: "idle",
   crawlError: null,
   crawlResult: null,
   flowNodes: [],
@@ -40,18 +40,19 @@ export const useAppStore = create<AppState>((set) => ({
 
   setCrawlError: (error) => set({ crawlError: error }),
 
-  setCrawlResult: (result) => set({ crawlResult: result, crawlStatus: 'completed' }),
+  setCrawlResult: (result) => set({ crawlResult: result, crawlStatus: "completed" }),
 
   setFlowData: (nodes, edges) => set({ flowNodes: nodes, flowEdges: edges }),
 
   setSelectedNode: (nodeId) => set({ selectedNodeId: nodeId }),
 
-  reset: () => set({
-    crawlStatus: 'idle',
-    crawlError: null,
-    crawlResult: null,
-    flowNodes: [],
-    flowEdges: [],
-    selectedNodeId: null,
-  }),
+  reset: () =>
+    set({
+      crawlStatus: "idle",
+      crawlError: null,
+      crawlResult: null,
+      flowNodes: [],
+      flowEdges: [],
+      selectedNodeId: null,
+    }),
 }));

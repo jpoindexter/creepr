@@ -1,27 +1,24 @@
-import { LinkStatus } from '@/types/sitemap';
+import { LinkStatus } from "@/types/sitemap";
+import { normalizeUrl } from "../utils";
 
 export function getLinkStatus(statusCode: number): LinkStatus {
-  if (statusCode >= 200 && statusCode < 300) return 'success';
-  if (statusCode >= 300 && statusCode < 400) return 'redirect';
-  if (statusCode >= 400 && statusCode < 500) return 'client-error';
-  if (statusCode >= 500) return 'server-error';
-  return 'unknown';
+  if (statusCode >= 200 && statusCode < 300) return "success";
+  if (statusCode >= 300 && statusCode < 400) return "redirect";
+  if (statusCode >= 400 && statusCode < 500) return "client-error";
+  if (statusCode >= 500) return "server-error";
+  return "unknown";
 }
 
 export function isValidHttpUrl(url: string): boolean {
   try {
     const parsedUrl = new URL(url);
-    return parsedUrl.protocol === 'http:' || parsedUrl.protocol === 'https:';
+    return parsedUrl.protocol === "http:" || parsedUrl.protocol === "https:";
   } catch {
     return false;
   }
 }
 
-export function shouldCrawlUrl(
-  url: string,
-  baseUrl: string,
-  visitedUrls: Set<string>
-): boolean {
+export function shouldCrawlUrl(url: string, baseUrl: string, visitedUrls: Set<string>): boolean {
   // Check if already visited
   if (visitedUrls.has(url)) {
     return false;
@@ -37,10 +34,7 @@ export function shouldCrawlUrl(
     const parsedBaseUrl = new URL(baseUrl);
 
     // Only crawl same origin (host + port)
-    return (
-      parsedUrl.hostname === parsedBaseUrl.hostname &&
-      parsedUrl.port === parsedBaseUrl.port
-    );
+    return parsedUrl.hostname === parsedBaseUrl.hostname && parsedUrl.port === parsedBaseUrl.port;
   } catch {
     return false;
   }
@@ -61,11 +55,11 @@ export function extractLinks(html: string, baseUrl: string): string[] {
       const absoluteUrl = new URL(href, baseUrl);
 
       // Remove hash fragments
-      absoluteUrl.hash = '';
+      absoluteUrl.hash = "";
 
       // Normalize trailing slashes
       let pathname = absoluteUrl.pathname;
-      if (pathname.endsWith('/') && pathname.length > 1) {
+      if (pathname.endsWith("/") && pathname.length > 1) {
         pathname = pathname.slice(0, -1);
       }
       absoluteUrl.pathname = pathname;
@@ -77,6 +71,6 @@ export function extractLinks(html: string, baseUrl: string): string[] {
     }
   }
 
-  // Remove duplicates
-  return Array.from(new Set(links));
+  // Remove duplicates using normalized URLs
+  return Array.from(new Set(links.map(normalizeUrl)));
 }

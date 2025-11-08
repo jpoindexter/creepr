@@ -5,8 +5,14 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "creepr",
-  description: "Crawl and visualize your app structure",
+  title: "creepr - Localhost Sitemap Generator",
+  description:
+    "Generate interactive visual sitemaps for localhost applications. Built with Next.js 15, React Flow, and Crawlee for developers who need to understand their application structure.",
+  openGraph: {
+    title: "creepr - Localhost Sitemap Generator",
+    description: "Generate interactive visual sitemaps for localhost applications.",
+    type: "website",
+  },
 };
 
 export default function RootLayout({

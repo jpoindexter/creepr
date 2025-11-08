@@ -1,12 +1,12 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 // Link status types
-export type LinkStatus = 'success' | 'redirect' | 'client-error' | 'server-error' | 'unknown';
+export type LinkStatus = "success" | "redirect" | "client-error" | "server-error" | "unknown";
 
 // Crawled page schema
 export const CrawledPageSchema = z.object({
   url: z.string().url(),
-  title: z.string().default('Untitled'),
+  title: z.string().default("Untitled"),
   statusCode: z.number(),
   links: z.array(z.string()),
   depth: z.number().default(0),
@@ -47,7 +47,7 @@ export interface CrawlRequest {
 
 // Crawl status
 export interface CrawlStatus {
-  status: 'idle' | 'crawling' | 'completed' | 'error';
+  status: "idle" | "crawling" | "completed" | "error";
   progress: number; // 0-100
   message?: string;
   currentUrl?: string;
