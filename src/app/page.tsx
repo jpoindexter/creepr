@@ -52,11 +52,11 @@ export default function Home() {
         setCrawlResult(result);
 
         // Build flow data from the tree
-        // Use tighter spacing for interactive mode with many elements
+        // Use balanced spacing for readability
         const flowData = buildFlowData(result.tree, {
           direction: "TB",
-          nodeSpacing: 40,
-          rankSpacing: 60,
+          nodeSpacing: 120,
+          rankSpacing: 150,
         });
 
         setFlowData(flowData.nodes, flowData.edges);

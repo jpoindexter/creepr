@@ -82,22 +82,22 @@ export const SITEMAP_COLORS = {
 } as const;
 
 export const SITEMAP_SPACING = {
-  // Layout spacing - compact for interactive mode with many elements
-  rankSeparation: 60, // Vertical spacing between hierarchy levels (reduced from 100)
-  nodeSeparation: 40, // Horizontal spacing between sibling nodes (reduced from 80)
-  marginX: 20, // Left/right margins (reduced from 40)
-  marginY: 20, // Top/bottom margins (reduced from 40)
+  // Layout spacing - professional sitemap sizing for readability
+  rankSeparation: 120, // Vertical spacing between hierarchy levels
+  nodeSeparation: 100, // Horizontal spacing between sibling nodes
+  marginX: 60, // Left/right margins
+  marginY: 60, // Top/bottom margins
 
-  // Node sizing
+  // Node sizing - larger for better readability
   rootNode: {
-    minWidth: 200,
-    padding: 20,
+    minWidth: 280,
+    padding: 24,
     borderRadius: 12,
     borderWidth: 3,
   },
   regularNode: {
-    minWidth: 160,
-    padding: 16,
+    minWidth: 220,
+    padding: 20,
     borderRadius: 10,
     borderWidth: 3,
   },
@@ -108,19 +108,19 @@ export const SITEMAP_SPACING = {
 
 export const SITEMAP_TYPOGRAPHY = {
   root: {
-    titleSize: "16px",
+    titleSize: "18px",
     titleWeight: "600",
-    urlSize: "13px",
+    urlSize: "14px",
     urlWeight: "400",
   },
   regular: {
-    titleSize: "14px",
+    titleSize: "15px",
     titleWeight: "500",
-    urlSize: "12px",
+    urlSize: "13px",
     urlWeight: "400",
   },
   badge: {
-    fontSize: "11px",
+    fontSize: "12px",
     fontWeight: "600",
   },
 } as const;
@@ -141,18 +141,18 @@ export const SITEMAP_EFFECTS = {
  */
 export const LAYOUT_PRESETS = {
   compact: {
-    nodeSpacing: 20,
-    rankSpacing: 40,
+    nodeSpacing: 80,
+    rankSpacing: 100,
     description: "Tight spacing for large sitemaps (100+ nodes)",
   },
   balanced: {
-    nodeSpacing: 40,
-    rankSpacing: 60,
+    nodeSpacing: 120,
+    rankSpacing: 150,
     description: "Default balanced spacing",
   },
   spacious: {
-    nodeSpacing: 80,
-    rankSpacing: 100,
+    nodeSpacing: 180,
+    rankSpacing: 220,
     description: "Generous spacing for presentations",
   },
 } as const;
