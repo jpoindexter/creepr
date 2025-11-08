@@ -20,8 +20,11 @@ export async function POST(request: NextRequest) {
     // Default options
     const maxDepth = body.maxDepth ?? 10;
     const maxPages = body.maxPages ?? 100;
+    const interactiveMode = body.interactiveMode ?? false;
 
-    console.info(`Starting crawl for ${body.url}`);
+    console.info(
+      `Starting crawl for ${body.url} (${interactiveMode ? "Interactive Mode" : "Sitemap Mode"})`
+    );
     const startTime = Date.now();
 
     // Create and run crawler
@@ -29,6 +32,7 @@ export async function POST(request: NextRequest) {
       maxDepth,
       maxPages,
       timeout: 30000,
+      interactiveMode,
     });
 
     const pages = await crawler.crawl();

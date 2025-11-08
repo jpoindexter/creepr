@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
-import { CrawlForm } from "@/components/CrawlForm";
+import { CrawlForm, CrawlConfig } from "@/components/CrawlForm";
 import { StatusPanel } from "@/components/StatusPanel";
 import { SitemapFlow } from "@/components/flow/SitemapFlow";
 import { useAppStore } from "@/lib/store";
@@ -25,7 +25,7 @@ export default function Home() {
   } = useAppStore();
 
   const handleCrawl = useCallback(
-    async (url: string) => {
+    async (config: CrawlConfig) => {
       setCrawlStatus("crawling");
       setCrawlError(null);
 
@@ -35,7 +35,12 @@ export default function Home() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ url, maxDepth: 10, maxPages: 100 }),
+          body: JSON.stringify({
+            url: config.url,
+            maxDepth: config.maxDepth,
+            maxPages: config.maxPages,
+            interactiveMode: config.interactiveMode,
+          }),
         });
 
         if (!response.ok) {
@@ -47,10 +52,11 @@ export default function Home() {
         setCrawlResult(result);
 
         // Build flow data from the tree
+        // Use tighter spacing for interactive mode with many elements
         const flowData = buildFlowData(result.tree, {
           direction: "TB",
-          nodeSpacing: 100,
-          rankSpacing: 150,
+          nodeSpacing: 40,
+          rankSpacing: 60,
         });
 
         setFlowData(flowData.nodes, flowData.edges);

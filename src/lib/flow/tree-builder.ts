@@ -23,6 +23,10 @@ export function buildSitemapTree(pages: PageInfo[], rootUrl: string): SitemapNod
       children: [],
       parentId: page.parentUrl,
       isBroken: isBrokenLink(page.statusCode),
+      // New fields for interactive mode
+      nodeType: page.nodeType || "page",
+      interactionType: page.interactionType,
+      parentPageUrl: page.parentPageUrl,
     };
     nodesMap.set(page.url, node);
   });
@@ -41,6 +45,7 @@ export function buildSitemapTree(pages: PageInfo[], rootUrl: string): SitemapNod
       depth: 0,
       children: [],
       isBroken: false,
+      nodeType: "page",
     };
     nodesMap.set(rootUrl, rootNode);
   }

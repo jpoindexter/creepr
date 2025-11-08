@@ -4,10 +4,10 @@ import { CustomNodeData } from "@/types/flow";
 import { SITEMAP_COLORS, SITEMAP_SPACING, SITEMAP_TYPOGRAPHY } from "./constants";
 
 /**
- * Determines node style based on status and depth
+ * Determines node style based on node type, status, and depth
  */
 function getNodeStyle(sitemapNode: SitemapNode) {
-  const isRoot = sitemapNode.depth === 0;
+  const isRoot = sitemapNode.depth === 0 && sitemapNode.nodeType === "page";
 
   // Root node gets special gradient styling
   if (isRoot) {
@@ -24,7 +24,31 @@ function getNodeStyle(sitemapNode: SitemapNode) {
     };
   }
 
-  // Determine status-based styling
+  // Interactive elements get their own styling
+  if (sitemapNode.nodeType !== "page") {
+    const interactiveColors =
+      SITEMAP_COLORS[
+        sitemapNode.nodeType as keyof Pick<
+          typeof SITEMAP_COLORS,
+          "tab" | "modal" | "accordion" | "dropdown" | "button"
+        >
+      ];
+
+    return {
+      background: interactiveColors.background,
+      border: `${SITEMAP_SPACING.regularNode.borderWidth}px solid ${interactiveColors.border}`,
+      borderRadius: `${SITEMAP_SPACING.regularNode.borderRadius}px`,
+      color: interactiveColors.text,
+      padding: `${SITEMAP_SPACING.regularNode.padding}px`,
+      minWidth: `${SITEMAP_SPACING.regularNode.minWidth}px`,
+      boxShadow: interactiveColors.shadow,
+      fontSize: SITEMAP_TYPOGRAPHY.regular.titleSize,
+      fontWeight: SITEMAP_TYPOGRAPHY.regular.titleWeight,
+      opacity: 0.95, // Slightly transparent to distinguish from pages
+    };
+  }
+
+  // Page nodes: Determine status-based styling
   let colorScheme:
     | (typeof SITEMAP_COLORS)["success"]
     | (typeof SITEMAP_COLORS)["error"]
@@ -75,6 +99,7 @@ export function createFlowNode(
       depth: sitemapNode.depth,
       title: sitemapNode.title,
       childCount,
+      nodeType: sitemapNode.nodeType,
     },
     style: getNodeStyle(sitemapNode),
     className: `sitemap-node ${sitemapNode.isBroken ? "broken" : ""} ${isRoot ? "root" : ""}`,

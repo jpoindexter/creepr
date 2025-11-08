@@ -106,15 +106,32 @@ export function SitemapFlow({
           showInteractive={false}
         />
 
-        {/* Minimap with purple theme */}
+        {/* Minimap with node type colors */}
         <MiniMap
           nodeColor={(node) => {
-            if (node.data?.isBroken) return "#DC2626"; // Red
-            if (node.data?.depth === 0) return "#9945FF"; // Purple
-            return "#CBD5E0"; // Light gray
+            if (node.data?.isBroken) return "#DC2626"; // Red for broken
+            if (node.data?.depth === 0 && node.data?.nodeType === "page") return "#9945FF"; // Purple for root
+            // Color by node type
+            switch (node.data?.nodeType) {
+              case "tab":
+                return "#3B82F6"; // Blue
+              case "modal":
+                return "#F59E0B"; // Orange
+              case "accordion":
+                return "#10B981"; // Green
+              case "dropdown":
+                return "#F97316"; // Orange
+              case "button":
+                return "#6B7280"; // Gray
+              case "page":
+              default:
+                return "#9945FF"; // Purple for pages
+            }
           }}
           className="!border-2 !border-purple-200 !bg-white !shadow-lg"
           maskColor="rgba(153, 69, 255, 0.1)"
+          pannable
+          zoomable
         />
 
         {/* Export button panel */}
@@ -126,6 +143,46 @@ export function SitemapFlow({
             <Download className="h-4 w-4" />
             Export JSON
           </button>
+        </Panel>
+
+        {/* Legend panel */}
+        <Panel
+          position="bottom-left"
+          className="rounded-lg border-2 border-purple-200 bg-white p-3 shadow-lg"
+        >
+          <h3 className="mb-2 text-xs font-semibold text-gray-700">Node Types</h3>
+          <div className="space-y-1.5">
+            <div className="flex items-center gap-2">
+              <div className="h-3 w-3 rounded border-2 border-purple-600 bg-purple-100"></div>
+              <span className="text-xs text-gray-600">📄 Page</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="h-3 w-3 rounded border-2 border-blue-600 bg-blue-100"></div>
+              <span className="text-xs text-gray-600">📑 Tab</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="h-3 w-3 rounded border-2 border-orange-600 bg-yellow-100"></div>
+              <span className="text-xs text-gray-600">🔘 Modal</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="h-3 w-3 rounded border-2 border-green-600 bg-green-100"></div>
+              <span className="text-xs text-gray-600">▼ Accordion</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="h-3 w-3 rounded border-2 border-orange-600 bg-orange-100"></div>
+              <span className="text-xs text-gray-600">⋮ Dropdown</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="h-3 w-3 rounded border-2 border-gray-600 bg-gray-100"></div>
+              <span className="text-xs text-gray-600">🎯 Button</span>
+            </div>
+            <div className="mt-2 border-t border-gray-200 pt-2">
+              <div className="flex items-center gap-2">
+                <div className="h-3 w-3 rounded border-2 border-red-600 bg-red-100"></div>
+                <span className="text-xs text-gray-600">Broken Link</span>
+              </div>
+            </div>
+          </div>
         </Panel>
       </ReactFlow>
     </div>

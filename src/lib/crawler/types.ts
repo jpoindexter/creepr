@@ -1,8 +1,11 @@
+import { NodeType } from "@/types/sitemap";
+
 export interface CrawlerOptions {
   maxDepth?: number;
   maxPages?: number;
   timeout?: number;
   userAgent?: string;
+  interactiveMode?: boolean; // Enable interactive element detection
 }
 
 export interface CrawlProgress {
@@ -19,4 +22,8 @@ export interface PageInfo {
   depth: number;
   parentUrl?: string;
   error?: string;
+  // New fields for interactive mode
+  nodeType?: NodeType;
+  interactionType?: "click" | "hover" | "expand";
+  parentPageUrl?: string;
 }

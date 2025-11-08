@@ -3,10 +3,55 @@
 import { memo } from "react";
 import { Handle, Position } from "@xyflow/react";
 import { CustomNodeData } from "@/types/flow";
+import { NodeType } from "@/types/sitemap";
 
 interface CustomNodeProps {
   data: CustomNodeData;
   selected?: boolean;
+}
+
+/**
+ * Returns an icon for the given node type
+ */
+function getNodeIcon(nodeType: NodeType): string {
+  switch (nodeType) {
+    case "page":
+      return "📄";
+    case "tab":
+      return "📑";
+    case "modal":
+      return "🔘";
+    case "accordion":
+      return "▼";
+    case "dropdown":
+      return "⋮";
+    case "button":
+      return "🎯";
+    default:
+      return "📄";
+  }
+}
+
+/**
+ * Returns a human-readable label for the node type
+ */
+function getNodeTypeLabel(nodeType: NodeType): string {
+  switch (nodeType) {
+    case "page":
+      return "Page";
+    case "tab":
+      return "Tab";
+    case "modal":
+      return "Modal";
+    case "accordion":
+      return "Accordion";
+    case "dropdown":
+      return "Dropdown";
+    case "button":
+      return "Button";
+    default:
+      return "Page";
+  }
 }
 
 /**
@@ -15,7 +60,8 @@ interface CustomNodeProps {
  * This component focuses on content layout only
  */
 function CustomNodeComponent({ data, selected }: CustomNodeProps) {
-  const isRoot = data.depth === 0;
+  const isRoot = data.depth === 0 && data.nodeType === "page";
+  const isInteractive = data.nodeType !== "page";
 
   // Extract path from URL for display
   const getPath = (url: string) => {
@@ -40,39 +86,50 @@ function CustomNodeComponent({ data, selected }: CustomNodeProps) {
 
       {/* Node content - two-part design */}
       <div className="flex flex-col">
-        {/* Header: Title */}
-        <div className={`truncate ${isRoot ? "text-current" : "text-gray-900"}`}>{data.title}</div>
+        {/* Header: Icon + Title */}
+        <div className="flex items-center gap-2">
+          <span className="text-base leading-none">{getNodeIcon(data.nodeType)}</span>
+          <div className={`flex-1 truncate ${isRoot ? "text-current" : "text-gray-900"}`}>
+            {data.title}
+          </div>
+        </div>
 
-        {/* Body: URL path */}
+        {/* Body: URL path (only for pages) or Type label (for interactive elements) */}
         <div
           className={`mt-1 truncate text-xs ${isRoot ? "text-current opacity-90" : "text-gray-500"}`}
         >
-          {getPath(data.url)}
+          {isInteractive ? (
+            <span className="font-medium">{getNodeTypeLabel(data.nodeType)}</span>
+          ) : (
+            getPath(data.url)
+          )}
         </div>
 
         {/* Footer: Status badge and child count */}
         <div className="mt-2 flex items-center gap-2">
-          {/* Status code badge */}
-          <span
-            className={`rounded px-1.5 py-0.5 text-xs font-semibold ${
-              data.isBroken || data.statusCode >= 400
-                ? "bg-red-100 text-red-700"
-                : data.statusCode >= 300 && data.statusCode < 400
-                  ? "bg-orange-100 text-orange-700"
-                  : isRoot
-                    ? "bg-white/20 text-white"
-                    : "bg-purple-100 text-purple-700"
-            }`}
-          >
-            {data.statusCode}
-          </span>
+          {/* Status code badge (only for pages) */}
+          {!isInteractive && (
+            <span
+              className={`rounded px-1.5 py-0.5 text-xs font-semibold ${
+                data.isBroken || data.statusCode >= 400
+                  ? "bg-red-100 text-red-700"
+                  : data.statusCode >= 300 && data.statusCode < 400
+                    ? "bg-orange-100 text-orange-700"
+                    : isRoot
+                      ? "bg-white/20 text-white"
+                      : "bg-purple-100 text-purple-700"
+              }`}
+            >
+              {data.statusCode}
+            </span>
+          )}
 
           {/* Child count badge */}
           {data.childCount > 0 && (
             <span
               className={`rounded px-1.5 py-0.5 text-xs font-semibold ${isRoot ? "bg-white/20 text-white" : "bg-gray-100 text-gray-600"}`}
             >
-              {data.childCount} {data.childCount === 1 ? "page" : "pages"}
+              {data.childCount} {data.childCount === 1 ? "item" : "items"}
             </span>
           )}
         </div>

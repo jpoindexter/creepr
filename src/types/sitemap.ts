@@ -3,6 +3,9 @@ import { z } from "zod";
 // Link status types
 export type LinkStatus = "success" | "redirect" | "client-error" | "server-error" | "unknown";
 
+// Node types for different elements
+export type NodeType = "page" | "tab" | "modal" | "accordion" | "dropdown" | "button";
+
 // Crawled page schema
 export const CrawledPageSchema = z.object({
   url: z.string().url(),
@@ -26,6 +29,10 @@ export interface SitemapNode {
   children: SitemapNode[];
   parentId?: string;
   isBroken: boolean;
+  // New fields for interactive mode
+  nodeType: NodeType;
+  interactionType?: "click" | "hover" | "expand";
+  parentPageUrl?: string; // Original page URL for interactive elements
 }
 
 // Crawl result
@@ -43,6 +50,7 @@ export interface CrawlRequest {
   url: string;
   maxDepth?: number;
   maxPages?: number;
+  interactiveMode?: boolean; // New: enable interactive element detection
 }
 
 // Crawl status

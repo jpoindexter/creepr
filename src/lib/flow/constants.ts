@@ -37,6 +37,42 @@ export const SITEMAP_COLORS = {
     shadow: "0 2px 8px rgba(220, 38, 38, 0.2)",
   },
 
+  // Interactive element types
+  tab: {
+    background: "#DBEAFE", // Light blue
+    border: "#3B82F6", // Blue
+    text: "#1E40AF",
+    shadow: "0 2px 8px rgba(59, 130, 246, 0.2)",
+  },
+
+  modal: {
+    background: "#FEF3C7", // Light yellow
+    border: "#F59E0B", // Orange
+    text: "#92400E",
+    shadow: "0 2px 8px rgba(245, 158, 11, 0.2)",
+  },
+
+  accordion: {
+    background: "#D1FAE5", // Light green
+    border: "#10B981", // Green
+    text: "#065F46",
+    shadow: "0 2px 8px rgba(16, 185, 129, 0.2)",
+  },
+
+  dropdown: {
+    background: "#FFEDD5", // Light orange
+    border: "#F97316", // Orange
+    text: "#9A3412",
+    shadow: "0 2px 8px rgba(249, 115, 22, 0.2)",
+  },
+
+  button: {
+    background: "#F3F4F6", // Light gray
+    border: "#6B7280", // Gray
+    text: "#374151",
+    shadow: "0 2px 8px rgba(107, 114, 128, 0.2)",
+  },
+
   // Edge colors
   edge: {
     normal: "#CBD5E0", // Light gray
@@ -46,11 +82,11 @@ export const SITEMAP_COLORS = {
 } as const;
 
 export const SITEMAP_SPACING = {
-  // Layout spacing
-  rankSeparation: 100, // Vertical spacing between hierarchy levels
-  nodeSeparation: 80, // Horizontal spacing between sibling nodes
-  marginX: 40, // Left/right margins
-  marginY: 40, // Top/bottom margins
+  // Layout spacing - compact for interactive mode with many elements
+  rankSeparation: 60, // Vertical spacing between hierarchy levels (reduced from 100)
+  nodeSeparation: 40, // Horizontal spacing between sibling nodes (reduced from 80)
+  marginX: 20, // Left/right margins (reduced from 40)
+  marginY: 20, // Top/bottom margins (reduced from 40)
 
   // Node sizing
   rootNode: {

@@ -1,4 +1,5 @@
 import { Node, Edge } from "@xyflow/react";
+import { NodeType } from "./sitemap";
 
 // Custom node data
 export interface CustomNodeData extends Record<string, unknown> {
@@ -9,6 +10,7 @@ export interface CustomNodeData extends Record<string, unknown> {
   depth: number;
   title: string;
   childCount: number; // Number of child nodes
+  nodeType: NodeType; // Type of element (page, tab, modal, etc.)
 }
 
 // Custom node type

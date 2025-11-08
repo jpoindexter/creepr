@@ -2,6 +2,7 @@ import { PlaywrightCrawler } from "@crawlee/playwright";
 import { CrawlerOptions, PageInfo } from "./types";
 import { shouldCrawlUrl } from "./link-validator";
 import { normalizeUrl } from "../utils";
+import { detectInteractiveElements, groupElementsByType } from "./interactive-detector";
 
 export class SitemapCrawler {
   private visitedUrls = new Set<string>();
@@ -16,6 +17,7 @@ export class SitemapCrawler {
       maxPages: options.maxPages ?? 100,
       timeout: options.timeout ?? 30000,
       userAgent: options.userAgent ?? "SitemapCrawler/1.0",
+      interactiveMode: options.interactiveMode ?? false,
     };
   }
 
@@ -77,8 +79,34 @@ export class SitemapCrawler {
             }
           }
 
-          // Remove duplicates
-          const uniqueLinks = Array.from(new Set(links));
+          // Also check for Next.js Link components and buttons with routing
+          // Look for data-href, data-url, or role="link" elements
+          const extraNavElements = await page
+            .locator('[data-href], [data-url], [role="link"], button[data-testid*="nav"]')
+            .all();
+
+          for (const element of extraNavElements) {
+            try {
+              const dataHref =
+                (await element.getAttribute("data-href")) ||
+                (await element.getAttribute("data-url"));
+              if (dataHref) {
+                const absoluteUrl = new URL(dataHref, url);
+                absoluteUrl.hash = "";
+                let pathname = absoluteUrl.pathname;
+                if (pathname.endsWith("/") && pathname.length > 1) {
+                  pathname = pathname.slice(0, -1);
+                }
+                absoluteUrl.pathname = pathname;
+                links.push(normalizeUrl(absoluteUrl.toString()));
+              }
+            } catch {
+              continue;
+            }
+          }
+
+          // Remove duplicates (normalize URLs to ensure consistency)
+          const uniqueLinks = Array.from(new Set(links.map((link) => normalizeUrl(link))));
 
           // Store page info
           const pageInfo: PageInfo = {
@@ -88,10 +116,62 @@ export class SitemapCrawler {
             links: uniqueLinks,
             depth: request.userData.depth ?? 0,
             parentUrl: request.userData.parentUrl,
+            nodeType: "page", // This is a real page
           };
 
           pageInfos.push(pageInfo);
           visitedUrls.add(normalizeUrl(url));
+
+          // Interactive mode: Detect and catalog interactive elements
+          if (options.interactiveMode) {
+            try {
+              log.info(`Detecting interactive elements on ${url}...`);
+
+              const interactiveElements = await detectInteractiveElements(page);
+              const grouped = groupElementsByType(interactiveElements);
+
+              // Limit to 50 interactions per page for performance
+              const maxInteractions = 50;
+              let interactionCount = 0;
+
+              // Process each type of interactive element
+              for (const [type, elements] of Object.entries(grouped)) {
+                if (interactionCount >= maxInteractions) break;
+
+                for (const element of elements) {
+                  if (interactionCount >= maxInteractions) break;
+                  if (!element.isClickable) continue;
+
+                  try {
+                    // Create a PageInfo for this interactive element
+                    const interactiveInfo: PageInfo = {
+                      url: `${url}#${type}-${element.label.replace(/\s+/g, "-").toLowerCase()}`,
+                      title: element.label,
+                      statusCode: 200,
+                      links: [],
+                      depth: (request.userData.depth ?? 0) + 1,
+                      parentUrl: url,
+                      nodeType: element.type,
+                      interactionType: "click",
+                      parentPageUrl: url,
+                    };
+
+                    pageInfos.push(interactiveInfo);
+                    interactionCount++;
+
+                    log.info(`  Found ${type}: ${element.label}`);
+                  } catch (error) {
+                    log.error(`Error processing ${type} element:`, { error });
+                    continue;
+                  }
+                }
+              }
+
+              log.info(`Found ${interactionCount} interactive elements on ${url}`);
+            } catch (error) {
+              log.error(`Error detecting interactive elements:`, { error });
+            }
+          }
 
           // Enqueue links if within depth limit
           const currentDepth = request.userData.depth ?? 0;
