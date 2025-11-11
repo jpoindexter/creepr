@@ -1,17 +1,13 @@
 import { PageInfo } from "../crawler/types";
 import { SitemapNode } from "@/types/sitemap";
 import { getLinkStatus } from "../crawler/link-validator";
-import { isBrokenLink } from "../utils";
+import { isBrokenLink, normalizeUrl, getPathParent, getPathSegments } from "../utils";
 
 export function buildSitemapTree(pages: PageInfo[], rootUrl: string): SitemapNode {
-  // Create a map for quick lookup
-  const pageMap = new Map<string, PageInfo>();
-  pages.forEach((page) => pageMap.set(page.url, page));
-
-  // Create nodes map
+  // Create nodes map (includes both real pages and virtual folders)
   const nodesMap = new Map<string, SitemapNode>();
 
-  // Create all nodes first
+  // First, create nodes for all actual crawled pages
   pages.forEach((page) => {
     const node: SitemapNode = {
       id: page.url,
@@ -21,21 +17,18 @@ export function buildSitemapTree(pages: PageInfo[], rootUrl: string): SitemapNod
       status: getLinkStatus(page.statusCode),
       depth: page.depth,
       children: [],
-      parentId: page.parentUrl,
       isBroken: isBrokenLink(page.statusCode),
-      // New fields for interactive mode
       nodeType: page.nodeType || "page",
       interactionType: page.interactionType,
       parentPageUrl: page.parentPageUrl,
+      isVirtual: false,
     };
     nodesMap.set(page.url, node);
   });
 
-  // Find root node
+  // Find root node or create it
   let rootNode = nodesMap.get(rootUrl);
-
   if (!rootNode) {
-    // Create a default root if not found
     rootNode = {
       id: rootUrl,
       url: rootUrl,
@@ -46,35 +39,77 @@ export function buildSitemapTree(pages: PageInfo[], rootUrl: string): SitemapNod
       children: [],
       isBroken: false,
       nodeType: "page",
+      isVirtual: false,
     };
     nodesMap.set(rootUrl, rootNode);
   }
 
-  // Build parent-child relationships
+  // Build path-based hierarchy by creating virtual folder nodes for missing intermediates
+  const allUrls = Array.from(nodesMap.keys());
+
+  allUrls.forEach((url) => {
+    // Walk up the path hierarchy and create virtual folders if needed
+    let currentUrl = url;
+    let parentUrl = getPathParent(currentUrl);
+
+    while (parentUrl && !nodesMap.has(parentUrl)) {
+      // Create virtual folder node
+      const segments = getPathSegments(parentUrl);
+      const folderName = segments[segments.length - 1] || "/";
+
+      const virtualNode: SitemapNode = {
+        id: parentUrl,
+        url: parentUrl,
+        title: folderName,
+        statusCode: 200, // Virtual folders are "successful"
+        status: "success",
+        depth: segments.length, // Depth based on path segments
+        children: [],
+        isBroken: false,
+        nodeType: "page",
+        isVirtual: true, // Mark as virtual
+      };
+
+      nodesMap.set(parentUrl, virtualNode);
+
+      // Continue walking up
+      currentUrl = parentUrl;
+      parentUrl = getPathParent(currentUrl);
+    }
+  });
+
+  // Now build parent-child relationships based on path hierarchy
   nodesMap.forEach((node) => {
-    if (node.parentId && node.parentId !== node.id) {
-      const parent = nodesMap.get(node.parentId);
+    if (node.id === rootNode!.id) return; // Skip root
+
+    // Get path-based parent (not the link-based parent)
+    const parentUrl = getPathParent(node.id);
+
+    if (parentUrl) {
+      const parent = nodesMap.get(normalizeUrl(parentUrl));
       if (parent && !parent.children.find((child) => child.id === node.id)) {
         parent.children.push(node);
+        node.parentId = parent.id;
+
+        // Update depth to be parent depth + 1
+        node.depth = parent.depth + 1;
+      }
+    } else {
+      // No parent means this is a direct child of root
+      if (!rootNode!.children.find((child) => child.id === node.id)) {
+        rootNode!.children.push(node);
+        node.parentId = rootNode!.id;
+        node.depth = 1;
       }
     }
   });
 
-  // Collect orphaned nodes (nodes without parents that aren't the root)
-  const orphanedNodes: SitemapNode[] = [];
-  nodesMap.forEach((node) => {
-    if (node.id !== rootNode!.id && (!node.parentId || !nodesMap.has(node.parentId))) {
-      orphanedNodes.push(node);
-    }
-  });
-
-  // Attach orphaned nodes to root
-  orphanedNodes.forEach((orphan) => {
-    if (!rootNode!.children.find((child) => child.id === orphan.id)) {
-      rootNode!.children.push(orphan);
-      orphan.parentId = rootNode!.id;
-    }
-  });
+  // Update depths recursively to ensure consistency
+  function updateDepths(node: SitemapNode, depth: number) {
+    node.depth = depth;
+    node.children.forEach((child) => updateDepths(child, depth + 1));
+  }
+  updateDepths(rootNode, 0);
 
   return rootNode;
 }

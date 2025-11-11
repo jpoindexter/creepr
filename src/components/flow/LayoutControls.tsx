@@ -2,11 +2,19 @@
 
 import { useCallback } from "react";
 import { Panel, useReactFlow } from "@xyflow/react";
-import { ArrowDown, ArrowRight, RotateCw, Grid3X3 } from "lucide-react";
+import { ArrowDown, ArrowRight, RotateCw, Grid3X3, ChevronsDown, ChevronsUp } from "lucide-react";
 import { useAppStore, type LayoutDirection, type SpacingPreset } from "@/lib/store";
 import { relayoutFlow } from "@/lib/flow/layout-builder";
 import { LAYOUT_PRESETS } from "@/lib/flow/constants";
 import type { CustomNode, CustomEdge } from "@/types/flow";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export function LayoutControls() {
   const {
@@ -17,6 +25,8 @@ export function LayoutControls() {
     setSpacingPreset,
     setSnapToGrid,
     setFlowData,
+    collapseAll,
+    expandAll,
   } = useAppStore();
 
   const { getNodes, getEdges, fitView } = useReactFlow();
@@ -63,68 +73,90 @@ export function LayoutControls() {
     <Panel position="top-right" className="flex flex-col gap-2">
       {/* Direction Switcher */}
       <div className="flex rounded-lg border-2 border-purple-500 bg-white shadow-lg">
-        <button
+        <Button
+          variant={layoutDirection === "TB" ? "default" : "ghost"}
+          size="sm"
           onClick={() => handleDirectionChange("TB")}
-          className={`flex items-center gap-1.5 px-3 py-2 text-sm font-medium transition-colors ${
-            layoutDirection === "TB"
-              ? "bg-purple-100 text-purple-900"
-              : "text-gray-600 hover:bg-gray-50"
-          }`}
+          className="flex items-center gap-1.5 rounded-none rounded-l-md"
           title="Vertical Layout (Top to Bottom)"
         >
           <ArrowDown className="h-4 w-4" />
           Vertical
-        </button>
+        </Button>
         <div className="w-px bg-purple-200" />
-        <button
+        <Button
+          variant={layoutDirection === "LR" ? "default" : "ghost"}
+          size="sm"
           onClick={() => handleDirectionChange("LR")}
-          className={`flex items-center gap-1.5 px-3 py-2 text-sm font-medium transition-colors ${
-            layoutDirection === "LR"
-              ? "bg-purple-100 text-purple-900"
-              : "text-gray-600 hover:bg-gray-50"
-          }`}
+          className="flex items-center gap-1.5 rounded-none rounded-r-md"
           title="Horizontal Layout (Left to Right)"
         >
           <ArrowRight className="h-4 w-4" />
           Horizontal
-        </button>
+        </Button>
       </div>
 
       {/* Spacing Presets Dropdown */}
-      <select
-        value={spacingPreset}
-        onChange={(e) => handleSpacingChange(e.target.value as SpacingPreset)}
-        className="rounded-lg border-2 border-purple-500 bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-lg transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500"
-        title="Change node spacing"
-      >
-        <option value="compact">🔸 Compact</option>
-        <option value="balanced">🔹 Balanced</option>
-        <option value="spacious">🔷 Spacious</option>
-      </select>
+      <Select value={spacingPreset} onValueChange={(value) => handleSpacingChange(value as SpacingPreset)}>
+        <SelectTrigger className="rounded-lg border-2 border-purple-500 bg-white shadow-lg" title="Change node spacing">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="compact">🔸 Compact</SelectItem>
+          <SelectItem value="balanced">🔹 Balanced</SelectItem>
+          <SelectItem value="spacious">🔷 Spacious</SelectItem>
+        </SelectContent>
+      </Select>
 
       {/* Re-layout Button */}
-      <button
+      <Button
+        variant="outline"
+        size="sm"
         onClick={handleReLayout}
-        className="flex items-center justify-center gap-2 rounded-lg border-2 border-purple-500 bg-white px-3 py-2 text-sm font-medium text-purple-700 shadow-lg transition-all hover:bg-purple-50 hover:shadow-xl"
+        className="flex items-center justify-center gap-2 border-2 border-purple-500 text-purple-700 shadow-lg hover:bg-purple-50"
         title="Re-apply layout (useful after manual dragging)"
       >
         <RotateCw className="h-4 w-4" />
         Re-layout
-      </button>
+      </Button>
 
       {/* Snap to Grid Toggle */}
-      <button
+      <Button
+        variant={snapToGrid ? "default" : "outline"}
+        size="sm"
         onClick={() => setSnapToGrid(!snapToGrid)}
-        className={`flex items-center justify-center gap-2 rounded-lg border-2 px-3 py-2 text-sm font-medium shadow-lg transition-all ${
-          snapToGrid
-            ? "border-purple-500 bg-purple-100 text-purple-900"
-            : "border-gray-300 bg-white text-gray-600 hover:bg-gray-50"
-        }`}
+        className="flex items-center justify-center gap-2 shadow-lg"
         title={snapToGrid ? "Snap to Grid: ON" : "Snap to Grid: OFF"}
       >
         <Grid3X3 className="h-4 w-4" />
         {snapToGrid ? "Grid ON" : "Grid OFF"}
-      </button>
+      </Button>
+
+      {/* Divider */}
+      <div className="h-px bg-purple-200 my-1" />
+
+      {/* Collapse/Expand Controls */}
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={collapseAll}
+        className="flex items-center justify-center gap-2 border-2 border-purple-500 text-purple-700 shadow-lg hover:bg-purple-50"
+        title="Collapse all nodes with children"
+      >
+        <ChevronsUp className="h-4 w-4" />
+        Collapse All
+      </Button>
+
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={expandAll}
+        className="flex items-center justify-center gap-2 border-2 border-purple-500 text-purple-700 shadow-lg hover:bg-purple-50"
+        title="Expand all collapsed nodes"
+      >
+        <ChevronsDown className="h-4 w-4" />
+        Expand All
+      </Button>
     </Panel>
   );
 }

@@ -63,11 +63,19 @@ function getLayoutedElements(
     ranksep: options.rankSpacing,
     marginx: SITEMAP_SPACING.marginX,
     marginy: SITEMAP_SPACING.marginY,
+    align: "UL", // Align nodes to upper-left for cleaner tree structure
+    ranker: "network-simplex", // Use network-simplex for better vertical tree layouts (avoids wide horizontal spreads)
+    acyclicer: "greedy", // Handle any cycles in the graph
   });
 
-  // Add nodes to dagre
+  // Add nodes to dagre with explicit rank based on depth for proper hierarchical layout
   nodes.forEach((node) => {
-    dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight });
+    const depth = node.data.depth ?? 0;
+    dagreGraph.setNode(node.id, {
+      width: nodeWidth,
+      height: nodeHeight,
+      rank: depth, // Explicitly set rank based on depth to ensure hierarchical layout
+    });
   });
 
   // Add edges to dagre

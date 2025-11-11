@@ -11,6 +11,7 @@ export interface CustomNodeData extends Record<string, unknown> {
   title: string;
   childCount: number; // Number of child nodes
   nodeType: NodeType; // Type of element (page, tab, modal, etc.)
+  isVirtual?: boolean; // Whether this is a virtual folder (not actually crawled)
 }
 
 // Custom node type

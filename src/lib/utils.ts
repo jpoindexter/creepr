@@ -41,6 +41,61 @@ export function normalizeUrl(url: string): string {
   }
 }
 
+/**
+ * Extract the parent URL from a URL based on its path
+ * Example: http://localhost:3000/blog/posts/article -> http://localhost:3000/blog/posts
+ */
+export function getPathParent(url: string): string | null {
+  try {
+    const u = new URL(url);
+    const pathname = u.pathname;
+
+    // Root path has no parent
+    if (pathname === "/" || pathname === "") {
+      return null;
+    }
+
+    // Remove trailing slash if present
+    const cleanPath = pathname.endsWith("/") ? pathname.slice(0, -1) : pathname;
+
+    // Get parent path
+    const lastSlash = cleanPath.lastIndexOf("/");
+    if (lastSlash === -1 || lastSlash === 0) {
+      // Parent is root
+      u.pathname = "/";
+      return u.toString();
+    }
+
+    // Parent is the path up to the last slash
+    u.pathname = cleanPath.slice(0, lastSlash);
+    return u.toString();
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Split a URL path into segments
+ * Example: http://localhost:3000/blog/posts/article -> ['blog', 'posts', 'article']
+ */
+export function getPathSegments(url: string): string[] {
+  try {
+    const u = new URL(url);
+    const pathname = u.pathname;
+
+    // Remove leading and trailing slashes
+    const cleanPath = pathname.replace(/^\/|\/$/g, "");
+
+    if (!cleanPath) {
+      return [];
+    }
+
+    return cleanPath.split("/");
+  } catch {
+    return [];
+  }
+}
+
 // Status code utilities
 export function getStatusColor(statusCode: number): string {
   if (statusCode >= 200 && statusCode < 300) return "#10b981"; // Green

@@ -4,7 +4,8 @@ import { useState } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
-import { Loader2, Search } from "lucide-react";
+import { Slider } from "./ui/slider";
+import { Loader2, Search, XCircle } from "lucide-react";
 
 export interface CrawlConfig {
   url: string;
@@ -15,10 +16,11 @@ export interface CrawlConfig {
 
 interface CrawlFormProps {
   onSubmit: (config: CrawlConfig) => void;
+  onCancel?: () => void;
   isLoading: boolean;
 }
 
-export function CrawlForm({ onSubmit, isLoading }: CrawlFormProps) {
+export function CrawlForm({ onSubmit, onCancel, isLoading }: CrawlFormProps) {
   const [url, setUrl] = useState("http://localhost:3000");
   const [maxDepth, setMaxDepth] = useState(10);
   const [maxPages, setMaxPages] = useState(100);
@@ -68,31 +70,25 @@ export function CrawlForm({ onSubmit, isLoading }: CrawlFormProps) {
           {/* Mode Toggle */}
           <div className="space-y-2">
             <div className="text-sm font-medium">Crawl Mode</div>
-            <div className="flex gap-2">
-              <button
+            <div className="flex flex-col gap-2">
+              <Button
                 type="button"
+                variant={!interactiveMode ? "default" : "outline"}
                 onClick={() => setInteractiveMode(false)}
                 disabled={isLoading}
-                className={`flex-1 rounded-lg border-2 px-3 py-2 text-sm font-medium transition-colors ${
-                  !interactiveMode
-                    ? "border-purple-500 bg-purple-50 text-purple-900"
-                    : "border-gray-200 bg-white text-gray-600 hover:border-gray-300"
-                }`}
+                className="w-full"
               >
                 📄 Sitemap Mode
-              </button>
-              <button
+              </Button>
+              <Button
                 type="button"
+                variant={interactiveMode ? "default" : "outline"}
                 onClick={() => setInteractiveMode(true)}
                 disabled={isLoading}
-                className={`flex-1 rounded-lg border-2 px-3 py-2 text-sm font-medium transition-colors ${
-                  interactiveMode
-                    ? "border-purple-500 bg-purple-50 text-purple-900"
-                    : "border-gray-200 bg-white text-gray-600 hover:border-gray-300"
-                }`}
+                className="w-full"
               >
                 🔍 Interactive Mode
-              </button>
+              </Button>
             </div>
             <p className="text-xs text-muted-foreground">
               {interactiveMode
@@ -106,13 +102,13 @@ export function CrawlForm({ onSubmit, isLoading }: CrawlFormProps) {
             <label htmlFor="maxDepth" className="text-sm font-medium">
               Max Depth: {maxDepth}
             </label>
-            <input
+            <Slider
               id="maxDepth"
-              type="range"
-              min="1"
-              max="20"
-              value={maxDepth}
-              onChange={(e) => setMaxDepth(parseInt(e.target.value))}
+              min={1}
+              max={20}
+              step={1}
+              value={[maxDepth]}
+              onValueChange={(value) => setMaxDepth(value[0])}
               disabled={isLoading}
               className="w-full"
             />
@@ -124,14 +120,13 @@ export function CrawlForm({ onSubmit, isLoading }: CrawlFormProps) {
             <label htmlFor="maxPages" className="text-sm font-medium">
               Max Pages: {maxPages}
             </label>
-            <input
+            <Slider
               id="maxPages"
-              type="range"
-              min="10"
-              max="500"
-              step="10"
-              value={maxPages}
-              onChange={(e) => setMaxPages(parseInt(e.target.value))}
+              min={10}
+              max={500}
+              step={10}
+              value={[maxPages]}
+              onValueChange={(value) => setMaxPages(value[0])}
               disabled={isLoading}
               className="w-full"
             />
@@ -140,19 +135,30 @@ export function CrawlForm({ onSubmit, isLoading }: CrawlFormProps) {
             </p>
           </div>
 
-          <Button type="submit" disabled={isLoading || !url.trim()} className="w-full">
-            {isLoading ? (
-              <>
+          {!isLoading ? (
+            <Button type="submit" disabled={!url.trim()} className="w-full">
+              <Search className="h-4 w-4" />
+              Start Crawl
+            </Button>
+          ) : (
+            <div className="space-y-2">
+              <Button type="button" disabled className="w-full">
                 <Loader2 className="h-4 w-4 animate-spin" />
                 Crawling...
-              </>
-            ) : (
-              <>
-                <Search className="h-4 w-4" />
-                Start Crawl
-              </>
-            )}
-          </Button>
+              </Button>
+              {onCancel && (
+                <Button
+                  type="button"
+                  variant="destructive"
+                  onClick={onCancel}
+                  className="w-full"
+                >
+                  <XCircle className="h-4 w-4" />
+                  Cancel Crawl
+                </Button>
+              )}
+            </div>
+          )}
         </form>
       </CardContent>
     </Card>

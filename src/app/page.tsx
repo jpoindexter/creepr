@@ -1,10 +1,14 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { CrawlForm, CrawlConfig } from "@/components/CrawlForm";
 import { StatusPanel } from "@/components/StatusPanel";
+import { CrawlProgress } from "@/components/CrawlProgress";
 import { SitemapFlow } from "@/components/flow/SitemapFlow";
+import { ListView } from "@/components/views/ListView";
+import { ViewSwitcher, ViewMode } from "@/components/views/ViewSwitcher";
 import { useAppStore } from "@/lib/store";
+import { useCrawlProgress } from "@/hooks/useCrawlProgress";
 import { buildFlowData } from "@/lib/flow/layout-builder";
 import { CrawlResult } from "@/types/sitemap";
 import { AlertCircle, Loader2 } from "lucide-react";
@@ -19,10 +23,17 @@ export default function Home() {
     selectedNodeId,
     setCrawlStatus,
     setCrawlError,
+    setCrawlSessionId,
     setCrawlResult,
     setFlowData,
     setSelectedNode,
+    cancelCrawl,
   } = useAppStore();
+
+  const [viewMode, setViewMode] = useState<ViewMode>("tree");
+
+  // Poll for progress updates while crawling
+  useCrawlProgress();
 
   const handleCrawl = useCallback(
     async (config: CrawlConfig) => {
@@ -49,6 +60,12 @@ export default function Home() {
         }
 
         const result: CrawlResult = await response.json();
+
+        // Store session ID for cancellation
+        if (result.sessionId) {
+          setCrawlSessionId(result.sessionId);
+        }
+
         setCrawlResult(result);
 
         // Build flow data from the tree
@@ -86,6 +103,10 @@ export default function Home() {
             <h1 className="text-2xl font-bold text-gray-900">creepr</h1>
             <p className="mt-1 text-sm text-gray-500">Crawl and visualize your app structure</p>
           </div>
+          {/* View Switcher (only show when crawl completed) */}
+          {crawlStatus === "completed" && flowNodes.length > 0 && (
+            <ViewSwitcher currentView={viewMode} onViewChange={setViewMode} />
+          )}
         </div>
       </header>
 
@@ -94,7 +115,14 @@ export default function Home() {
         {/* Sidebar */}
         <aside className="w-96 overflow-y-auto border-r border-gray-200 bg-gray-50 p-6">
           <div className="space-y-6">
-            <CrawlForm onSubmit={handleCrawl} isLoading={crawlStatus === "crawling"} />
+            <CrawlForm
+              onSubmit={handleCrawl}
+              onCancel={cancelCrawl}
+              isLoading={crawlStatus === "crawling"}
+            />
+
+            {/* Progress bar - shown while crawling */}
+            {crawlStatus === "crawling" && <CrawlProgress />}
 
             {crawlStatus === "error" && crawlError && (
               <div className="rounded-lg border border-red-200 bg-red-50 p-4">
@@ -113,6 +141,8 @@ export default function Home() {
                 totalPages={crawlResult.totalPages}
                 brokenLinks={crawlResult.brokenLinks}
                 crawlTime={crawlResult.crawlTime}
+                failedUrls={crawlResult.failedUrls}
+                errorSummary={crawlResult.errorSummary}
                 selectedNode={
                   selectedNode
                     ? {
@@ -150,7 +180,13 @@ export default function Home() {
           )}
 
           {crawlStatus === "completed" && flowNodes.length > 0 && (
-            <SitemapFlow nodes={flowNodes} edges={flowEdges} onNodeClick={handleNodeClick} />
+            <>
+              {viewMode === "tree" ? (
+                <SitemapFlow nodes={flowNodes} edges={flowEdges} onNodeClick={handleNodeClick} />
+              ) : (
+                <ListView nodes={flowNodes} onNodeClick={handleNodeClick} />
+              )}
+            </>
           )}
 
           {crawlStatus === "error" && (

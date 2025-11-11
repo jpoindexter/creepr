@@ -1,13 +1,18 @@
 "use client";
 
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { CheckCircle, XCircle, Clock, FileText } from "lucide-react";
+import { Button } from "./ui/button";
+import { CheckCircle, XCircle, Clock, FileText, AlertTriangle, ChevronDown, ChevronUp } from "lucide-react";
 import { formatDuration } from "@/lib/utils";
+import { FailedUrl, ErrorSummary } from "@/types/sitemap";
 
 interface StatusPanelProps {
   totalPages: number;
   brokenLinks: number;
   crawlTime?: number;
+  failedUrls?: FailedUrl[];
+  errorSummary?: ErrorSummary;
   selectedNode?: {
     title: string;
     url: string;
@@ -19,9 +24,13 @@ export function StatusPanel({
   totalPages,
   brokenLinks,
   crawlTime,
+  failedUrls = [],
+  errorSummary,
   selectedNode,
 }: StatusPanelProps) {
+  const [showErrors, setShowErrors] = useState(false);
   const successPages = totalPages - brokenLinks;
+  const hasErrors = failedUrls.length > 0;
 
   return (
     <div className="space-y-4">
@@ -61,6 +70,68 @@ export function StatusPanel({
                 <span className="text-sm">Crawl Time</span>
               </div>
               <span className="font-mono text-sm">{formatDuration(crawlTime)}</span>
+            </div>
+          )}
+
+          {/* Error Summary */}
+          {hasErrors && errorSummary && (
+            <div className="border-t pt-3 space-y-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowErrors(!showErrors)}
+                className="w-full flex items-center justify-between p-2 hover:bg-red-50"
+              >
+                <div className="flex items-center gap-2">
+                  <AlertTriangle className="h-4 w-4 text-red-500" />
+                  <span className="text-sm font-medium">Errors ({failedUrls.length})</span>
+                </div>
+                {showErrors ? (
+                  <ChevronUp className="h-4 w-4" />
+                ) : (
+                  <ChevronDown className="h-4 w-4" />
+                )}
+              </Button>
+
+              {showErrors && (
+                <div className="space-y-2 text-xs">
+                  {/* Error type breakdown */}
+                  <div className="rounded bg-red-50 p-2 space-y-1">
+                    {errorSummary.timeout > 0 && (
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Timeouts:</span>
+                        <span className="font-semibold text-red-700">{errorSummary.timeout}</span>
+                      </div>
+                    )}
+                    {errorSummary.redirect > 0 && (
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Redirect loops:</span>
+                        <span className="font-semibold text-red-700">{errorSummary.redirect}</span>
+                      </div>
+                    )}
+                    {errorSummary.other > 0 && (
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Other:</span>
+                        <span className="font-semibold text-red-700">{errorSummary.other}</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Failed URLs list */}
+                  <div className="max-h-40 overflow-y-auto space-y-2">
+                    {failedUrls.map((failed, index) => (
+                      <div key={index} className="rounded border border-red-200 bg-white p-2">
+                        <div className="font-mono text-xs break-all text-red-700">
+                          {failed.url}
+                        </div>
+                        <div className="mt-1 text-xs text-gray-500">
+                          {failed.errorType} • {failed.retryCount} {failed.retryCount === 1 ? "retry" : "retries"}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </CardContent>

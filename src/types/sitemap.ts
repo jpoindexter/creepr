@@ -33,6 +33,23 @@ export interface SitemapNode {
   nodeType: NodeType;
   interactionType?: "click" | "hover" | "expand";
   parentPageUrl?: string; // Original page URL for interactive elements
+  // Virtual folder flag (for intermediate paths that weren't actually crawled)
+  isVirtual?: boolean;
+}
+
+// Failed URL info
+export interface FailedUrl {
+  url: string;
+  errorType: string;
+  errorMessage: string;
+  retryCount: number;
+}
+
+// Error summary
+export interface ErrorSummary {
+  timeout: number;
+  redirect: number;
+  other: number;
 }
 
 // Crawl result
@@ -43,6 +60,9 @@ export interface CrawlResult {
   brokenLinks: number;
   crawlTime: number; // in milliseconds
   tree: SitemapNode;
+  failedUrls?: FailedUrl[];
+  errorSummary?: ErrorSummary;
+  sessionId?: string;
 }
 
 // Crawl request
@@ -60,4 +80,14 @@ export interface CrawlStatus {
   message?: string;
   currentUrl?: string;
   pagesFound: number;
+}
+
+// Crawl progress (real-time statistics)
+export interface CrawlProgress {
+  requestsFinished: number;
+  requestsTotal: number;
+  requestsFailed: number;
+  requestsRetries?: number;
+  crawlerRuntimeMillis?: number;
+  currentUrl: string;
 }

@@ -82,22 +82,22 @@ export const SITEMAP_COLORS = {
 } as const;
 
 export const SITEMAP_SPACING = {
-  // Layout spacing - professional sitemap sizing for readability
-  rankSeparation: 120, // Vertical spacing between hierarchy levels
-  nodeSeparation: 100, // Horizontal spacing between sibling nodes
-  marginX: 60, // Left/right margins
-  marginY: 60, // Top/bottom margins
+  // Layout spacing - compact by default for better visualization
+  rankSeparation: 80, // Vertical spacing between hierarchy levels (reduced from 120)
+  nodeSeparation: 60, // Horizontal spacing between sibling nodes (reduced from 100)
+  marginX: 40, // Left/right margins (reduced from 60)
+  marginY: 40, // Top/bottom margins (reduced from 60)
 
-  // Node sizing - larger for better readability
+  // Node sizing - compact but readable
   rootNode: {
-    minWidth: 280,
-    padding: 24,
+    minWidth: 240,
+    padding: 20,
     borderRadius: 12,
     borderWidth: 3,
   },
   regularNode: {
-    minWidth: 220,
-    padding: 20,
+    minWidth: 200,
+    padding: 16,
     borderRadius: 10,
     borderWidth: 3,
   },
@@ -141,18 +141,18 @@ export const SITEMAP_EFFECTS = {
  */
 export const LAYOUT_PRESETS = {
   compact: {
-    nodeSpacing: 80,
-    rankSpacing: 100,
-    description: "Tight spacing for large sitemaps (100+ nodes)",
+    nodeSpacing: 40,
+    rankSpacing: 60,
+    description: "Ultra-tight spacing for large sitemaps (100+ nodes)",
   },
   balanced: {
-    nodeSpacing: 120,
-    rankSpacing: 150,
-    description: "Default balanced spacing",
+    nodeSpacing: 60,
+    rankSpacing: 80,
+    description: "Default balanced spacing (recommended)",
   },
   spacious: {
-    nodeSpacing: 180,
-    rankSpacing: 220,
+    nodeSpacing: 100,
+    rankSpacing: 120,
     description: "Generous spacing for presentations",
   },
 } as const;

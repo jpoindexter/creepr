@@ -100,8 +100,9 @@ export function createFlowNode(
       title: sitemapNode.title,
       childCount,
       nodeType: sitemapNode.nodeType,
+      isVirtual: sitemapNode.isVirtual,
     },
     style: getNodeStyle(sitemapNode),
-    className: `sitemap-node ${sitemapNode.isBroken ? "broken" : ""} ${isRoot ? "root" : ""}`,
+    className: `sitemap-node ${sitemapNode.isBroken ? "broken" : ""} ${isRoot ? "root" : ""} ${sitemapNode.isVirtual ? "virtual" : ""}`,
   };
 }

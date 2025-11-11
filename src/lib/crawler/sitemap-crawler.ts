@@ -7,11 +7,16 @@ import { detectInteractiveElements, groupElementsByType } from "./interactive-de
 export class SitemapCrawler {
   private visitedUrls = new Set<string>();
   private pageInfos: PageInfo[] = [];
+  private failedUrls: Array<{ url: string; errorType: string; errorMessage: string; retryCount: number }> = [];
   private baseUrl: string;
   private options: Required<CrawlerOptions>;
+  private signal?: AbortSignal;
+  private crawler?: PlaywrightCrawler;
+  private currentUrl?: string;
 
-  constructor(baseUrl: string, options: CrawlerOptions = {}) {
+  constructor(baseUrl: string, options: CrawlerOptions = {}, signal?: AbortSignal) {
     this.baseUrl = normalizeUrl(baseUrl);
+    this.signal = signal;
     this.options = {
       maxDepth: options.maxDepth ?? 10,
       maxPages: options.maxPages ?? 100,
@@ -24,30 +29,42 @@ export class SitemapCrawler {
   async crawl(): Promise<PageInfo[]> {
     this.visitedUrls.clear();
     this.pageInfos = [];
+    this.failedUrls = [];
 
     // Capture instance variables for use in callbacks
     const pageInfos = this.pageInfos;
     const visitedUrls = this.visitedUrls;
+    const failedUrls = this.failedUrls;
     const baseUrl = this.baseUrl;
     const options = this.options;
+    const signal = this.signal;
+    const self = this; // Capture 'this' for currentUrl tracking
 
-    const crawler = new PlaywrightCrawler({
+    this.crawler = new PlaywrightCrawler({
       maxRequestsPerCrawl: options.maxPages,
-      maxConcurrency: 5,
-      requestHandlerTimeoutSecs: options.timeout / 1000,
+      maxConcurrency: 15, // Increased from 5 to 15 for much faster crawling
+      requestHandlerTimeoutSecs: 10, // Reduced from 30s to 10s per page
+      navigationTimeoutSecs: 15, // Increased to 15s for slow pages
+      maxRequestRetries: 1, // Only retry once instead of 3 times
 
       async requestHandler({ request, page, enqueueLinks, log, response }) {
+        // Check if crawl was cancelled
+        if (signal?.aborted) {
+          throw new Error("Crawl cancelled by user");
+        }
+
         const url = normalizeUrl(request.url);
 
-        log.info(`Crawling: ${url}`);
+        // Track current URL for progress reporting
+        self.currentUrl = url;
 
         try {
           // Get status code from initial navigation (Crawlee already loaded the page!)
           const statusCode = response?.status() ?? 200;
 
-          // Wait for client-side JavaScript and network to settle
+          // Wait for network idle for Next.js apps (ensures client-side JS loads)
           await page.waitForLoadState("networkidle", {
-            timeout: options.timeout,
+            timeout: 8000, // 8 second timeout
           });
 
           // Get page title
@@ -205,23 +222,40 @@ export class SitemapCrawler {
       },
 
       failedRequestHandler({ request, log }, error) {
-        log.error(`Request ${request.url} failed:`, { error });
+        const url = normalizeUrl(request.url);
 
-        // Store failed request
+        // Track failed URL with error details
+        const errorMessage = error.message || "Unknown error";
+        let errorType = "other";
+
+        if (errorMessage.includes("timeout") || errorMessage.includes("Navigation timed out")) {
+          errorType = "timeout";
+        } else if (errorMessage.includes("REDIRECT") || errorMessage.includes("TOO_MANY_REDIRECTS")) {
+          errorType = "redirect";
+        }
+
+        failedUrls.push({
+          url,
+          errorType,
+          errorMessage: errorMessage.substring(0, 200), // Truncate long messages
+          retryCount: request.retryCount || 0,
+        });
+
+        // Store failed request as broken page
         pageInfos.push({
-          url: normalizeUrl(request.url),
+          url,
           title: "Failed",
           statusCode: 500,
           links: [],
           depth: request.userData.depth ?? 0,
           parentUrl: request.userData.parentUrl,
-          error: error.message,
+          error: errorMessage,
         });
       },
     });
 
     // Start crawling from the base URL
-    await crawler.run([
+    await this.crawler.run([
       {
         url: this.baseUrl,
         userData: { depth: 0 },
@@ -231,11 +265,52 @@ export class SitemapCrawler {
     return this.pageInfos;
   }
 
+  async stop(message?: string): Promise<void> {
+    if (this.crawler) {
+      await this.crawler.stop(message || "Crawl cancelled by user");
+    }
+  }
+
+  getCurrentUrl(): string | undefined {
+    return this.currentUrl;
+  }
+
+  getStats() {
+    if (!this.crawler) {
+      return null;
+    }
+    return this.crawler.stats.calculate();
+  }
+
   getVisitedUrls(): Set<string> {
     return new Set(Array.from(this.visitedUrls).map(normalizeUrl));
   }
 
   getPageCount(): number {
     return this.pageInfos.length;
+  }
+
+  getFailedUrls() {
+    return this.failedUrls;
+  }
+
+  getErrorSummary() {
+    const summary = {
+      timeout: 0,
+      redirect: 0,
+      other: 0,
+    };
+
+    this.failedUrls.forEach((failed) => {
+      if (failed.errorType === "timeout") {
+        summary.timeout++;
+      } else if (failed.errorType === "redirect") {
+        summary.redirect++;
+      } else {
+        summary.other++;
+      }
+    });
+
+    return summary;
   }
 }

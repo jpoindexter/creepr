@@ -11,6 +11,9 @@ const nextConfig = {
     "@crawlee/browser-pool",
     "@crawlee/browser",
   ],
+  // Empty turbopack config to silence Next.js 16 warning
+  // Turbopack works fine without custom config for this project
+  turbopack: {},
   webpack: (config, { isServer }) => {
     // Exclude puppeteer and other unnecessary browser automation tools
     config.resolve.alias = {
@@ -30,10 +33,6 @@ const nextConfig = {
     }
 
     return config;
-  },
-  eslint: {
-    // Allow production builds to successfully complete even if there are ESLint warnings
-    ignoreDuringBuilds: false,
   },
 };
 

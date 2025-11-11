@@ -40,18 +40,61 @@ export function SitemapFlow({
   edges: initialEdges,
   onNodeClick,
 }: SitemapFlowProps) {
-  const { snapToGrid } = useAppStore();
+  const { snapToGrid, collapsedNodes } = useAppStore();
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
-  // Update nodes and edges when props change
+  // Filter nodes and edges based on collapsed state
+  const getDescendants = useCallback((nodeId: string, allEdges: CustomEdge[]): Set<string> => {
+    const descendants = new Set<string>();
+    const toProcess = [nodeId];
+
+    while (toProcess.length > 0) {
+      const currentId = toProcess.pop()!;
+      const children = allEdges
+        .filter(e => e.source === currentId)
+        .map(e => e.target);
+
+      children.forEach(childId => {
+        if (!descendants.has(childId)) {
+          descendants.add(childId);
+          toProcess.push(childId);
+        }
+      });
+    }
+
+    return descendants;
+  }, []);
+
+  const filteredData = useMemo(() => {
+    if (collapsedNodes.size === 0) {
+      return { nodes: initialNodes, edges: initialEdges };
+    }
+
+    // Find all descendants of collapsed nodes
+    const hiddenNodeIds = new Set<string>();
+    collapsedNodes.forEach(collapsedId => {
+      const descendants = getDescendants(collapsedId, initialEdges);
+      descendants.forEach(id => hiddenNodeIds.add(id));
+    });
+
+    // Filter nodes and edges
+    const visibleNodes = initialNodes.filter(node => !hiddenNodeIds.has(node.id));
+    const visibleEdges = initialEdges.filter(
+      edge => !hiddenNodeIds.has(edge.source) && !hiddenNodeIds.has(edge.target)
+    );
+
+    return { nodes: visibleNodes, edges: visibleEdges };
+  }, [initialNodes, initialEdges, collapsedNodes, getDescendants]);
+
+  // Update nodes and edges when filtered data changes
   useMemo(() => {
-    setNodes(initialNodes);
-  }, [initialNodes, setNodes]);
+    setNodes(filteredData.nodes);
+  }, [filteredData.nodes, setNodes]);
 
   useMemo(() => {
-    setEdges(initialEdges);
-  }, [initialEdges, setEdges]);
+    setEdges(filteredData.edges);
+  }, [filteredData.edges, setEdges]);
 
   const handleNodeClick = useCallback(
     (_event: React.MouseEvent, node: CustomNodeType) => {

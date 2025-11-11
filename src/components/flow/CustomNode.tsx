@@ -4,10 +4,13 @@ import { memo } from "react";
 import { Handle, Position } from "@xyflow/react";
 import { CustomNodeData } from "@/types/flow";
 import { NodeType } from "@/types/sitemap";
+import { ChevronDown, ChevronRight } from "lucide-react";
+import { useAppStore } from "@/lib/store";
 
 interface CustomNodeProps {
   data: CustomNodeData;
   selected?: boolean;
+  id: string;
 }
 
 /**
@@ -59,9 +62,14 @@ function getNodeTypeLabel(nodeType: NodeType): string {
  * Styling is controlled by node-factory.ts
  * This component focuses on content layout only
  */
-function CustomNodeComponent({ data, selected }: CustomNodeProps) {
+function CustomNodeComponent({ data, selected, id }: CustomNodeProps) {
   const isRoot = data.depth === 0 && data.nodeType === "page";
   const isInteractive = data.nodeType !== "page";
+  const hasChildren = data.childCount > 0;
+  const isVirtual = data.isVirtual === true;
+
+  const { collapsedNodes, toggleNodeCollapse } = useAppStore();
+  const isCollapsed = collapsedNodes.has(id);
 
   // Extract path from URL for display
   const getPath = (url: string) => {
@@ -71,6 +79,11 @@ function CustomNodeComponent({ data, selected }: CustomNodeProps) {
     } catch {
       return url;
     }
+  };
+
+  const handleToggleCollapse = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    toggleNodeCollapse(id);
   };
 
   return (
@@ -86,10 +99,26 @@ function CustomNodeComponent({ data, selected }: CustomNodeProps) {
 
       {/* Node content - two-part design */}
       <div className="flex flex-col">
-        {/* Header: Icon + Title */}
+        {/* Header: Icon + Title + Collapse button */}
         <div className="flex items-center gap-2">
-          <span className="text-base leading-none">{getNodeIcon(data.nodeType)}</span>
-          <div className={`flex-1 truncate ${isRoot ? "text-current" : "text-gray-900"}`}>
+          {/* Collapse/Expand button (only if has children) */}
+          {hasChildren && (
+            <button
+              onClick={handleToggleCollapse}
+              className={`flex-shrink-0 transition-colors hover:bg-gray-100 rounded p-0.5 ${isRoot ? "text-white hover:bg-white/20" : "text-gray-600"}`}
+              title={isCollapsed ? "Expand children" : "Collapse children"}
+            >
+              {isCollapsed ? (
+                <ChevronRight className="h-3.5 w-3.5" />
+              ) : (
+                <ChevronDown className="h-3.5 w-3.5" />
+              )}
+            </button>
+          )}
+          <span className="text-base leading-none">
+            {isVirtual ? "📁" : getNodeIcon(data.nodeType)}
+          </span>
+          <div className={`flex-1 truncate ${isRoot ? "text-current" : isVirtual ? "text-gray-600 italic" : "text-gray-900"}`}>
             {data.title}
           </div>
         </div>
@@ -127,9 +156,9 @@ function CustomNodeComponent({ data, selected }: CustomNodeProps) {
           {/* Child count badge */}
           {data.childCount > 0 && (
             <span
-              className={`rounded px-1.5 py-0.5 text-xs font-semibold ${isRoot ? "bg-white/20 text-white" : "bg-gray-100 text-gray-600"}`}
+              className={`rounded px-1.5 py-0.5 text-xs font-semibold ${isRoot ? "bg-white/20 text-white" : isCollapsed ? "bg-orange-100 text-orange-700" : "bg-gray-100 text-gray-600"}`}
             >
-              {data.childCount} {data.childCount === 1 ? "item" : "items"}
+              {isCollapsed ? `${data.childCount} hidden` : `${data.childCount} ${data.childCount === 1 ? "item" : "items"}`}
             </span>
           )}
         </div>

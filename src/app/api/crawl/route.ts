@@ -3,6 +3,11 @@ import { SitemapCrawler } from "@/lib/crawler/sitemap-crawler";
 import { buildSitemapTree, getTreeStats } from "@/lib/flow/tree-builder";
 import { CrawlRequest, CrawlResult } from "@/types/sitemap";
 import { isValidUrl } from "@/lib/utils";
+import { randomUUID } from "crypto";
+
+// Store active crawlers with their abort controllers
+// Exported so the cancel endpoint can access it
+export const activeCrawls = new Map<string, { crawler: SitemapCrawler; controller: AbortController }>();
 
 export async function POST(request: NextRequest) {
   try {
@@ -22,47 +27,72 @@ export async function POST(request: NextRequest) {
     const maxPages = body.maxPages ?? 100;
     const interactiveMode = body.interactiveMode ?? false;
 
+    // Generate session ID for this crawl
+    const sessionId = randomUUID();
+
     console.info(
-      `Starting crawl for ${body.url} (${interactiveMode ? "Interactive Mode" : "Sitemap Mode"})`
+      `Starting crawl ${sessionId} for ${body.url} (${interactiveMode ? "Interactive Mode" : "Sitemap Mode"})`
     );
     const startTime = Date.now();
 
-    // Create and run crawler
-    const crawler = new SitemapCrawler(body.url, {
-      maxDepth,
-      maxPages,
-      timeout: 30000,
-      interactiveMode,
-    });
+    // Create abort controller for this crawl
+    const controller = new AbortController();
 
-    const pages = await crawler.crawl();
+    // Create and run crawler with abort signal
+    const crawler = new SitemapCrawler(
+      body.url,
+      {
+        maxDepth,
+        maxPages,
+        timeout: 30000,
+        interactiveMode,
+      },
+      controller.signal
+    );
 
-    console.info(`Crawled ${pages.length} pages in ${Date.now() - startTime}ms`);
+    // Store in active crawls map
+    activeCrawls.set(sessionId, { crawler, controller });
 
-    // Build tree structure
-    const tree = buildSitemapTree(pages, body.url);
-    const stats = getTreeStats(tree);
+    try {
+      const pages = await crawler.crawl();
 
-    const crawlTime = Date.now() - startTime;
+      console.info(`Crawled ${pages.length} pages in ${Date.now() - startTime}ms`);
 
-    // Prepare response
-    const result: CrawlResult = {
-      rootUrl: body.url,
-      pages: pages.map((page) => ({
-        url: page.url,
-        title: page.title,
-        statusCode: page.statusCode,
-        links: page.links,
-        depth: page.depth,
-        parentUrl: page.parentUrl,
-      })),
-      totalPages: stats.totalPages,
-      brokenLinks: stats.brokenLinks,
-      crawlTime,
-      tree,
-    };
+      // Build tree structure
+      const tree = buildSitemapTree(pages, body.url);
+      const stats = getTreeStats(tree);
 
-    return NextResponse.json(result);
+      const crawlTime = Date.now() - startTime;
+
+      // Get error information
+      const failedUrls = crawler.getFailedUrls();
+      const errorSummary = crawler.getErrorSummary();
+
+      // Prepare response
+      const result: CrawlResult = {
+        rootUrl: body.url,
+        pages: pages.map((page) => ({
+          url: page.url,
+          title: page.title,
+          statusCode: page.statusCode,
+          links: page.links,
+          depth: page.depth,
+          parentUrl: page.parentUrl,
+        })),
+        totalPages: stats.totalPages,
+        brokenLinks: stats.brokenLinks,
+        crawlTime,
+        tree,
+        failedUrls,
+        errorSummary,
+        sessionId,
+      };
+
+      return NextResponse.json(result);
+    } finally {
+      // Clean up: remove from active crawls
+      activeCrawls.delete(sessionId);
+    }
   } catch (error) {
     console.error("Crawl error:", error);
 
