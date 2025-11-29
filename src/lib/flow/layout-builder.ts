@@ -55,7 +55,8 @@ function getLayoutedElements(
 
   // Use professional sitemap node dimensions
   const nodeWidth = SITEMAP_SPACING.regularNode.minWidth;
-  const nodeHeight = 110; // Fixed height for consistent layout (larger for readability)
+  // Remove fixed height - let nodes auto-size based on content for better adaptability
+  const nodeHeight = 120; // Approximate height for layout, but nodes will auto-size
 
   dagreGraph.setGraph({
     rankdir: options.direction,

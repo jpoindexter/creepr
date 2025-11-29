@@ -58,27 +58,7 @@
   }
 }
 
-/* React Flow custom styles */
-.react-flow__node-custom {
-  border-radius: 8px;
-  padding: 12px 16px;
-  border: 2px solid #e5e7eb;
-  background: white;
-  font-size: 14px;
-  min-width: 150px;
-}
-
-.react-flow__node-custom.broken {
-  border-color: #ef4444;
-  background: #fee2e2;
-}
-
-.react-flow__node-custom.root {
-  border-color: #3b82f6;
-  background: #dbeafe;
-  font-weight: 600;
-}
-
+/* React Flow custom edge styles */
 .react-flow__edge-path.broken {
   stroke: #ef4444;
   stroke-width: 2;

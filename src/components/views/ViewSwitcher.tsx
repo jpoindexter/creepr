@@ -2,8 +2,7 @@
 
 import { Network, List } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
-export type ViewMode = "tree" | "list";
+import { ViewMode } from "@/lib/store";
 
 interface ViewSwitcherProps {
   currentView: ViewMode;

@@ -1,19 +1,21 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { Suspense, useCallback, useEffect } from "react";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { CrawlForm, CrawlConfig } from "@/components/CrawlForm";
 import { StatusPanel } from "@/components/StatusPanel";
 import { CrawlProgress } from "@/components/CrawlProgress";
 import { SitemapFlow } from "@/components/flow/SitemapFlow";
 import { ListView } from "@/components/views/ListView";
-import { ViewSwitcher, ViewMode } from "@/components/views/ViewSwitcher";
-import { useAppStore } from "@/lib/store";
+import { ViewSwitcher } from "@/components/views/ViewSwitcher";
+import { useAppStore, ViewMode } from "@/lib/store";
 import { useCrawlProgress } from "@/hooks/useCrawlProgress";
-import { buildFlowData } from "@/lib/flow/layout-builder";
-import { CrawlResult } from "@/types/sitemap";
 import { AlertCircle, Loader2 } from "lucide-react";
 
-export default function Home() {
+function HomeContent() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
   const {
     crawlStatus,
     crawlError,
@@ -21,22 +23,43 @@ export default function Home() {
     flowNodes,
     flowEdges,
     selectedNodeId,
+    viewMode,
     setCrawlStatus,
     setCrawlError,
     setCrawlSessionId,
-    setCrawlResult,
-    setFlowData,
     setSelectedNode,
+    setViewMode,
     cancelCrawl,
+    reset,
   } = useAppStore();
-
-  const [viewMode, setViewMode] = useState<ViewMode>("tree");
 
   // Poll for progress updates while crawling
   useCrawlProgress();
 
+  // Handle URL parameter for view mode on initial load
+  useEffect(() => {
+    const viewParam = searchParams.get("view");
+    if (viewParam === "list" || viewParam === "tree") {
+      setViewMode(viewParam as ViewMode);
+    }
+  }, [searchParams, setViewMode]);
+
+  // Handler for view mode changes that updates both store and URL
+  const handleViewModeChange = useCallback(
+    (mode: ViewMode) => {
+      setViewMode(mode);
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("view", mode);
+      router.push(`${pathname}?${params.toString()}`, { scroll: false });
+    },
+    [setViewMode, router, pathname, searchParams]
+  );
+
   const handleCrawl = useCallback(
     async (config: CrawlConfig) => {
+      // Clear all previous crawl state before starting new crawl
+      reset();
+
       setCrawlStatus("crawling");
       setCrawlError(null);
 
@@ -59,30 +82,19 @@ export default function Home() {
           throw new Error(error.error || "Failed to crawl");
         }
 
-        const result: CrawlResult = await response.json();
+        // API now returns 202 Accepted with sessionId
+        const { sessionId } = await response.json();
 
-        // Store session ID for cancellation
-        if (result.sessionId) {
-          setCrawlSessionId(result.sessionId);
-        }
+        // Store session ID immediately for cancellation
+        setCrawlSessionId(sessionId);
 
-        setCrawlResult(result);
-
-        // Build flow data from the tree
-        // Use balanced spacing for readability
-        const flowData = buildFlowData(result.tree, {
-          direction: "TB",
-          nodeSpacing: 120,
-          rankSpacing: 150,
-        });
-
-        setFlowData(flowData.nodes, flowData.edges);
+        // Progress hook will poll for updates and fetch results when complete
       } catch (error) {
         setCrawlStatus("error");
         setCrawlError(error instanceof Error ? error.message : "Unknown error");
       }
     },
-    [setCrawlStatus, setCrawlError, setCrawlResult, setFlowData]
+    [setCrawlStatus, setCrawlError, setCrawlSessionId, reset]
   );
 
   const handleNodeClick = useCallback(
@@ -105,7 +117,7 @@ export default function Home() {
           </div>
           {/* View Switcher (only show when crawl completed) */}
           {crawlStatus === "completed" && flowNodes.length > 0 && (
-            <ViewSwitcher currentView={viewMode} onViewChange={setViewMode} />
+            <ViewSwitcher currentView={viewMode} onViewChange={handleViewModeChange} />
           )}
         </div>
       </header>
@@ -201,5 +213,18 @@ export default function Home() {
         </main>
       </div>
     </div>
+  );
+}
+
+// Wrap with Suspense for useSearchParams
+export default function Home() {
+  return (
+    <Suspense fallback={
+      <div className="flex h-screen items-center justify-center">
+        <Loader2 className="h-12 w-12 animate-spin text-purple-500" />
+      </div>
+    }>
+      <HomeContent />
+    </Suspense>
   );
 }

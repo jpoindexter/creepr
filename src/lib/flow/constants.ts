@@ -10,7 +10,7 @@ export const SITEMAP_COLORS = {
       "linear-gradient(135deg, oklch(70.28% 0.1753 295.36) 0%, oklch(60% 0.18 295.36) 100%)",
     border: "oklch(60% 0.18 295.36)",
     text: "#FFFFFF",
-    shadow: "0 4px 12px rgba(153, 69, 255, 0.3)",
+    shadow: "0 8px 24px rgba(153, 69, 255, 0.25), 0 4px 8px rgba(0, 0, 0, 0.1)",
   },
 
   // Success status (200-299)
@@ -18,7 +18,7 @@ export const SITEMAP_COLORS = {
     background: "#FFFFFF",
     border: "oklch(70.28% 0.1753 295.36)", // Purple theme
     text: "#1A202C",
-    shadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+    shadow: "0 4px 16px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.06)",
   },
 
   // Redirect status (300-399)
@@ -82,23 +82,23 @@ export const SITEMAP_COLORS = {
 } as const;
 
 export const SITEMAP_SPACING = {
-  // Layout spacing - compact by default for better visualization
-  rankSeparation: 80, // Vertical spacing between hierarchy levels (reduced from 120)
-  nodeSeparation: 60, // Horizontal spacing between sibling nodes (reduced from 100)
-  marginX: 40, // Left/right margins (reduced from 60)
-  marginY: 40, // Top/bottom margins (reduced from 60)
+  // Layout spacing - generous spacing for professional appearance and readability
+  rankSeparation: 150, // Vertical spacing between hierarchy levels
+  nodeSeparation: 120, // Horizontal spacing between sibling nodes
+  marginX: 40, // Left/right margins
+  marginY: 40, // Top/bottom margins
 
-  // Node sizing - compact but readable
+  // Node sizing - spacious and readable like professional sitemap tools
   rootNode: {
-    minWidth: 240,
-    padding: 20,
-    borderRadius: 12,
+    minWidth: 320,
+    padding: 24,
+    borderRadius: 16,
     borderWidth: 3,
   },
   regularNode: {
-    minWidth: 200,
-    padding: 16,
-    borderRadius: 10,
+    minWidth: 280,
+    padding: 24,
+    borderRadius: 14,
     borderWidth: 3,
   },
 
@@ -108,15 +108,15 @@ export const SITEMAP_SPACING = {
 
 export const SITEMAP_TYPOGRAPHY = {
   root: {
-    titleSize: "18px",
-    titleWeight: "600",
-    urlSize: "14px",
+    titleSize: "20px",
+    titleWeight: "700",
+    urlSize: "15px",
     urlWeight: "400",
   },
   regular: {
-    titleSize: "15px",
-    titleWeight: "500",
-    urlSize: "13px",
+    titleSize: "17px",
+    titleWeight: "600",
+    urlSize: "14px",
     urlWeight: "400",
   },
   badge: {
@@ -141,18 +141,18 @@ export const SITEMAP_EFFECTS = {
  */
 export const LAYOUT_PRESETS = {
   compact: {
-    nodeSpacing: 40,
-    rankSpacing: 60,
-    description: "Ultra-tight spacing for large sitemaps (100+ nodes)",
+    nodeSpacing: 80,
+    rankSpacing: 100,
+    description: "Tighter spacing for large sitemaps (100+ nodes)",
   },
   balanced: {
-    nodeSpacing: 60,
-    rankSpacing: 80,
-    description: "Default balanced spacing (recommended)",
+    nodeSpacing: 120,
+    rankSpacing: 150,
+    description: "Default professional spacing (recommended)",
   },
   spacious: {
-    nodeSpacing: 100,
-    rankSpacing: 120,
-    description: "Generous spacing for presentations",
+    nodeSpacing: 160,
+    rankSpacing: 200,
+    description: "Maximum spacing for presentations",
   },
 } as const;

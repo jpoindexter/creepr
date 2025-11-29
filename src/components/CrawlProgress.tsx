@@ -7,11 +7,17 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 export function CrawlProgress() {
   const { crawlProgress } = useAppStore();
 
-  if (!crawlProgress) return null;
+  // Show immediately with 0% if no progress data yet
+  const progress = crawlProgress ?? {
+    requestsTotal: 0,
+    requestsFinished: 0,
+    requestsFailed: 0,
+    currentUrl: "",
+  };
 
   const percentage =
-    crawlProgress.requestsTotal > 0
-      ? Math.round((crawlProgress.requestsFinished / crawlProgress.requestsTotal) * 100)
+    progress.requestsTotal > 0
+      ? Math.round((progress.requestsFinished / progress.requestsTotal) * 100)
       : 0;
 
   return (
@@ -37,19 +43,19 @@ export function CrawlProgress() {
         {/* Stats */}
         <div className="flex items-center justify-between text-xs text-muted-foreground">
           <span>
-            {crawlProgress.requestsFinished} / {crawlProgress.requestsTotal} pages
+            {progress.requestsFinished} / {progress.requestsTotal} pages
           </span>
-          {crawlProgress.requestsFailed > 0 && (
-            <span className="text-red-500">{crawlProgress.requestsFailed} failed</span>
+          {progress.requestsFailed > 0 && (
+            <span className="text-red-500">{progress.requestsFailed} failed</span>
           )}
         </div>
 
         {/* Current URL */}
-        {crawlProgress.currentUrl && (
+        {progress.currentUrl && (
           <div className="flex items-center gap-2 rounded border border-gray-200 bg-gray-50 p-2">
             <Loader2 className="h-3 w-3 flex-shrink-0 animate-spin text-blue-500" />
             <span className="truncate font-mono text-xs text-muted-foreground">
-              {crawlProgress.currentUrl}
+              {progress.currentUrl}
             </span>
           </div>
         )}

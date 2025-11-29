@@ -6,7 +6,49 @@ export type LinkStatus = "success" | "redirect" | "client-error" | "server-error
 // Node types for different elements
 export type NodeType = "page" | "tab" | "modal" | "accordion" | "dropdown" | "button";
 
-// Crawled page schema
+// Meta tag information
+export interface MetaInfo {
+  description?: string;
+  ogTitle?: string;
+  ogDescription?: string;
+  ogImage?: string;
+  ogUrl?: string;
+  canonical?: string;
+  robots?: string;
+  keywords?: string;
+}
+
+// Heading information
+export interface HeadingInfo {
+  tag: string;
+  text: string;
+}
+
+// Image information
+export interface ImageInfo {
+  src: string;
+  alt?: string;
+  hasAlt: boolean;
+  loading?: string;
+}
+
+// Link with anchor text
+export interface LinkInfo {
+  url: string;
+  anchorText: string;
+  title?: string;
+}
+
+// Content metrics
+export interface ContentMetrics {
+  wordCount: number;
+  scriptCount: number;
+  stylesheetCount: number;
+  imageCount: number;
+  formCount: number;
+}
+
+// Crawled page schema (basic validation)
 export const CrawledPageSchema = z.object({
   url: z.string().url(),
   title: z.string().default("Untitled"),
@@ -16,7 +58,21 @@ export const CrawledPageSchema = z.object({
   parentUrl: z.string().url().optional(),
 });
 
-export type CrawledPage = z.infer<typeof CrawledPageSchema>;
+// Extended crawled page with SEO/AI data
+export interface CrawledPage {
+  url: string;
+  title: string;
+  statusCode: number;
+  links: string[];
+  depth: number;
+  parentUrl?: string;
+  // Enhanced SEO/AI fields
+  meta?: MetaInfo;
+  headings?: HeadingInfo[];
+  images?: ImageInfo[];
+  linksWithText?: LinkInfo[];
+  contentMetrics?: ContentMetrics;
+}
 
 // Sitemap node (hierarchical structure)
 export interface SitemapNode {
@@ -63,6 +119,7 @@ export interface CrawlResult {
   failedUrls?: FailedUrl[];
   errorSummary?: ErrorSummary;
   sessionId?: string;
+  error?: string; // Error message if crawl failed
 }
 
 // Crawl request
@@ -84,6 +141,7 @@ export interface CrawlStatus {
 
 // Crawl progress (real-time statistics)
 export interface CrawlProgress {
+  isComplete?: boolean; // Indicates crawl has finished
   requestsFinished: number;
   requestsTotal: number;
   requestsFailed: number;

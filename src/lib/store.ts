@@ -4,6 +4,7 @@ import { CustomNode, CustomEdge } from "@/types/flow";
 
 export type LayoutDirection = "TB" | "LR" | "BT" | "RL";
 export type SpacingPreset = "compact" | "balanced" | "spacious";
+export type ViewMode = "tree" | "list";
 
 interface AppState {
   // Crawl state
@@ -24,6 +25,9 @@ interface AppState {
   // Selected node
   selectedNodeId: string | null;
 
+  // View mode
+  viewMode: ViewMode;
+
   // Layout settings
   layoutDirection: LayoutDirection;
   spacingPreset: SpacingPreset;
@@ -40,6 +44,7 @@ interface AppState {
   setCrawlProgress: (progress: CrawlProgress | null) => void;
   setFlowData: (nodes: CustomNode[], edges: CustomEdge[]) => void;
   setSelectedNode: (nodeId: string | null) => void;
+  setViewMode: (mode: ViewMode) => void;
   setLayoutDirection: (direction: LayoutDirection) => void;
   setSpacingPreset: (preset: SpacingPreset) => void;
   setSnapToGrid: (enabled: boolean) => void;
@@ -49,6 +54,13 @@ interface AppState {
   cancelCrawl: () => Promise<void>;
   reset: () => void;
 }
+
+// Helper to get initial view mode from localStorage
+const getInitialViewMode = (): ViewMode => {
+  if (typeof window === "undefined") return "list"; // SSR default
+  const stored = localStorage.getItem("creepr-view-mode");
+  return (stored === "tree" || stored === "list") ? stored : "list";
+};
 
 export const useAppStore = create<AppState>((set, get) => ({
   // Initial state
@@ -60,6 +72,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   flowNodes: [],
   flowEdges: [],
   selectedNodeId: null,
+  viewMode: getInitialViewMode(),
   layoutDirection: "TB",
   spacingPreset: "balanced",
   snapToGrid: false,
@@ -79,6 +92,13 @@ export const useAppStore = create<AppState>((set, get) => ({
   setFlowData: (nodes, edges) => set({ flowNodes: nodes, flowEdges: edges }),
 
   setSelectedNode: (nodeId) => set({ selectedNodeId: nodeId }),
+
+  setViewMode: (mode) => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("creepr-view-mode", mode);
+    }
+    set({ viewMode: mode });
+  },
 
   setLayoutDirection: (direction) => set({ layoutDirection: direction }),
 
@@ -110,13 +130,19 @@ export const useAppStore = create<AppState>((set, get) => ({
 
   cancelCrawl: async () => {
     const { crawlSessionId } = get();
-    if (!crawlSessionId) return;
+
+    if (!crawlSessionId) {
+      return;
+    }
 
     try {
-      await fetch(`/api/crawl/${crawlSessionId}`, { method: "DELETE" });
-      set({ crawlStatus: "cancelled", crawlSessionId: null });
-    } catch (error) {
-      console.error("Failed to cancel crawl:", error);
+      const response = await fetch(`/api/crawl/${crawlSessionId}`, { method: "DELETE" });
+
+      if (response.ok) {
+        set({ crawlStatus: "cancelled", crawlSessionId: null });
+      }
+    } catch {
+      // Ignore cancel errors
     }
   },
 
