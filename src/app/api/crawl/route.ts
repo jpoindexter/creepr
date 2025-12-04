@@ -87,6 +87,8 @@ export async function POST(request: NextRequest) {
             images: page.images,
             linksWithText: page.linksWithText,
             contentMetrics: page.contentMetrics,
+            // Full style extraction for design system analysis
+            styles: page.styles,
           })),
           totalPages: stats.totalPages,
           brokenLinks: stats.brokenLinks,

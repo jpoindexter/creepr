@@ -1,10 +1,18 @@
 import { create } from "zustand";
 import { CrawlResult, CrawlProgress } from "@/types/sitemap";
 import { CustomNode, CustomEdge } from "@/types/flow";
+import { FullAuditReport } from "@/lib/source-auditor";
+import { AIAuditReport } from "@/lib/ai-auditor";
+import { DesignSystemAuditReport } from "@/lib/design-system-auditor";
 
 export type LayoutDirection = "TB" | "LR" | "BT" | "RL";
 export type SpacingPreset = "compact" | "balanced" | "spacious";
 export type ViewMode = "tree" | "list";
+
+export interface AuditProgress {
+  stage: string;
+  percent: number;
+}
 
 interface AppState {
   // Crawl state
@@ -17,6 +25,13 @@ interface AppState {
 
   // Progress tracking
   crawlProgress: CrawlProgress | null;
+
+  // Audit state
+  auditStatus: "idle" | "auditing" | "completed";
+  auditProgress: AuditProgress | null;
+  auditReport: FullAuditReport | null;
+  aiAuditReport: AIAuditReport | null;
+  designSystemReport: DesignSystemAuditReport | null;
 
   // Flow data
   flowNodes: CustomNode[];
@@ -42,6 +57,11 @@ interface AppState {
   setCrawlSessionId: (sessionId: string | null) => void;
   setCrawlResult: (result: CrawlResult) => void;
   setCrawlProgress: (progress: CrawlProgress | null) => void;
+  setAuditStatus: (status: "idle" | "auditing" | "completed") => void;
+  setAuditProgress: (progress: AuditProgress | null) => void;
+  setAuditReport: (report: FullAuditReport | null) => void;
+  setAiAuditReport: (report: AIAuditReport | null) => void;
+  setDesignSystemReport: (report: DesignSystemAuditReport | null) => void;
   setFlowData: (nodes: CustomNode[], edges: CustomEdge[]) => void;
   setSelectedNode: (nodeId: string | null) => void;
   setViewMode: (mode: ViewMode) => void;
@@ -69,6 +89,11 @@ export const useAppStore = create<AppState>((set, get) => ({
   crawlSessionId: null,
   crawlResult: null,
   crawlProgress: null,
+  auditStatus: "idle",
+  auditProgress: null,
+  auditReport: null,
+  aiAuditReport: null,
+  designSystemReport: null,
   flowNodes: [],
   flowEdges: [],
   selectedNodeId: null,
@@ -88,6 +113,16 @@ export const useAppStore = create<AppState>((set, get) => ({
   setCrawlResult: (result) => set({ crawlResult: result, crawlStatus: "completed" }),
 
   setCrawlProgress: (progress) => set({ crawlProgress: progress }),
+
+  setAuditStatus: (status) => set({ auditStatus: status }),
+
+  setAuditProgress: (progress) => set({ auditProgress: progress }),
+
+  setAuditReport: (report) => set({ auditReport: report }),
+
+  setAiAuditReport: (report) => set({ aiAuditReport: report }),
+
+  setDesignSystemReport: (report) => set({ designSystemReport: report }),
 
   setFlowData: (nodes, edges) => set({ flowNodes: nodes, flowEdges: edges }),
 

@@ -5,9 +5,11 @@ import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { CrawlForm, CrawlConfig } from "@/components/CrawlForm";
 import { StatusPanel } from "@/components/StatusPanel";
 import { CrawlProgress } from "@/components/CrawlProgress";
+import { SourceAuditPanel } from "@/components/SourceAuditPanel";
 import { SitemapFlow } from "@/components/flow/SitemapFlow";
 import { ListView } from "@/components/views/ListView";
 import { ViewSwitcher } from "@/components/views/ViewSwitcher";
+import { AuditResultsView } from "@/components/views/AuditResultsView";
 import { useAppStore, ViewMode } from "@/lib/store";
 import { useCrawlProgress } from "@/hooks/useCrawlProgress";
 import { AlertCircle, Loader2 } from "lucide-react";
@@ -24,6 +26,9 @@ function HomeContent() {
     flowEdges,
     selectedNodeId,
     viewMode,
+    auditProgress,
+    auditStatus,
+    designSystemReport,
     setCrawlStatus,
     setCrawlError,
     setCrawlSessionId,
@@ -106,6 +111,11 @@ function HomeContent() {
 
   const selectedNode = selectedNodeId ? flowNodes.find((n) => n.id === selectedNodeId) : undefined;
 
+  // Find the page data (with styles) for the selected node
+  const selectedPageData = selectedNodeId && crawlResult
+    ? crawlResult.pages.find((p) => p.url === selectedNodeId)
+    : undefined;
+
   return (
     <div className="flex h-screen flex-col">
       {/* Header */}
@@ -161,22 +171,51 @@ function HomeContent() {
                         title: selectedNode.data.title,
                         url: selectedNode.data.url,
                         statusCode: selectedNode.data.statusCode,
+                        styles: selectedPageData?.styles,
                       }
                     : undefined
                 }
               />
             )}
+
+            {/* Source Code Audit - always available */}
+            <SourceAuditPanel />
           </div>
         </aside>
 
         {/* Main visualization area */}
         <main className="relative flex-1">
-          {crawlStatus === "idle" && (
+          {crawlStatus === "idle" && !auditProgress && !designSystemReport && (
             <div className="flex h-full items-center justify-center text-gray-500">
               <div className="text-center">
                 <div className="mb-4 text-6xl">🗺️</div>
                 <p className="text-lg font-medium">Ready to crawl</p>
                 <p className="mt-2 text-sm">Enter a localhost URL to get started</p>
+              </div>
+            </div>
+          )}
+
+          {/* Audit Progress */}
+          {auditProgress && (
+            <div className="flex h-full items-center justify-center">
+              <div className="w-full max-w-md space-y-4 px-8">
+                <div className="text-center">
+                  <div className="mb-4 text-6xl">🔍</div>
+                  <p className="text-lg font-medium text-gray-700">Auditing Source Code</p>
+                  <p className="mt-2 text-sm text-gray-500">{auditProgress.stage}</p>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-600">Progress</span>
+                    <span className="font-mono text-gray-500">{auditProgress.percent}%</span>
+                  </div>
+                  <div className="h-3 w-full overflow-hidden rounded-full bg-gray-200">
+                    <div
+                      className="h-full rounded-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-300 ease-out"
+                      style={{ width: `${auditProgress.percent}%` }}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           )}
@@ -199,6 +238,11 @@ function HomeContent() {
                 <ListView nodes={flowNodes} onNodeClick={handleNodeClick} />
               )}
             </>
+          )}
+
+          {/* Audit Results - shown when we have a report and not showing crawl results */}
+          {designSystemReport && crawlStatus !== "completed" && !auditProgress && (
+            <AuditResultsView report={designSystemReport} />
           )}
 
           {crawlStatus === "error" && (

@@ -19,6 +19,7 @@ import { CustomNode } from "./CustomNode";
 import { LayoutControls } from "./LayoutControls";
 import { CustomNode as CustomNodeType, CustomEdge } from "@/types/flow";
 import { useAppStore } from "@/lib/store";
+import { exportStylesToJSON } from "@/lib/export";
 import { Download } from "lucide-react";
 
 interface SitemapFlowProps {
@@ -40,7 +41,7 @@ export function SitemapFlow({
   edges: initialEdges,
   onNodeClick,
 }: SitemapFlowProps) {
-  const { snapToGrid, collapsedNodes } = useAppStore();
+  const { snapToGrid, collapsedNodes, crawlResult } = useAppStore();
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
@@ -193,6 +194,13 @@ export function SitemapFlow({
           >
             <Download className="h-4 w-4" />
             Export JSON
+          </button>
+          <button
+            onClick={() => exportStylesToJSON(crawlResult)}
+            className="flex items-center gap-2 rounded-lg border-2 border-pink-500 bg-white px-4 py-2 text-sm font-medium text-pink-700 shadow-lg transition-all hover:bg-pink-50 hover:shadow-xl"
+          >
+            <Download className="h-4 w-4" />
+            Export Styles
           </button>
         </Panel>
 

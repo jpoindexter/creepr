@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useTransition } from "react";
 import { CustomNode } from "@/types/flow";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown, Search, Download } from "lucide-react";
 import { useAppStore } from "@/lib/store";
-import { exportToCSV, exportToJSON, getStatusColor } from "@/lib/export";
+import { exportToCSV, exportToJSON, exportStylesToJSON, getStatusColor } from "@/lib/export";
 
 interface ListViewProps {
   nodes: CustomNode[];
@@ -117,6 +117,9 @@ export function ListView({ nodes, onNodeClick }: ListViewProps) {
             <Button variant="outline" size="sm" onClick={() => exportToCSV(sortedNodes)} className="flex items-center gap-2 border-2 border-purple-500 text-purple-700 hover:bg-purple-50">
               <Download className="h-4 w-4" />CSV
             </Button>
+            <Button variant="outline" size="sm" onClick={() => exportStylesToJSON(crawlResult)} className="flex items-center gap-2 border-2 border-pink-500 text-pink-700 hover:bg-pink-50">
+              <Download className="h-4 w-4" />Styles
+            </Button>
           </div>
         </div>
         <div className="mt-3 flex gap-4 text-sm text-gray-600">
@@ -182,7 +185,7 @@ export function ListView({ nodes, onNodeClick }: ListViewProps) {
   );
 }
 
-function SortHeader({ field, label, current, onSort, center }: { field: SortField; label: string; current: SortField; onSort: (f: SortField) => void; center?: boolean }) {
+function SortHeader({ field, label, onSort, center }: { field: SortField; label: string; current?: SortField; onSort: (f: SortField) => void; center?: boolean }) {
   return (
     <th className={`px-4 py-3 ${center ? "text-center" : "text-left"}`}>
       <button onClick={() => onSort(field)} className={`flex items-center gap-2 font-semibold text-purple-900 hover:text-purple-700 ${center ? "mx-auto" : ""}`}>

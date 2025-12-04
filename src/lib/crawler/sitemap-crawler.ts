@@ -4,6 +4,7 @@ import { shouldCrawlUrl } from "./link-validator";
 import { normalizeUrl } from "../utils";
 import { detectInteractiveElements, groupElementsByType } from "./interactive-detector";
 import { extractAllPageData } from "./page-extractors";
+import { extractPageStyles } from "./style-extractor";
 import { randomUUID } from "crypto";
 import { rm } from "fs/promises";
 import { Page } from "playwright";
@@ -77,7 +78,11 @@ export class SitemapCrawler {
           await page.waitForLoadState("networkidle", { timeout: 15000 });
 
           const title = await page.title();
-          const { links, linksWithText, meta, headings, images, contentMetrics } = await extractAllPageData(page, url);
+          const [pageData, styles] = await Promise.all([
+            extractAllPageData(page, url),
+            extractPageStyles(page),
+          ]);
+          const { links, linksWithText, meta, headings, images, contentMetrics } = pageData;
 
           const pageInfo: PageInfo = {
             url,
@@ -92,6 +97,7 @@ export class SitemapCrawler {
             images,
             linksWithText,
             contentMetrics,
+            styles,
           };
 
           pageInfos.push(pageInfo);

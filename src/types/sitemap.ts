@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { PageStyles } from "@/lib/crawler/types";
 
 // Link status types
 export type LinkStatus = "success" | "redirect" | "client-error" | "server-error" | "unknown";
@@ -72,6 +73,8 @@ export interface CrawledPage {
   images?: ImageInfo[];
   linksWithText?: LinkInfo[];
   contentMetrics?: ContentMetrics;
+  // Full style extraction for design system analysis
+  styles?: PageStyles;
 }
 
 // Sitemap node (hierarchical structure)

@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p ${PORT:-3500}",
+    "dev": "lsof -ti:3500 | xargs kill -9 2>/dev/null || true; next dev -p ${PORT:-3500}",
     "dev:kill": "lsof -ti:3500 | xargs kill -9 2>/dev/null || true",
     "dev:restart": "npm run dev:kill && npm run dev",
     "build": "next build",
