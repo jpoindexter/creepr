@@ -38,6 +38,19 @@ interface AuditRequest {
   excludeDirs?: string[];
 }
 
+// Files to exclude from audit (infrastructure/config files that define patterns)
+const EXCLUDED_FILES = [
+  "source-auditor.ts", // Defines the audit patterns themselves
+  "switch.tsx", // Switch component uses pill shape intentionally
+];
+
+// Path patterns to exclude (matched against full relative path)
+const EXCLUDED_PATH_PATTERNS = [
+  "lib/export.ts", // Contains documentation comments about patterns
+  "lib/auditor/", // Audit infrastructure files
+  "design-system/", // Design system config files use pattern names as values
+];
+
 async function getAllFiles(
   dirPath: string,
   extensions: string[],
@@ -59,8 +72,16 @@ async function getAllFiles(
             await walk(fullPath);
           }
         } else if (entry.isFile()) {
-          // Check extension
-          if (extensions.some((ext) => entry.name.endsWith(ext))) {
+          // Check extension and exclude infrastructure files
+          const isExcludedFile = EXCLUDED_FILES.includes(entry.name);
+          const isExcludedPath = EXCLUDED_PATH_PATTERNS.some((pattern) =>
+            fullPath.includes(pattern)
+          );
+          if (
+            extensions.some((ext) => entry.name.endsWith(ext)) &&
+            !isExcludedFile &&
+            !isExcludedPath
+          ) {
             files.push(fullPath);
           }
         }

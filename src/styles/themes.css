@@ -1,0 +1,1497 @@
+/* ============================================
+   ADDITIONAL THEMES
+   ============================================ */
+
+/* Red Theme - Monochrome Red CRT (hue 25) */
+[data-theme="red"] {
+  --background: 5% 0.01 25;
+  --foreground: 78% 0.28 25;
+  --card: 8% 0.02 25;
+  --card-foreground: 78% 0.28 25;
+  --popover: 10% 0.03 25;
+  --popover-foreground: 78% 0.28 25;
+  --primary: 55% 0.28 25; /* Bold red */
+  --primary-foreground: 5% 0.01 25;
+  --secondary: 60% 0.26 25;
+  --secondary-foreground: 5% 0.01 25;
+  --muted: 18% 0.05 25;
+  --muted-foreground: 68% 0.22 25;
+  --accent: 65% 0.28 25;
+  --accent-foreground: 5% 0.01 25;
+  --destructive: 75% 0.32 25;
+  --destructive-foreground: 5% 0.01 25;
+  --border: 42% 0.2 25;
+  --input: 42% 0.2 25;
+  --ring: 60% 0.25 25;
+
+  /* Status colors - all monochrome red */
+  --success: 65% 0.28 25;
+  --success-foreground: 5% 0.01 25;
+  --warning: 70% 0.26 25;
+  --warning-foreground: 5% 0.01 25;
+  --info: 60% 0.24 25;
+  --info-foreground: 5% 0.01 25;
+
+  /* Chart colors - all monochrome red */
+  --chart-1: 65% 0.28 25;
+  --chart-2: 55% 0.24 25;
+  --chart-3: 70% 0.26 25;
+  --chart-4: 60% 0.22 25;
+  --chart-5: 50% 0.2 25;
+  --chart-6: 75% 0.3 25;
+  --chart-7: 45% 0.18 25;
+  --chart-8: 62% 0.25 25;
+  --chart-9: 58% 0.23 25;
+
+  /* Semantic mappings */
+  --color-bg-canvas: var(--background);
+  --color-bg-surface: var(--card);
+  --color-bg-elevated: var(--popover);
+  --color-bg-sunken: var(--muted);
+
+  --color-text-primary: var(--foreground);
+  --color-text-secondary: var(--muted-foreground);
+  --color-text-tertiary: var(--secondary-foreground);
+  --color-text-inverse: var(--primary-foreground);
+  --color-text-disabled: var(--muted-foreground);
+
+  --color-border-default: var(--border);
+  --color-border-muted: var(--input);
+  --color-border-strong: var(--ring);
+  --color-border-focus: var(--ring);
+
+  --color-status-success: var(--success);
+  --color-status-success-bg: var(--success);
+  --color-status-warning: var(--warning);
+  --color-status-warning-bg: var(--warning);
+  --color-status-error: var(--destructive);
+  --color-status-error-bg: var(--destructive);
+  --color-status-info: var(--info);
+  --color-status-info-bg: var(--info);
+
+  /* Code syntax highlighting (Prism) - red hue 25 */
+  --code-fg: oklch(65% 0.25 25);
+  --code-bg: oklch(8% 0.02 25);
+  --code-comment: oklch(50% 0.15 25);
+  --code-string: oklch(60% 0.22 25);
+  --code-punctuation: oklch(50% 0.2 25);
+  --code-number: oklch(55% 0.22 25);
+  --code-keyword: oklch(65% 0.25 25);
+  --code-function: oklch(70% 0.28 25);
+  --code-selector: oklch(60% 0.22 25);
+}
+
+/* Blue Theme - Monochrome Blue CRT (hue 200) */
+[data-theme="blue"] {
+  --background: 4% 0.01 200;
+  --foreground: 80% 0.22 200;
+  --card: 8% 0.02 200;
+  --card-foreground: 80% 0.22 200;
+  --popover: 10% 0.03 200;
+  --popover-foreground: 80% 0.22 200;
+  --primary: 40% 0.2 200;
+  --primary-foreground: 95% 0.01 200;
+  --secondary: 70% 0.2 200;
+  --secondary-foreground: 4% 0.01 200;
+  --muted: 18% 0.05 200;
+  --muted-foreground: 70% 0.18 200;
+  --accent: 60% 0.2 200;
+  --accent-foreground: 4% 0.01 200;
+  --destructive: 75% 0.22 200;
+  --destructive-foreground: 4% 0.01 200;
+  --border: 45% 0.16 200;
+  --input: 45% 0.16 200;
+  --ring: 60% 0.2 200;
+
+  /* Status colors - all monochrome blue */
+  --success: 75% 0.22 200;
+  --success-foreground: 4% 0.01 200;
+  --warning: 78% 0.2 200;
+  --warning-foreground: 4% 0.01 200;
+  --info: 70% 0.2 200;
+  --info-foreground: 4% 0.01 200;
+
+  /* Chart colors - all monochrome blue */
+  --chart-1: 75% 0.22 200;
+  --chart-2: 65% 0.18 200;
+  --chart-3: 80% 0.24 200;
+  --chart-4: 70% 0.2 200;
+  --chart-5: 60% 0.16 200;
+  --chart-6: 85% 0.24 200;
+  --chart-7: 55% 0.14 200;
+  --chart-8: 72% 0.21 200;
+  --chart-9: 68% 0.19 200;
+
+  /* Semantic mappings */
+  --color-bg-canvas: var(--background);
+  --color-bg-surface: var(--card);
+  --color-bg-elevated: var(--popover);
+  --color-bg-sunken: var(--muted);
+
+  --color-text-primary: var(--foreground);
+  --color-text-secondary: var(--muted-foreground);
+  --color-text-tertiary: var(--secondary-foreground);
+  --color-text-inverse: var(--primary-foreground);
+  --color-text-disabled: var(--muted-foreground);
+
+  --color-border-default: var(--border);
+  --color-border-muted: var(--input);
+  --color-border-strong: var(--ring);
+  --color-border-focus: var(--ring);
+
+  --color-status-success: var(--success);
+  --color-status-success-bg: var(--success);
+  --color-status-warning: var(--warning);
+  --color-status-warning-bg: var(--warning);
+  --color-status-error: var(--destructive);
+  --color-status-error-bg: var(--destructive);
+  --color-status-info: var(--info);
+  --color-status-info-bg: var(--info);
+
+  /* Code syntax highlighting (Prism) */
+  --code-fg: oklch(82% 0.1 274);
+  --code-bg: oklch(14% 0.02 278);
+  --code-comment: oklch(62% 0.09 278);
+  --code-string: oklch(86% 0.08 269);
+  --code-punctuation: oklch(72% 0.09 276);
+  --code-number: oklch(77% 0.09 274);
+  --code-keyword: oklch(82% 0.1 274);
+  --code-function: oklch(89% 0.06 261);
+  --code-selector: oklch(82% 0.1 274);
+}
+
+/* Green Theme - Monochrome Green CRT (hue 145) */
+[data-theme="green"] {
+  --background: 5% 0.01 145;
+  --foreground: 85% 0.3 145;
+  --card: 8% 0.02 145;
+  --card-foreground: 85% 0.3 145;
+  --popover: 10% 0.03 145;
+  --popover-foreground: 85% 0.3 145;
+  --primary: 40% 0.25 145;
+  --primary-foreground: 95% 0.01 145;
+  --secondary: 70% 0.25 145;
+  --secondary-foreground: 5% 0.01 145;
+  --muted: 18% 0.05 145;
+  --muted-foreground: 70% 0.22 145;
+  --accent: 60% 0.25 145;
+  --accent-foreground: 5% 0.01 145;
+  --destructive: 80% 0.28 145;
+  --destructive-foreground: 5% 0.01 145;
+  --border: 40% 0.18 145;
+  --input: 40% 0.18 145;
+  --ring: 60% 0.25 145;
+
+  /* Semantic mappings */
+  --color-bg-canvas: var(--background);
+  --color-bg-surface: var(--card);
+  --color-bg-elevated: var(--popover);
+  --color-bg-sunken: var(--muted);
+
+  --color-text-primary: var(--foreground);
+  --color-text-secondary: var(--muted-foreground);
+  --color-text-tertiary: var(--secondary-foreground);
+  --color-text-inverse: var(--primary-foreground);
+  --color-text-disabled: var(--muted-foreground);
+
+  --color-border-default: var(--border);
+  --color-border-muted: var(--input);
+  --color-border-strong: var(--ring);
+  --color-border-focus: var(--ring);
+
+  --color-status-success: var(--success);
+  --color-status-success-bg: var(--success);
+  --color-status-warning: var(--warning);
+  --color-status-warning-bg: var(--warning);
+  --color-status-error: var(--destructive);
+  --color-status-error-bg: var(--destructive);
+  --color-status-info: var(--info);
+  --color-status-info-bg: var(--info);
+
+  /* Status colors - all monochrome green */
+  --success: 75% 0.28 145;
+  --success-foreground: 5% 0.01 145;
+  --warning: 80% 0.26 145;
+  --warning-foreground: 5% 0.01 145;
+  --info: 70% 0.24 145;
+  --info-foreground: 5% 0.01 145;
+
+  /* Chart colors - all monochrome green */
+  --chart-1: 75% 0.28 145;
+  --chart-2: 65% 0.24 145;
+  --chart-3: 80% 0.26 145;
+  --chart-4: 70% 0.22 145;
+  --chart-5: 60% 0.2 145;
+  --chart-6: 85% 0.3 145;
+  --chart-7: 55% 0.18 145;
+  --chart-8: 72% 0.25 145;
+  --chart-9: 68% 0.23 145;
+
+  /* Code syntax highlighting (Prism) - Grayscale */
+  --code-fg: oklch(90% 0 0);
+  --code-bg: oklch(12% 0 0);
+  --code-comment: oklch(50% 0 0);
+  --code-string: oklch(85% 0 0);
+  --code-punctuation: oklch(70% 0 0);
+  --code-number: oklch(75% 0 0);
+  --code-keyword: oklch(95% 0 0);
+  --code-function: oklch(80% 0 0);
+  --code-selector: oklch(85% 0 0);
+}
+
+/* Amber Theme - Monochrome Amber CRT (hue 50) */
+[data-theme="amber"] {
+  --background: 5% 0.01 50;
+  --foreground: 88% 0.25 50;
+  --card: 10% 0.02 50;
+  --card-foreground: 88% 0.25 50;
+  --popover: 12% 0.03 50;
+  --popover-foreground: 88% 0.25 50;
+  --primary: 35% 0.2 50;
+  --primary-foreground: 95% 0.01 50;
+  --secondary: 75% 0.22 50;
+  --secondary-foreground: 5% 0.01 50;
+  --muted: 18% 0.05 50;
+  --muted-foreground: 75% 0.2 50;
+  --accent: 60% 0.2 50;
+  --accent-foreground: 5% 0.01 50;
+  --destructive: 82% 0.28 50;
+  --destructive-foreground: 5% 0.01 50;
+  --border: 40% 0.15 50;
+  --input: 40% 0.15 50;
+  --ring: 60% 0.2 50;
+
+  /* Semantic mappings */
+  --color-bg-canvas: var(--background);
+  --color-bg-surface: var(--card);
+  --color-bg-elevated: var(--popover);
+  --color-bg-sunken: var(--muted);
+
+  --color-text-primary: var(--foreground);
+  --color-text-secondary: var(--muted-foreground);
+  --color-text-tertiary: var(--secondary-foreground);
+  --color-text-inverse: var(--primary-foreground);
+  --color-text-disabled: var(--muted-foreground);
+
+  --color-border-default: var(--border);
+  --color-border-muted: var(--input);
+  --color-border-strong: var(--ring);
+  --color-border-focus: var(--ring);
+
+  --color-status-success: var(--success);
+  --color-status-success-bg: var(--success);
+  --color-status-warning: var(--warning);
+  --color-status-warning-bg: var(--warning);
+  --color-status-error: var(--destructive);
+  --color-status-error-bg: var(--destructive);
+  --color-status-info: var(--info);
+  --color-status-info-bg: var(--info);
+
+  /* Status colors - all monochrome amber */
+  --success: 75% 0.22 50;
+  --success-foreground: 5% 0.01 50;
+  --warning: 82% 0.28 50;
+  --warning-foreground: 5% 0.01 50;
+  --info: 70% 0.2 50;
+  --info-foreground: 5% 0.01 50;
+
+  /* Chart colors - all monochrome amber */
+  --chart-1: 75% 0.22 50;
+  --chart-2: 65% 0.18 50;
+  --chart-3: 82% 0.28 50;
+  --chart-4: 70% 0.2 50;
+  --chart-5: 60% 0.16 50;
+  --chart-6: 88% 0.25 50;
+  --chart-7: 55% 0.14 50;
+  --chart-8: 72% 0.21 50;
+  --chart-9: 68% 0.19 50;
+
+  /* Semantic mappings */
+  --color-bg-canvas: var(--background);
+  --color-bg-surface: var(--card);
+  --color-bg-elevated: var(--popover);
+  --color-bg-sunken: var(--muted);
+
+  --color-text-primary: var(--foreground);
+  --color-text-secondary: var(--muted-foreground);
+  --color-text-tertiary: var(--secondary-foreground);
+  --color-text-inverse: var(--primary-foreground);
+  --color-text-disabled: var(--muted-foreground);
+
+  --color-border-default: var(--border);
+  --color-border-muted: var(--input);
+  --color-border-strong: var(--ring);
+  --color-border-focus: var(--ring);
+
+  --color-status-success: var(--success);
+  --color-status-success-bg: var(--success);
+  --color-status-warning: var(--warning);
+  --color-status-warning-bg: var(--warning);
+  --color-status-error: var(--destructive);
+  --color-status-error-bg: var(--destructive);
+
+  /* Code syntax highlighting (Prism) */
+  --code-fg: oklch(81% 0.14 108);
+  --code-bg: oklch(14% 0.02 113);
+  --code-comment: oklch(62% 0.11 110);
+  --code-string: oklch(84% 0.14 110);
+  --code-punctuation: oklch(75% 0.13 102);
+  --code-number: oklch(78% 0.13 105);
+  --code-keyword: oklch(73% 0.13 98);
+  --code-function: oklch(87% 0.14 112);
+  --code-selector: oklch(81% 0.14 108);
+}
+
+/* Purple Theme - Monochrome Purple CRT (hue 300) */
+[data-theme="purple"] {
+  --background: 5% 0.01 300;
+  --foreground: 85% 0.25 300;
+  --card: 8% 0.02 300;
+  --card-foreground: 85% 0.25 300;
+  --popover: 10% 0.03 300;
+  --popover-foreground: 85% 0.25 300;
+  --primary: 45% 0.22 300;
+  --primary-foreground: 98% 0.01 300;
+  --secondary: 70% 0.2 300;
+  --secondary-foreground: 5% 0.01 300;
+  --muted: 12% 0.03 300;
+  --muted-foreground: 75% 0.18 300;
+  --accent: 60% 0.2 300;
+  --accent-foreground: 5% 0.01 300;
+  --destructive: 82% 0.28 300;
+  --destructive-foreground: 5% 0.01 300;
+  --border: 50% 0.2 300;
+  --input: 50% 0.2 300;
+  --ring: 60% 0.2 300;
+
+  /* Status colors - all monochrome purple */
+  --success: 70% 0.2 300;
+  --success-foreground: 5% 0.01 300;
+  --warning: 75% 0.22 300;
+  --warning-foreground: 5% 0.01 300;
+  --info: 65% 0.18 300;
+  --info-foreground: 5% 0.01 300;
+
+  /* Chart colors - all monochrome purple */
+  --chart-1: 70% 0.2 300;
+  --chart-2: 60% 0.16 300;
+  --chart-3: 75% 0.22 300;
+  --chart-4: 65% 0.18 300;
+  --chart-5: 55% 0.14 300;
+  --chart-6: 85% 0.25 300;
+  --chart-7: 50% 0.12 300;
+  --chart-8: 72% 0.21 300;
+  --chart-9: 68% 0.19 300;
+
+  /* Semantic mappings */
+  --color-bg-canvas: var(--background);
+  --color-bg-surface: var(--card);
+  --color-bg-elevated: var(--popover);
+  --color-bg-sunken: var(--muted);
+
+  --color-text-primary: var(--foreground);
+  --color-text-secondary: var(--muted-foreground);
+  --color-text-tertiary: var(--secondary-foreground);
+  --color-text-inverse: var(--primary-foreground);
+  --color-text-disabled: var(--muted-foreground);
+
+  --color-border-default: var(--border);
+  --color-border-muted: var(--input);
+  --color-border-strong: var(--ring);
+  --color-border-focus: var(--ring);
+
+  --color-status-success: var(--success);
+  --color-status-success-bg: var(--success);
+  --color-status-warning: var(--warning);
+  --color-status-warning-bg: var(--warning);
+  --color-status-error: var(--destructive);
+  --color-status-error-bg: var(--destructive);
+
+  /* Code syntax highlighting (Prism) */
+  --code-fg: oklch(76% 0.13 294);
+  --code-bg: oklch(14% 0.05 294);
+  --code-comment: oklch(52% 0.12 293);
+  --code-string: oklch(80% 0.11 295);
+  --code-punctuation: oklch(66% 0.13 294);
+  --code-number: oklch(71% 0.13 294);
+  --code-keyword: oklch(78% 0.13 296);
+  --code-function: oklch(84% 0.09 296);
+  --code-selector: oklch(76% 0.13 294);
+}
+
+/* Game Boy Theme - Authentic DMG-01 LCD green (hue 85) */
+[data-theme="gameboy"] {
+  --background: 85% 0.18 85; /* #9bbc0f iconic Game Boy green */
+  --foreground: 15% 0.12 85; /* #0f380f dark olive text */
+  --card: 80% 0.16 85;
+  --card-foreground: 15% 0.12 85;
+  --popover: 75% 0.14 85;
+  --popover-foreground: 15% 0.12 85;
+  --primary: 25% 0.14 85;
+  --primary-foreground: 85% 0.18 85;
+  --secondary: 65% 0.16 85;
+  --secondary-foreground: 15% 0.12 85;
+  --muted: 78% 0.15 85;
+  --muted-foreground: 28% 0.12 85;
+  --accent: 20% 0.14 85;
+  --accent-foreground: 85% 0.18 85;
+  --destructive: 30% 0.14 85;
+  --destructive-foreground: 85% 0.18 85;
+  --border: 32% 0.14 85;
+  --input: 32% 0.14 85;
+  --ring: 20% 0.14 85;
+
+  --bg-dot-opacity: 0.25;
+
+  /* Status colors - Game Boy green spectrum */
+  --success: 25% 0.14 85;
+  --success-foreground: 85% 0.18 85;
+  --warning: 30% 0.14 85;
+  --warning-foreground: 85% 0.18 85;
+  --info: 22% 0.12 85;
+  --info-foreground: 85% 0.18 85;
+
+  /* Chart colors - olive green spectrum */
+  --chart-1: 25% 0.14 85;
+  --chart-2: 30% 0.14 85;
+  --chart-3: 35% 0.14 85;
+  --chart-4: 40% 0.14 85;
+  --chart-5: 45% 0.14 85;
+  --chart-6: 20% 0.12 85;
+  --chart-7: 32% 0.14 85;
+  --chart-8: 38% 0.14 85;
+  --chart-9: 42% 0.14 85;
+
+  /* Semantic mappings */
+  --color-bg-canvas: var(--background);
+  --color-bg-surface: var(--card);
+  --color-bg-elevated: var(--popover);
+  --color-bg-sunken: var(--muted);
+
+  --color-text-primary: var(--foreground);
+  --color-text-secondary: var(--muted-foreground);
+  --color-text-tertiary: var(--secondary-foreground);
+  --color-text-inverse: var(--primary-foreground);
+  --color-text-disabled: var(--muted-foreground);
+
+  --color-border-default: var(--border);
+  --color-border-muted: var(--input);
+  --color-border-strong: var(--ring);
+  --color-border-focus: var(--ring);
+
+  --color-status-success: var(--success);
+  --color-status-success-bg: var(--success);
+  --color-status-warning: var(--warning);
+  --color-status-warning-bg: var(--warning);
+  --color-status-error: var(--destructive);
+  --color-status-error-bg: var(--destructive);
+
+  /* Code syntax highlighting - authentic Game Boy palette */
+  --code-fg: oklch(29% 0.04 132);
+  --code-bg: oklch(72% 0.13 120);
+  --code-comment: oklch(43% 0.05 133);
+  --code-string: oklch(29% 0.04 132);
+  --code-punctuation: oklch(36% 0.05 132);
+  --code-number: oklch(29% 0.04 132);
+  --code-keyword: oklch(29% 0.04 132);
+  --code-function: oklch(36% 0.05 132);
+  --code-selector: oklch(29% 0.04 132);
+}
+
+/* C64 Theme - Commodore 64 blue (hue 280) */
+[data-theme="c64"] {
+  --background: 25% 0.1 280; /* Dark Blue (#352879 approx) */
+  --foreground: 82% 0.15 280;
+  --card: 28% 0.1 280;
+  --card-foreground: 82% 0.15 280;
+  --popover: 30% 0.1 280;
+  --popover-foreground: 82% 0.15 280;
+  --primary: 68% 0.2 280;
+  --primary-foreground: 25% 0.1 280;
+  --secondary: 40% 0.15 280;
+  --secondary-foreground: 80% 0.1 280;
+  --muted: 35% 0.05 280;
+  --muted-foreground: 82% 0.1 280;
+  --accent: 75% 0.2 280;
+  --accent-foreground: 25% 0.1 280;
+  --destructive: 45% 0.2 0;
+  --destructive-foreground: 98% 0.05 0;
+  --border: 60% 0.1 280;
+  --input: 60% 0.1 280;
+  --ring: 75% 0.2 280;
+
+  /* Status colors - blue spectrum */
+  --success: 65% 0.2 280;
+  --success-foreground: 15% 0.1 280;
+  --warning: 70% 0.18 280;
+  --warning-foreground: 15% 0.1 280;
+  --info: 60% 0.18 280;
+  --info-foreground: 15% 0.1 280;
+
+  /* Chart colors - blue spectrum */
+  --chart-1: 65% 0.2 280;
+  --chart-2: 55% 0.18 280;
+  --chart-3: 70% 0.22 280;
+  --chart-4: 60% 0.16 280;
+  --chart-5: 50% 0.14 280;
+  --chart-6: 75% 0.24 280;
+  --chart-7: 45% 0.12 280;
+  --chart-8: 62% 0.19 280;
+  --chart-9: 68% 0.21 280;
+
+  /* Semantic mappings */
+  --color-bg-canvas: var(--background);
+  --color-bg-surface: var(--card);
+  --color-bg-elevated: var(--popover);
+  --color-bg-sunken: var(--muted);
+
+  --color-text-primary: var(--foreground);
+  --color-text-secondary: var(--muted-foreground);
+  --color-text-tertiary: var(--secondary-foreground);
+  --color-text-inverse: var(--primary-foreground);
+  --color-text-disabled: var(--muted-foreground);
+
+  --color-border-default: var(--border);
+  --color-border-muted: var(--input);
+  --color-border-strong: var(--ring);
+  --color-border-focus: var(--ring);
+
+  --color-status-success: var(--success);
+  --color-status-success-bg: var(--success);
+  --color-status-warning: var(--warning);
+  --color-status-warning-bg: var(--warning);
+  --color-status-error: var(--destructive);
+  --color-status-error-bg: var(--destructive);
+
+  /* Code syntax highlighting - C64 blue */
+  --code-fg: oklch(76% 0.08 289);
+  --code-bg: oklch(38% 0.11 290);
+  --code-comment: oklch(65% 0.13 290);
+  --code-string: oklch(69% 0.12 290);
+  --code-punctuation: oklch(72% 0.1 290);
+  --code-number: oklch(87% 0.07 283);
+  --code-keyword: oklch(76% 0.08 289);
+  --code-function: oklch(87% 0.07 283);
+  --code-selector: oklch(76% 0.08 289);
+}
+
+/* Game Boy Pocket Theme - Silver/gray monochrome LCD */
+[data-theme="gbpocket"] {
+  --background: 94% 0.01 0; /* Silver LCD background */
+  --foreground: 15% 0.01 0;
+  --card: 90% 0.01 0;
+  --card-foreground: 15% 0.01 0;
+  --popover: 86% 0.01 0;
+  --popover-foreground: 15% 0.01 0;
+  --primary: 20% 0.01 0;
+  --primary-foreground: 94% 0.01 0;
+  --secondary: 80% 0.01 0;
+  --secondary-foreground: 15% 0.01 0;
+  --muted: 88% 0.01 0;
+  --muted-foreground: 30% 0.01 0;
+  --accent: 18% 0.01 0;
+  --accent-foreground: 94% 0.01 0;
+  --destructive: 25% 0.01 0;
+  --destructive-foreground: 94% 0.01 0;
+  --border: 35% 0.01 0;
+  --input: 35% 0.01 0;
+  --ring: 18% 0.01 0;
+
+  --bg-dot-opacity: 0.25;
+
+  /* Status colors - grayscale */
+  --success: 22% 0.01 0;
+  --success-foreground: 94% 0.01 0;
+  --warning: 28% 0.01 0;
+  --warning-foreground: 94% 0.01 0;
+  --info: 24% 0.01 0;
+  --info-foreground: 94% 0.01 0;
+
+  /* Chart colors - grayscale spectrum */
+  --chart-1: 20% 0.01 0;
+  --chart-2: 28% 0.01 0;
+  --chart-3: 36% 0.01 0;
+  --chart-4: 44% 0.01 0;
+  --chart-5: 52% 0.01 0;
+  --chart-6: 24% 0.01 0;
+  --chart-7: 32% 0.01 0;
+  --chart-8: 40% 0.01 0;
+  --chart-9: 48% 0.01 0;
+
+  /* Semantic mappings */
+  --color-bg-canvas: var(--background);
+  --color-bg-surface: var(--card);
+  --color-bg-elevated: var(--popover);
+  --color-bg-sunken: var(--muted);
+
+  --color-text-primary: var(--foreground);
+  --color-text-secondary: var(--muted-foreground);
+  --color-text-tertiary: var(--secondary-foreground);
+  --color-text-inverse: var(--primary-foreground);
+  --color-text-disabled: var(--muted-foreground);
+
+  --color-border-default: var(--border);
+  --color-border-muted: var(--input);
+  --color-border-strong: var(--ring);
+  --color-border-focus: var(--ring);
+
+  --color-status-success: var(--success);
+  --color-status-success-bg: var(--success);
+  --color-status-warning: var(--warning);
+  --color-status-warning-bg: var(--warning);
+  --color-status-error: var(--destructive);
+  --color-status-error-bg: var(--destructive);
+
+  /* Code syntax highlighting - grayscale */
+  --code-fg: oklch(28% 0 261);
+  --code-bg: oklch(93% 0.01 261);
+  --code-comment: oklch(47% 0.01 261);
+  --code-string: oklch(28% 0 261);
+  --code-punctuation: oklch(35% 0 261);
+  --code-number: oklch(28% 0 261);
+  --code-keyword: oklch(28% 0 261);
+  --code-function: oklch(35% 0 261);
+  --code-selector: oklch(28% 0 261);
+}
+
+/* VIC-20 Theme - Commodore VIC-20 cyan (hue 180) */
+[data-theme="vic20"] {
+  --background: 90% 0.06 180; /* Light cyan background */
+  --foreground: 18% 0.1 180;
+  --card: 86% 0.05 180;
+  --card-foreground: 18% 0.1 180;
+  --popover: 82% 0.05 180;
+  --popover-foreground: 18% 0.1 180;
+  --primary: 25% 0.12 180;
+  --primary-foreground: 90% 0.06 180;
+  --secondary: 74% 0.08 180;
+  --secondary-foreground: 18% 0.1 180;
+  --muted: 84% 0.05 180;
+  --muted-foreground: 30% 0.08 180;
+  --accent: 22% 0.12 180;
+  --accent-foreground: 90% 0.06 180;
+  --destructive: 30% 0.1 180;
+  --destructive-foreground: 90% 0.06 180;
+  --border: 38% 0.08 180;
+  --input: 38% 0.08 180;
+  --ring: 22% 0.12 180;
+
+  --bg-dot-opacity: 0.25;
+
+  /* Status colors - cyan spectrum */
+  --success: 25% 0.12 180;
+  --success-foreground: 90% 0.06 180;
+  --warning: 32% 0.1 180;
+  --warning-foreground: 90% 0.06 180;
+  --info: 26% 0.12 180;
+  --info-foreground: 90% 0.06 180;
+
+  /* Chart colors - cyan spectrum */
+  --chart-1: 25% 0.12 180;
+  --chart-2: 30% 0.1 180;
+  --chart-3: 35% 0.1 180;
+  --chart-4: 40% 0.08 180;
+  --chart-5: 45% 0.08 180;
+  --chart-6: 22% 0.12 180;
+  --chart-7: 32% 0.1 180;
+  --chart-8: 38% 0.08 180;
+  --chart-9: 42% 0.08 180;
+
+  /* Semantic mappings */
+  --color-bg-canvas: var(--background);
+  --color-bg-surface: var(--card);
+  --color-bg-elevated: var(--popover);
+  --color-bg-sunken: var(--muted);
+
+  --color-text-primary: var(--foreground);
+  --color-text-secondary: var(--muted-foreground);
+  --color-text-tertiary: var(--secondary-foreground);
+  --color-text-inverse: var(--primary-foreground);
+  --color-text-disabled: var(--muted-foreground);
+
+  --color-border-default: var(--border);
+  --color-border-muted: var(--input);
+  --color-border-strong: var(--ring);
+  --color-border-focus: var(--ring);
+
+  --color-status-success: var(--success);
+  --color-status-success-bg: var(--success);
+  --color-status-warning: var(--warning);
+  --color-status-warning-bg: var(--warning);
+  --color-status-error: var(--destructive);
+  --color-status-error-bg: var(--destructive);
+
+  /* Code syntax highlighting - cyan */
+  --code-fg: oklch(43% 0.03 247);
+  --code-bg: oklch(93% 0.02 254);
+  --code-comment: oklch(54% 0.03 248);
+  --code-string: oklch(43% 0.03 247);
+  --code-punctuation: oklch(48% 0.03 248);
+  --code-number: oklch(43% 0.03 247);
+  --code-keyword: oklch(43% 0.03 247);
+  --code-function: oklch(48% 0.03 248);
+  --code-selector: oklch(43% 0.03 247);
+}
+
+/* Atari 800 Theme - Authentic Blue background (Hue 220) */
+[data-theme="atari"] {
+  --background: 35% 0.1 220; /* Atari Blue background */
+  --foreground: 96% 0.05 220;
+  --card: 40% 0.1 220;
+  --card-foreground: 96% 0.05 220;
+  --popover: 38% 0.1 220;
+  --popover-foreground: 96% 0.05 220;
+  --primary: 73% 0.2 220;
+  --primary-foreground: 15% 0.05 220;
+  --secondary: 30% 0.1 220;
+  --secondary-foreground: 80% 0.1 220;
+  --muted: 25% 0.05 220;
+  --muted-foreground: 85% 0.1 220;
+  --accent: 70% 0.2 220;
+  --accent-foreground: 30% 0.1 220;
+  --destructive: 45% 0.2 0;
+  --destructive-foreground: 98% 0.05 0;
+  --border: 65% 0.1 220;
+  --input: 65% 0.1 220;
+  --ring: 70% 0.2 220;
+
+  /* Status colors - blue spectrum */
+  --success: 70% 0.2 220;
+  --success-foreground: 15% 0.1 220;
+  --warning: 75% 0.18 220;
+  --warning-foreground: 15% 0.1 220;
+  --info: 65% 0.18 220;
+  --info-foreground: 15% 0.1 220;
+
+  /* Chart colors - blue spectrum */
+  --chart-1: 70% 0.2 220;
+  --chart-2: 60% 0.18 220;
+  --chart-3: 75% 0.22 220;
+  --chart-4: 65% 0.16 220;
+  --chart-5: 55% 0.14 220;
+  --chart-6: 80% 0.24 220;
+  --chart-7: 50% 0.12 220;
+  --chart-8: 68% 0.19 220;
+  --chart-9: 72% 0.21 220;
+
+  /* Semantic mappings */
+  --color-bg-canvas: var(--background);
+  --color-bg-surface: var(--card);
+  --color-bg-elevated: var(--popover);
+  --color-bg-sunken: var(--muted);
+
+  --color-text-primary: var(--foreground);
+  --color-text-secondary: var(--muted-foreground);
+  --color-text-tertiary: var(--secondary-foreground);
+  --color-text-inverse: var(--primary-foreground);
+  --color-text-disabled: var(--muted-foreground);
+
+  --color-border-default: var(--border);
+  --color-border-muted: var(--input);
+  --color-border-strong: var(--ring);
+  --color-border-focus: var(--ring);
+
+  --color-status-success: var(--success);
+  --color-status-success-bg: var(--success);
+  --color-status-warning: var(--warning);
+  --color-status-warning-bg: var(--warning);
+  --color-status-error: var(--destructive);
+  --color-status-error-bg: var(--destructive);
+
+  /* Code syntax highlighting - Atari Blue */
+  --code-fg: oklch(90% 0.06 277);
+  --code-bg: oklch(44% 0.06 280);
+  --code-comment: oklch(65% 0.06 279);
+  --code-string: oklch(80% 0.06 275);
+  --code-punctuation: oklch(70% 0.06 278);
+  --code-number: oklch(100% 0.01 261);
+  --code-keyword: oklch(90% 0.06 277);
+  --code-function: oklch(100% 0.01 261);
+  --code-selector: oklch(90% 0.06 277);
+}
+
+/* ZX Spectrum Theme - Sinclair ZX Spectrum bright (hue 250) */
+[data-theme="spectrum"] {
+  --background: 96% 0.02 250; /* Near-white with subtle blue */
+  --foreground: 10% 0.08 250;
+  --card: 92% 0.02 250;
+  --card-foreground: 10% 0.08 250;
+  --popover: 88% 0.02 250;
+  --popover-foreground: 10% 0.08 250;
+  --primary: 18% 0.12 250;
+  --primary-foreground: 96% 0.02 250;
+  --secondary: 82% 0.06 250;
+  --secondary-foreground: 10% 0.08 250;
+  --muted: 90% 0.02 250;
+  --muted-foreground: 38% 0.08 250;
+  --accent: 15% 0.12 250;
+  --accent-foreground: 96% 0.02 250;
+  --destructive: 22% 0.1 250;
+  --destructive-foreground: 96% 0.02 250;
+  --border: 47% 0.06 250;
+  --input: 47% 0.06 250;
+  --ring: 15% 0.12 250;
+
+  --bg-dot-opacity: 0.25;
+
+  /* Status colors - spectrum */
+  --success: 20% 0.12 250;
+  --success-foreground: 96% 0.02 250;
+  --warning: 26% 0.1 250;
+  --warning-foreground: 96% 0.02 250;
+  --info: 18% 0.12 250;
+  --info-foreground: 96% 0.02 250;
+
+  /* Chart colors - spectrum */
+  --chart-1: 18% 0.12 250;
+  --chart-2: 24% 0.1 250;
+  --chart-3: 30% 0.1 250;
+  --chart-4: 36% 0.08 250;
+  --chart-5: 42% 0.08 250;
+  --chart-6: 20% 0.12 250;
+  --chart-7: 27% 0.1 250;
+  --chart-8: 33% 0.08 250;
+  --chart-9: 39% 0.08 250;
+
+  /* Semantic mappings */
+  --color-bg-canvas: var(--background);
+  --color-bg-surface: var(--card);
+  --color-bg-elevated: var(--popover);
+  --color-bg-sunken: var(--muted);
+
+  --color-text-primary: var(--foreground);
+  --color-text-secondary: var(--muted-foreground);
+  --color-text-tertiary: var(--secondary-foreground);
+  --color-text-inverse: var(--primary-foreground);
+  --color-text-disabled: var(--muted-foreground);
+
+  --color-border-default: var(--border);
+  --color-border-muted: var(--input);
+  --color-border-strong: var(--ring);
+  --color-border-focus: var(--ring);
+
+  --color-status-success: var(--success);
+  --color-status-success-bg: var(--success);
+  --color-status-warning: var(--warning);
+  --color-status-warning-bg: var(--warning);
+  --color-status-error: var(--destructive);
+  --color-status-error-bg: var(--destructive);
+
+  /* Code syntax highlighting - bright spectrum */
+  --code-fg: oklch(30% 0.09 288);
+  --code-bg: oklch(97% 0.02 275);
+  --code-comment: oklch(45% 0.07 288);
+  --code-string: oklch(30% 0.09 288);
+  --code-punctuation: oklch(36% 0.09 288);
+  --code-number: oklch(30% 0.09 288);
+  --code-keyword: oklch(30% 0.09 288);
+  --code-function: oklch(36% 0.09 288);
+  --code-selector: oklch(30% 0.09 288);
+}
+
+/* ============================================
+   Black & White Theme - Pure grayscale (hue 0, zero saturation)
+   High contrast for accessibility and minimalist aesthetic
+   ============================================ */
+
+[data-theme="bw"] {
+  /* Base colors - Pure black & white (no saturation) */
+  --background: 100% 0 0; /* Pure white */
+  --foreground: 0% 0 0; /* Pure black */
+  --card: 100% 0 0;
+  --card-foreground: 0% 0 0;
+  --popover: 100% 0 0;
+  --popover-foreground: 0% 0 0;
+
+  /* Primary - Black (accent color is pure black) */
+  --primary: 0% 0 0;
+  --primary-foreground: 100% 0 0;
+
+  /* Secondary - Black background for contrast */
+  --secondary: 0% 0 0;
+  --secondary-foreground: 100% 0 0;
+
+  /* Muted - Light gray background for contrast, Black text */
+  --muted: 92% 0 0;
+  --muted-foreground: 0% 0 0;
+
+  /* Accent - Black */
+  --accent: 0% 0 0;
+  --accent-foreground: 100% 0 0;
+
+  /* Destructive - Black (differentiate via icon/text) */
+  --destructive: 0% 0 0;
+  --destructive-foreground: 100% 0 0;
+
+  /* Borders - Pure black for true B&W aesthetic */
+  --border: 0% 0 0;
+  --input: 0% 0 0;
+
+  /* Ring - Focus indicator (pure black) */
+  --ring: 0% 0 0;
+
+  --bg-dot-opacity: 0.3;
+
+  /* Status colors - Grayscale spectrum */
+  --success: 20% 0 0; /* Dark gray for success */
+  --success-foreground: 100% 0 0; /* White text */
+  --warning: 40% 0 0; /* Medium gray for warning */
+  --warning-foreground: 100% 0 0; /* White text */
+  --info: 60% 0 0; /* Light gray for info */
+  --info-foreground: 0% 0 0; /* Black text */
+
+  /* Chart colors - Grayscale spectrum (20%, 40%, 60%, 80%) */
+  --chart-1: 20% 0 0; /* Dark gray */
+  --chart-2: 40% 0 0; /* Medium-dark gray */
+  --chart-3: 60% 0 0; /* Medium-light gray */
+  --chart-4: 80% 0 0; /* Light gray */
+  --chart-5: 25% 0 0; /* Dark gray variant */
+  --chart-6: 35% 0 0; /* Medium-dark gray variant */
+  --chart-7: 50% 0 0; /* Medium gray */
+  --chart-8: 70% 0 0; /* Medium-light gray variant */
+  --chart-9: 90% 0 0; /* Very light gray */
+
+  /* Semantic mappings */
+  --color-bg-canvas: var(--background);
+  --color-bg-surface: var(--card);
+  --color-bg-elevated: var(--popover);
+  --color-bg-sunken: var(--muted);
+
+  --color-text-primary: var(--foreground);
+  --color-text-secondary: var(--muted-foreground);
+  --color-text-tertiary: var(--secondary-foreground);
+  --color-text-inverse: var(--primary-foreground);
+  --color-text-disabled: var(--muted-foreground);
+
+  --color-border-default: var(--border);
+  --color-border-muted: var(--input);
+  --color-border-strong: var(--ring);
+  --color-border-focus: var(--ring);
+
+  --color-status-success: var(--success);
+  --color-status-success-bg: var(--success);
+  --color-status-warning: var(--warning);
+  --color-status-warning-bg: var(--warning);
+  --color-status-error: var(--destructive);
+  --color-status-error-bg: var(--destructive);
+
+  /* Syntax highlighting - Pure B&W */
+  --code-bg: oklch(100% 0.01 261);
+  --code-fg: oklch(0% 0 0);
+  --code-comment: oklch(0% 0 0);
+  --code-string: oklch(0% 0 0);
+  --code-punctuation: oklch(0% 0 0);
+  --code-number: oklch(0% 0 0);
+  --code-keyword: oklch(0% 0 0);
+  --code-function: oklch(0% 0 0);
+  --code-selector: oklch(0% 0 0);
+}
+
+/* DARK B&W - Inverted black & white (dark mode) */
+[data-theme="bw-dark"] {
+  /* Base colors - Inverted black & white */
+  --background: 10% 0 0; /* Near black */
+  --foreground: 95% 0 0; /* Near white */
+  --card: 15% 0 0; /* Dark gray */
+  --card-foreground: 95% 0 0;
+  --popover: 12% 0 0;
+  --popover-foreground: 95% 0 0;
+
+  /* Primary - White accent on dark */
+  --primary: 95% 0 0;
+  --primary-foreground: 10% 0 0;
+
+  /* Secondary - Dark gray background */
+  --secondary: 20% 0 0;
+  --secondary-foreground: 95% 0 0;
+
+  /* Muted - Dark gray background for contrast */
+  --muted: 18% 0 0;
+  --muted-foreground: 72% 0 0; /* WCAG AA compliant */
+
+  /* Accent */
+  --accent: 25% 0 0;
+  --accent-foreground: 95% 0 0;
+
+  /* Destructive - Light gray for visibility */
+  --destructive: 70% 0 0;
+  --destructive-foreground: 10% 0 0;
+
+  /* Borders - Light gray for visibility */
+  --border: 30% 0 0;
+  --input: 30% 0 0;
+
+  /* Ring - Focus indicator */
+  --ring: 85% 0 0;
+
+  --bg-dot-opacity: 0.15;
+
+  /* Status colors - Grayscale spectrum (inverted) */
+  --success: 80% 0 0;
+  --success-foreground: 10% 0 0;
+  --warning: 60% 0 0;
+  --warning-foreground: 10% 0 0;
+  --info: 45% 0 0;
+  --info-foreground: 95% 0 0;
+
+  /* Chart colors - Grayscale spectrum */
+  --chart-1: 80% 0 0;
+  --chart-2: 60% 0 0;
+  --chart-3: 45% 0 0;
+  --chart-4: 30% 0 0;
+  --chart-5: 75% 0 0;
+  --chart-6: 55% 0 0;
+  --chart-7: 50% 0 0;
+  --chart-8: 35% 0 0;
+  --chart-9: 20% 0 0;
+
+  /* Semantic mappings */
+  --color-bg-canvas: var(--background);
+  --color-bg-surface: var(--card);
+  --color-bg-elevated: var(--popover);
+  --color-bg-muted: var(--muted);
+  --color-text-primary: var(--foreground);
+  --color-text-secondary: var(--muted-foreground);
+  --color-text-muted: var(--muted-foreground);
+  --color-border-default: var(--border);
+  --color-border-subtle: var(--border);
+
+  /* Syntax highlighting - Dark B&W */
+  --code-bg: oklch(15% 0 0);
+  --code-fg: oklch(95% 0 0);
+  --code-comment: oklch(60% 0 0);
+  --code-string: oklch(85% 0 0);
+  --code-punctuation: oklch(70% 0 0);
+  --code-number: oklch(80% 0 0);
+  --code-keyword: oklch(90% 0 0);
+  --code-function: oklch(85% 0 0);
+  --code-selector: oklch(75% 0 0);
+}
+
+/* INFRARED - Inverted red MONOTONE (only red hues) - WCAG 2.2 AA compliant */
+[data-theme="infrared"] {
+  --background: 65% 0.22 25; /* Light red background */
+  --foreground: 12% 0.15 25; /* Very dark red text */
+  --card: 60% 0.2 25; /* Slightly darker red */
+  --card-foreground: 12% 0.15 25;
+  --popover: 58% 0.18 25;
+  --popover-foreground: 12% 0.15 25;
+  --primary: 18% 0.18 25; /* Dark red primary */
+  --primary-foreground: 75% 0.2 25; /* Light red on primary */
+  --secondary: 55% 0.18 25;
+  --secondary-foreground: 12% 0.15 25;
+  --muted: 58% 0.16 25;
+  --muted-foreground: 15% 0.12 25; /* Dark red muted text */
+  --accent: 20% 0.2 25; /* Dark red accent */
+  --accent-foreground: 75% 0.2 25;
+  --destructive: 25% 0.22 25; /* Darker red for destructive */
+  --destructive-foreground: 75% 0.18 25;
+  --border: 35% 0.15 25; /* Medium-dark red border */
+  --input: 35% 0.15 25;
+  --ring: 18% 0.18 25;
+
+  --bg-dot-opacity: 0.25;
+
+  --success: 28% 0.2 25; /* Dark red badge */
+  --success-foreground: 75% 0.18 25;
+  --warning: 22% 0.18 25; /* Darker red badge */
+  --warning-foreground: 75% 0.18 25;
+  --info: 30% 0.2 25; /* Medium-dark red badge */
+  --info-foreground: 76% 0.18 25;
+
+  --chart-1: 15% 0.15 25;
+  --chart-2: 20% 0.16 25;
+  --chart-3: 25% 0.17 25;
+  --chart-4: 30% 0.18 25;
+  --chart-5: 35% 0.19 25;
+  --chart-6: 18% 0.15 25;
+  --chart-7: 23% 0.16 25;
+  --chart-8: 28% 0.17 25;
+  --chart-9: 33% 0.18 25;
+
+  --color-bg-canvas: var(--background);
+  --color-bg-surface: var(--card);
+  --color-bg-elevated: var(--popover);
+  --color-bg-sunken: var(--muted);
+  --color-text-primary: var(--foreground);
+  --color-text-secondary: var(--muted-foreground);
+  --color-text-tertiary: var(--secondary-foreground);
+  --color-text-inverse: var(--primary-foreground);
+  --color-text-disabled: var(--muted-foreground);
+  --color-border-default: var(--border);
+  --color-border-muted: var(--input);
+  --color-border-strong: var(--ring);
+  --color-border-focus: var(--ring);
+  --color-status-success: var(--success);
+  --color-status-success-bg: var(--success);
+  --color-status-warning: var(--warning);
+  --color-status-warning-bg: var(--warning);
+  --color-status-error: var(--destructive);
+  --color-status-error-bg: var(--destructive);
+  --color-status-info: var(--info);
+  --color-status-info-bg: var(--info);
+
+  --code-fg: oklch(12% 0.15 25);
+  --code-bg: oklch(58% 0.16 25);
+  --code-comment: oklch(28% 0.12 25);
+  --code-string: oklch(18% 0.16 25);
+  --code-punctuation: oklch(25% 0.14 25);
+  --code-number: oklch(15% 0.15 25);
+  --code-keyword: oklch(20% 0.18 25);
+  --code-function: oklch(22% 0.17 25);
+  --code-selector: oklch(18% 0.16 25);
+}
+
+/* ============================================
+   FUI THEMES - Futuristic User Interface
+   ============================================ */
+
+/* BLUEPRINT - Classic blueprint blue with white lines */
+[data-theme="blueprint"] {
+  --background: 25% 0.12 230; /* Classic blueprint blue */
+  --foreground: 95% 0.02 230; /* Off-white/cream text */
+  --card: 28% 0.1 230;
+  --card-foreground: 95% 0.02 230;
+  --popover: 30% 0.1 230;
+  --popover-foreground: 95% 0.02 230;
+  --primary: 92% 0.02 230; /* White primary */
+  --primary-foreground: 25% 0.12 230;
+  --secondary: 35% 0.08 230;
+  --secondary-foreground: 92% 0.02 230;
+  --muted: 22% 0.1 230;
+  --muted-foreground: 75% 0.04 230;
+  --accent: 88% 0.03 230;
+  --accent-foreground: 25% 0.12 230;
+  --destructive: 65% 0.2 25;
+  --destructive-foreground: 95% 0.02 230;
+  --border: 55% 0.08 230;
+  --input: 55% 0.08 230;
+  --ring: 92% 0.02 230;
+  --success: 70% 0.15 145;
+  --success-foreground: 25% 0.12 230;
+  --warning: 80% 0.15 85;
+  --warning-foreground: 25% 0.12 230;
+  --info: 85% 0.05 230;
+  --info-foreground: 25% 0.12 230;
+  --chart-1: 95% 0.02 230;
+  --chart-2: 85% 0.04 230;
+  --chart-3: 75% 0.06 230;
+  --chart-4: 65% 0.08 230;
+  --chart-5: 55% 0.1 230;
+  --chart-6: 45% 0.12 230;
+  --chart-7: 80% 0.05 230;
+  --chart-8: 60% 0.09 230;
+  --chart-9: 70% 0.07 230;
+
+  /* Code syntax - blueprint style */
+  --code-fg: oklch(92% 0.02 230);
+  --code-bg: oklch(22% 0.1 230);
+  --code-comment: oklch(60% 0.06 230);
+  --code-string: oklch(85% 0.04 230);
+  --code-punctuation: oklch(70% 0.05 230);
+  --code-number: oklch(80% 0.04 230);
+  --code-keyword: oklch(95% 0.02 230);
+  --code-function: oklch(90% 0.03 230);
+  --code-selector: oklch(85% 0.04 230);
+}
+
+/* CYBERPUNK - Neon pink on black */
+[data-theme="cyberpunk"] {
+  --background: 6% 0.02 330;
+  --foreground: 85% 0.08 330;
+  --card: 8% 0.02 330;
+  --card-foreground: 85% 0.08 330;
+  --popover: 10% 0.02 330;
+  --popover-foreground: 85% 0.08 330;
+  --primary: 55% 0.25 330;
+  --primary-foreground: 98% 0 0;
+  --secondary: 12% 0.02 330;
+  --secondary-foreground: 85% 0.08 330;
+  --muted: 12% 0.02 330;
+  --muted-foreground: 65% 0.1 330;
+  --accent: 60% 0.22 330;
+  --accent-foreground: 98% 0 0;
+  --destructive: 60% 0.3 25;
+  --destructive-foreground: 98% 0 0;
+  --border: 38% 0.1 330;
+  --input: 38% 0.1 330;
+  --ring: 55% 0.25 330;
+  --success: 60% 0.2 145;
+  --success-foreground: 98% 0 0;
+  --warning: 70% 0.2 85;
+  --warning-foreground: 6% 0 0;
+  --info: 60% 0.2 210;
+  --info-foreground: 98% 0 0;
+  --chart-1: 55% 0.25 330;
+  --chart-2: 60% 0.22 330;
+  --chart-3: 50% 0.2 330;
+  --chart-4: 65% 0.18 330;
+  --chart-5: 45% 0.15 330;
+  --chart-6: 70% 0.2 330;
+  --chart-7: 40% 0.12 330;
+  --chart-8: 75% 0.15 330;
+  --chart-9: 35% 0.1 330;
+
+  /* Code syntax - cyberpunk neon */
+  --code-fg: oklch(85% 0.08 330);
+  --code-bg: oklch(8% 0.02 330);
+  --code-comment: oklch(50% 0.12 330);
+  --code-string: oklch(70% 0.22 145);
+  --code-punctuation: oklch(65% 0.15 330);
+  --code-number: oklch(75% 0.18 50);
+  --code-keyword: oklch(80% 0.25 330);
+  --code-function: oklch(70% 0.2 195);
+  --code-selector: oklch(75% 0.2 330);
+}
+
+/* NAVIGATOR - Amber technical */
+[data-theme="navigator"] {
+  --background: 5% 0.01 50;
+  --foreground: 80% 0.12 50;
+  --card: 7% 0.01 50;
+  --card-foreground: 80% 0.12 50;
+  --popover: 9% 0.01 50;
+  --popover-foreground: 80% 0.12 50;
+  --primary: 65% 0.18 50;
+  --primary-foreground: 5% 0 0;
+  --secondary: 10% 0.01 50;
+  --secondary-foreground: 80% 0.12 50;
+  --muted: 10% 0.01 50;
+  --muted-foreground: 65% 0.1 50;
+  --accent: 70% 0.15 50;
+  --accent-foreground: 5% 0 0;
+  --destructive: 55% 0.28 25;
+  --destructive-foreground: 98% 0 0;
+  --border: 36% 0.08 50;
+  --input: 36% 0.08 50;
+  --ring: 65% 0.18 50;
+  --success: 60% 0.18 50;
+  --success-foreground: 5% 0 0;
+  --warning: 70% 0.15 50;
+  --warning-foreground: 5% 0 0;
+  --info: 55% 0.12 50;
+  --info-foreground: 98% 0 0;
+  --chart-1: 65% 0.18 50;
+  --chart-2: 55% 0.15 50;
+  --chart-3: 75% 0.12 50;
+  --chart-4: 60% 0.1 50;
+  --chart-5: 50% 0.08 50;
+  --chart-6: 80% 0.14 50;
+  --chart-7: 45% 0.06 50;
+  --chart-8: 70% 0.16 50;
+  --chart-9: 40% 0.05 50;
+
+  /* Code syntax - navigator amber */
+  --code-fg: oklch(80% 0.12 50);
+  --code-bg: oklch(7% 0.01 50);
+  --code-comment: oklch(50% 0.08 50);
+  --code-string: oklch(70% 0.15 50);
+  --code-punctuation: oklch(60% 0.1 50);
+  --code-number: oklch(75% 0.18 50);
+  --code-keyword: oklch(85% 0.2 50);
+  --code-function: oklch(72% 0.14 50);
+  --code-selector: oklch(78% 0.16 50);
+}
+
+/* PHOSPHOR - Green CRT terminal */
+[data-theme="phosphor"] {
+  --background: 3% 0.015 140;
+  --foreground: 75% 0.2 140;
+  --card: 5% 0.015 140;
+  --card-foreground: 75% 0.2 140;
+  --popover: 7% 0.015 140;
+  --popover-foreground: 75% 0.2 140;
+  --primary: 60% 0.2 140;
+  --primary-foreground: 3% 0 0;
+  --secondary: 8% 0.02 140;
+  --secondary-foreground: 75% 0.2 140;
+  --muted: 8% 0.02 140;
+  --muted-foreground: 60% 0.12 140;
+  --accent: 65% 0.18 140;
+  --accent-foreground: 3% 0 0;
+  --destructive: 55% 0.28 25;
+  --destructive-foreground: 98% 0 0;
+  --border: 35% 0.1 140;
+  --input: 35% 0.1 140;
+  --ring: 60% 0.2 140;
+  --success: 65% 0.2 140;
+  --success-foreground: 3% 0 0;
+  --warning: 70% 0.18 85;
+  --warning-foreground: 3% 0 0;
+  --info: 55% 0.15 200;
+  --info-foreground: 98% 0 0;
+  --chart-1: 60% 0.2 140;
+  --chart-2: 50% 0.15 140;
+  --chart-3: 70% 0.18 140;
+  --chart-4: 55% 0.12 140;
+  --chart-5: 45% 0.1 140;
+  --chart-6: 75% 0.22 140;
+  --chart-7: 40% 0.08 140;
+  --chart-8: 65% 0.16 140;
+  --chart-9: 35% 0.06 140;
+
+  /* Code syntax - phosphor green CRT */
+  --code-fg: oklch(75% 0.2 140);
+  --code-bg: oklch(5% 0.015 140);
+  --code-comment: oklch(45% 0.1 140);
+  --code-string: oklch(68% 0.18 140);
+  --code-punctuation: oklch(55% 0.12 140);
+  --code-number: oklch(70% 0.2 140);
+  --code-keyword: oklch(80% 0.25 140);
+  --code-function: oklch(72% 0.18 140);
+  --code-selector: oklch(65% 0.15 140);
+}
+
+/* HOLOGRAPHIC - Cyan minimal */
+[data-theme="holographic"] {
+  --background: 8% 0.015 210;
+  --foreground: 92% 0.04 210;
+  --card: 10% 0.015 210;
+  --card-foreground: 92% 0.04 210;
+  --popover: 12% 0.015 210;
+  --popover-foreground: 92% 0.04 210;
+  --primary: 70% 0.12 195;
+  --primary-foreground: 8% 0 0;
+  --secondary: 14% 0.015 210;
+  --secondary-foreground: 92% 0.04 210;
+  --muted: 14% 0.015 210;
+  --muted-foreground: 65% 0.05 210;
+  --accent: 75% 0.1 195;
+  --accent-foreground: 8% 0 0;
+  --destructive: 55% 0.28 25;
+  --destructive-foreground: 98% 0 0;
+  --border: 40% 0.06 195;
+  --input: 40% 0.06 195;
+  --ring: 70% 0.12 195;
+  --success: 65% 0.15 145;
+  --success-foreground: 8% 0 0;
+  --warning: 70% 0.15 85;
+  --warning-foreground: 8% 0 0;
+  --info: 70% 0.12 195;
+  --info-foreground: 8% 0 0;
+  --chart-1: 70% 0.12 195;
+  --chart-2: 60% 0.1 195;
+  --chart-3: 80% 0.08 195;
+  --chart-4: 65% 0.06 195;
+  --chart-5: 55% 0.04 195;
+  --chart-6: 75% 0.14 195;
+  --chart-7: 50% 0.08 195;
+  --chart-8: 85% 0.1 195;
+  --chart-9: 45% 0.05 195;
+
+  /* Code syntax - holographic cyan */
+  --code-fg: oklch(92% 0.04 210);
+  --code-bg: oklch(10% 0.015 210);
+  --code-comment: oklch(50% 0.06 210);
+  --code-string: oklch(75% 0.1 195);
+  --code-punctuation: oklch(65% 0.08 195);
+  --code-number: oklch(80% 0.12 195);
+  --code-keyword: oklch(85% 0.15 195);
+  --code-function: oklch(78% 0.1 195);
+  --code-selector: oklch(72% 0.09 195);
+}
+
+/* FUI Theme body effects */
+[data-theme="blueprint"] body {
+  /* Blueprint grid - white lines on blue */
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+[data-theme="cyberpunk"] body {
+  text-shadow: 0 0 15px oklch(55% 0.25 330 / 0.4);
+  background-image:
+    linear-gradient(rgba(255, 0, 80, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 0, 80, 0.04) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+[data-theme="navigator"] body {
+  text-shadow: 0 0 10px oklch(65% 0.18 50 / 0.3);
+  background-image:
+    linear-gradient(rgba(255, 140, 0, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 140, 0, 0.06) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+[data-theme="phosphor"] body {
+  text-shadow: 0 0 8px oklch(60% 0.2 140 / 0.5);
+  background-image:
+    linear-gradient(rgba(0, 255, 65, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 65, 0.05) 1px, transparent 1px);
+  background-size: 12px 12px;
+}
+
+[data-theme="holographic"] body {
+  text-shadow: 0 0 12px oklch(70% 0.12 195 / 0.3);
+  background-image:
+    linear-gradient(rgba(0, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* ============================================
+   CRT GLOW EFFECTS - Apply to all text
+   ============================================ */
+
+[data-theme="infrared"] body {
+  /* Dark text on light red - subtle shadow for depth */
+  text-shadow: 0 1px 0 oklch(65% 0.25 25 / 0.15);
+}
+[data-theme="red"] body {
+  text-shadow:
+    0 0 2px oklch(70% 0.3 25 / 0.3),
+    0 0 4px oklch(70% 0.3 25 / 0.15);
+}
+[data-theme="blue"] body {
+  text-shadow:
+    0 0 2px oklch(80% 0.22 200 / 0.3),
+    0 0 4px oklch(80% 0.22 200 / 0.15);
+}
+[data-theme="green"] body {
+  text-shadow:
+    0 0 2px oklch(85% 0.3 145 / 0.3),
+    0 0 4px oklch(85% 0.3 145 / 0.15);
+}
+[data-theme="amber"] body {
+  text-shadow:
+    0 0 2px oklch(88% 0.25 50 / 0.3),
+    0 0 4px oklch(88% 0.25 50 / 0.15);
+}
+[data-theme="purple"] body {
+  text-shadow:
+    0 0 2px oklch(70% 0.25 300 / 0.3),
+    0 0 4px oklch(70% 0.25 300 / 0.15);
+}
+[data-theme="gameboy"] body {
+  text-shadow:
+    0 0 1px oklch(15% 0.12 85 / 0.25),
+    0 0 3px oklch(15% 0.12 85 / 0.12);
+}
+[data-theme="c64"] body {
+  text-shadow:
+    0 0 1px oklch(20% 0.12 210 / 0.2),
+    0 0 2px oklch(20% 0.12 210 / 0.1);
+}
+[data-theme="gbpocket"] body {
+  text-shadow:
+    0 0 1px oklch(15% 0.01 0 / 0.15),
+    0 0 2px oklch(15% 0.01 0 / 0.08);
+}
+[data-theme="vic20"] body {
+  text-shadow:
+    0 0 1px oklch(18% 0.1 180 / 0.2),
+    0 0 2px oklch(18% 0.1 180 / 0.1);
+}
+[data-theme="atari"] body {
+  text-shadow:
+    0 0 1px oklch(20% 0.14 35 / 0.2),
+    0 0 2px oklch(20% 0.14 35 / 0.1);
+}
+[data-theme="spectrum"] body {
+  text-shadow:
+    0 0 1px oklch(10% 0.08 250 / 0.15),
+    0 0 2px oklch(10% 0.08 250 / 0.08);
+}

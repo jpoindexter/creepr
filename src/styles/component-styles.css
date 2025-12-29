@@ -1,0 +1,188 @@
+/* ============================================
+   UTILITIES
+   ============================================ */
+
+/* Scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: oklch(var(--border)) transparent;
+}
+*:hover {
+  scrollbar-color: oklch(var(--primary) / 0.5) transparent;
+}
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: oklch(var(--border));
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: oklch(var(--primary) / 0.5);
+}
+
+/* Terminal Utilities */
+.terminal-label {
+  font-family: var(--font-jetbrains-mono), monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.terminal-header {
+  @apply border-border flex items-center gap-2 border-b px-4 py-2;
+}
+.terminal-header-title {
+  @apply text-muted-foreground font-mono text-xs;
+}
+
+/* Typography Utilities */
+.heading-section {
+  @apply text-primary font-mono text-sm font-semibold;
+}
+.heading-subsection {
+  @apply text-foreground font-mono text-sm font-semibold;
+}
+.body-text {
+  @apply text-muted-foreground font-mono text-sm leading-relaxed;
+}
+
+/* Accessibility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Animation utilities */
+.animate-blink {
+  animation: blink 0.8s infinite;
+}
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: oklch(var(--background));
+  color: oklch(var(--foreground));
+  padding: 0.5rem 1rem;
+  z-index: 100;
+  text-decoration: none;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  border: 1px solid oklch(var(--border));
+  transition: top 0.2s ease;
+}
+.skip-link:focus {
+  top: 0.5rem;
+  outline: 2px solid oklch(var(--ring));
+  outline-offset: 2px;
+}
+
+/* ============================================
+   GRADIENT TEXT UTILITIES
+   ============================================ */
+
+/* Gradient effect for hero headlines - uses theme accent color */
+.text-gradient-purple {
+  background: linear-gradient(
+    135deg,
+    oklch(from var(--accent) calc(l + 0.15) c h),
+    oklch(var(--accent)),
+    oklch(from var(--accent) calc(l - 0.1) c h)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Text glow effect for accent elements - uses theme accent color */
+.text-glow-purple {
+  text-shadow:
+    0 0 20px oklch(var(--accent) / 0.5),
+    0 0 40px oklch(var(--accent) / 0.3),
+    0 0 60px oklch(var(--accent) / 0.2);
+}
+
+/* Button glow effect - uses theme accent color */
+.button-glow-purple {
+  box-shadow:
+    0 0 20px oklch(var(--accent) / 0.4),
+    0 0 40px oklch(var(--accent) / 0.2);
+}
+
+/* Animate gradient on hover */
+@keyframes gradient-shift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.text-gradient-animated {
+  background-size: 200% 200%;
+  animation: gradient-shift 3s ease infinite;
+}
+
+/* ============================================
+   FUI (Futuristic UI) Background Animations
+   ============================================ */
+
+@keyframes scan-vertical {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(calc(100vh + 100%));
+  }
+}
+
+@keyframes ping-slow {
+  0% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+@keyframes flow-down {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(calc(100vh + 100%));
+    opacity: 0;
+  }
+}
+
+.animate-scan-vertical {
+  animation: scan-vertical linear infinite;
+}
+
+.animate-ping-slow {
+  animation: ping-slow 3s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+.animate-flow-down {
+  animation: flow-down linear infinite;
+}

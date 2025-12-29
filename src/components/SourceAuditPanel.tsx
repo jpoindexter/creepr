@@ -345,7 +345,7 @@ export function SourceAuditPanel() {
     <Card>
       <CardHeader title="DESIGN_SYSTEM_AUDIT" icon={<Code className="h-4 w-4" />} />
       <CardContent className="space-y-4">
-        <p className="text-sm text-gray-600">
+        <p className="text-muted-foreground text-sm">
           Comprehensive scan for design inconsistencies with file:line locations
         </p>
 
@@ -374,7 +374,10 @@ export function SourceAuditPanel() {
         {/* AI Model Selector */}
         {auditMode === "ai" && availableModels.length > 0 && (
           <div className="space-y-1">
-            <label htmlFor="ollama-model-select" className="text-xs font-medium text-gray-500">
+            <label
+              htmlFor="ollama-model-select"
+              className="text-muted-foreground text-xs font-medium"
+            >
               Ollama Model
             </label>
             <select
@@ -382,7 +385,7 @@ export function SourceAuditPanel() {
               name="ollama-model"
               value={selectedModel}
               onChange={(e) => setSelectedModel(e.target.value)}
-              className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm"
+              className="border-border bg-card w-full rounded-none border px-4 py-2 text-sm"
             >
               {availableModels.map((model) => (
                 <option key={model} value={model}>
@@ -420,17 +423,18 @@ export function SourceAuditPanel() {
           {isLoadingFiles ? (
             <>
               <Loader2 className="h-4 w-4 animate-spin text-blue-500" />
-              <span className="text-gray-500">Loading files...</span>
+              <span className="text-muted-foreground">Loading files...</span>
             </>
           ) : (
             <>
               <FolderOpen className="h-4 w-4 text-blue-500" />
               {directoryName ? (
                 <span>
-                  {directoryName} <span className="text-gray-400">({fileHandles.size} files)</span>
+                  {directoryName}{" "}
+                  <span className="text-muted-foreground/60">({fileHandles.size} files)</span>
                 </span>
               ) : (
-                <span className="text-gray-500">Choose folder...</span>
+                <span className="text-muted-foreground">Choose folder...</span>
               )}
             </>
           )}

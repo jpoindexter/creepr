@@ -1,0 +1,367 @@
+/* ============================================
+   CUSTOM UTILITIES
+   ============================================ */
+
+/* Dynamic radius utility - responds to --radius CSS variable */
+@utility rounded-dynamic {
+  border-radius: var(--radius);
+}
+
+/* Dynamic font utilities - for runtime typography switching */
+@utility font-body {
+  font-family: var(--font-body);
+}
+
+@utility font-headline {
+  font-family: var(--font-headline);
+}
+
+/* ===========================================
+   DESIGN SYSTEM TOKENS
+   8-point grid compliant sizing utilities
+   =========================================== */
+
+/* Typography: Extra small text (10px = 0.625rem) */
+@utility text-2xs {
+  font-size: 0.625rem;
+  line-height: 1rem;
+}
+
+/* Typography: Micro text (8px = 0.5rem) - for decorative/ASCII art */
+@utility text-3xs {
+  font-size: 0.5rem;
+  line-height: 0.75rem;
+}
+
+/* Sizing: Panel heights (600px = 37.5rem, 400px = 25rem) */
+@utility h-panel {
+  height: 37.5rem;
+}
+
+@utility min-h-panel {
+  min-height: 37.5rem;
+}
+
+@utility h-panel-sm {
+  height: 25rem;
+}
+
+@utility min-h-panel-sm {
+  min-height: 25rem;
+}
+
+/* Sizing: Sidebar widths (288px = 18rem = w-72) */
+@utility w-sidebar {
+  width: 18rem;
+}
+
+/* Sizing: Auth page container (400px = 25rem) */
+@utility max-w-auth {
+  max-width: 25rem;
+}
+
+/* Sizing: Dropdown/Select minimum widths */
+@utility min-w-dropdown {
+  min-width: 8rem;
+}
+
+@utility min-w-select {
+  min-width: 5rem;
+}
+
+/* Sizing: Command/Dropdown max height (300px = 18.75rem) */
+@utility max-h-dropdown {
+  max-height: 18.75rem;
+}
+
+/* Sizing: Chat/TextArea max height (200px = 12.5rem) */
+@utility max-h-textarea {
+  max-height: 12.5rem;
+}
+
+/* Sizing: WCAG 2.1 AA touch targets (44px minimum) */
+@utility min-h-touch {
+  min-height: 2.75rem;
+}
+
+@utility min-w-touch {
+  min-width: 2.75rem;
+}
+
+/* ===========================================
+   Z-INDEX SCALE
+   Standardized layering for overlays
+   =========================================== */
+
+/* z-banner: Cookie consent, floating notices (60) */
+@utility z-banner {
+  z-index: 60;
+}
+
+/* z-modal: Modals, navigation, toast, impersonation (100) */
+@utility z-modal {
+  z-index: 100;
+}
+
+/* ===========================================
+   VIEWPORT HEIGHT TOKENS
+   For modal/panel max heights
+   =========================================== */
+
+/* max-h-modal: Cookie consent, scrollable modals (60vh) */
+@utility max-h-modal {
+  max-height: 60vh;
+}
+
+/* max-h-panel-view: Hero lab panels, theme dropdowns (70vh) */
+@utility max-h-panel-view {
+  max-height: 70vh;
+}
+
+/* max-h-dialog: Blog reference dialogs, large modals (80vh) */
+@utility max-h-dialog {
+  max-height: 80vh;
+}
+
+/* ===========================================
+   FIXED HEIGHT TOKENS
+   8-point grid aligned where possible
+   =========================================== */
+
+/* h-card-preview: Blog card preview area (180px = 11.25rem) */
+@utility h-card-preview {
+  height: 11.25rem;
+}
+
+/* h-chart: Chart containers, floating cards (300px = 18.75rem) */
+@utility h-chart {
+  height: 18.75rem;
+}
+
+/* min-h-onboarding: Onboarding step containers (400px = 25rem) */
+@utility min-h-onboarding {
+  min-height: 25rem;
+}
+
+/* min-h-demo: Demo/modal containers (600px = 37.5rem) */
+@utility min-h-demo {
+  min-height: 37.5rem;
+}
+
+/* h-embed: Interactive demo iframe (700px = 43.75rem) */
+@utility h-embed {
+  height: 43.75rem;
+}
+
+/* ===========================================
+   FIXED WIDTH TOKENS
+   Table columns and select triggers
+   =========================================== */
+
+/* w-column-xs: Extra small table columns (70px = 4.375rem) */
+@utility w-column-xs {
+  width: 4.375rem;
+}
+
+/* w-column-sm: Small table columns (100px = 6.25rem) */
+@utility w-column-sm {
+  width: 6.25rem;
+}
+
+/* w-column-md: Medium table columns, min-widths (120px = 7.5rem) */
+@utility w-column-md {
+  width: 7.5rem;
+}
+
+/* w-select-md: Medium select triggers (140px = 8.75rem) */
+@utility w-select-md {
+  width: 8.75rem;
+}
+
+/* w-select-lg: Large select triggers, table columns (180px = 11.25rem) */
+@utility w-select-lg {
+  width: 11.25rem;
+}
+
+/* min-w-column-md: Minimum column width (120px) */
+@utility min-w-column-md {
+  min-width: 7.5rem;
+}
+
+/* ===========================================
+   MAX WIDTH TOKENS
+   Form and container constraints
+   =========================================== */
+
+/* max-w-form: Auth forms, compact forms (380px = 23.75rem) */
+@utility max-w-form {
+  max-width: 23.75rem;
+}
+
+/* max-w-email: Email templates (600px = 37.5rem) */
+@utility max-w-email {
+  max-width: 37.5rem;
+}
+
+/* max-w-table: Comparison tables (700px = 43.75rem) */
+@utility max-w-table {
+  min-width: 43.75rem;
+}
+
+/* max-w-playground: Full-width playground (1800px = 112.5rem) */
+@utility max-w-playground {
+  max-width: 112.5rem;
+}
+
+/* ===========================================
+   SIDEBAR INDICATOR OFFSETS
+   Tree view connecting lines
+   =========================================== */
+
+/* ml-sidebar-sm: Small sidebar indicator offset (5px) */
+@utility ml-sidebar-sm {
+  margin-left: 0.3125rem;
+}
+
+/* ml-sidebar: Standard sidebar indicator offset (7px) */
+@utility ml-sidebar-indicator {
+  margin-left: 0.4375rem;
+}
+
+/* left-activity: Activity feed timeline position (19px) */
+@utility left-activity {
+  left: 1.1875rem;
+}
+
+/* ===========================================
+   MICRO ADJUSTMENTS
+   Sub-pixel and em-based sizing
+   =========================================== */
+
+/* mt-micro: Micro top margin for alignment (1px) */
+@utility mt-micro {
+  margin-top: 0.0625rem;
+}
+
+/* w-cursor: Blinking cursor width (0.5em) */
+@utility w-cursor {
+  width: 0.5em;
+}
+
+/* h-cursor: Blinking cursor height (1em) */
+@utility h-cursor {
+  height: 1em;
+}
+
+/* min-h-card-desc: Card description min height for 3-line clamp (60px = 3.75rem) */
+@utility min-h-card-desc {
+  min-height: 3.75rem;
+}
+
+/* min-h-headline: Headline min height to prevent layout shift (1.2em) */
+@utility min-h-headline {
+  min-height: 1.2em;
+}
+
+/* w-cursor-lg: Large blinking cursor width (0.55em) */
+@utility w-cursor-lg {
+  width: 0.55em;
+}
+
+/* -mb-cursor: Cursor vertical alignment adjustment (-0.1em) */
+@utility -mb-cursor {
+  margin-bottom: -0.1em;
+}
+
+/* min-h-bar: Chart bar minimum height (2px) */
+@utility min-h-bar {
+  min-height: 2px;
+}
+
+/* ===========================================
+   HAIRLINE UTILITIES
+   For 1px borders and separators
+   =========================================== */
+
+/* h-hairline: Horizontal separator (1px) */
+@utility h-hairline {
+  height: 1px;
+}
+
+/* w-hairline: Vertical separator (1px) */
+@utility w-hairline {
+  width: 1px;
+}
+
+/* p-hairline: Scrollbar padding (1px) */
+@utility p-hairline {
+  padding: 1px;
+}
+
+/* ===========================================
+   LINE CLAMP MIN HEIGHTS
+   Consistent card text areas
+   =========================================== */
+
+/* min-h-line-2: 2-line clamp min height (2.5rem = 40px) */
+@utility min-h-line-2 {
+  min-height: 2.5rem;
+}
+
+/* min-h-line-3: 3-line clamp min height (3.75rem = 60px) - alias for min-h-card-desc */
+@utility min-h-line-3 {
+  min-height: 3.75rem;
+}
+
+/* ===========================================
+   MOTION CURSOR TOKENS
+   For animated text cursors
+   =========================================== */
+
+/* w-cursor-motion: Motion component cursor (0.6em) */
+@utility w-cursor-motion {
+  width: 0.6em;
+}
+
+/* h-cursor-motion: Motion component cursor height (1.1em) */
+@utility h-cursor-motion {
+  height: 1.1em;
+}
+
+/* ===========================================
+   PERCENTAGE WIDTH TOKENS
+   For fluid layouts
+   =========================================== */
+
+/* max-w-message: Chat message max width (80%) */
+@utility max-w-message {
+  max-width: 80%;
+}
+
+/* ===========================================
+   DISPLAY/INTERACTION TOKENS
+   =========================================== */
+
+/* min-h-display: Display effect minimum height (80px = 5rem) */
+@utility min-h-display {
+  min-height: 5rem;
+}
+
+/* min-w-typewriter: Typewriter text min width (280px = 17.5rem) */
+@utility min-w-typewriter {
+  min-width: 17.5rem;
+}
+
+/* min-w-typewriter-lg: Large typewriter min width (320px = 20rem) */
+@utility min-w-typewriter-lg {
+  min-width: 20rem;
+}
+
+/* ===========================================
+   LETTER SPACING
+   =========================================== */
+
+/* tracking-caps: Standard uppercase letter spacing (0.05em) */
+@utility tracking-caps {
+  letter-spacing: 0.05em;
+}

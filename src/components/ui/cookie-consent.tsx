@@ -242,7 +242,7 @@ export function CookieConsent({
               )}
             >
               <div className="flex gap-4">
-                <Shield className="text-primary mt-1 h-5 w-5 flex-shrink-0" />
+                <Shield className="text-primary mt-1 h-5 w-5 shrink-0" />
                 <div className="space-y-1">
                   <p className={cn("text-sm font-medium", mode.font)}>[NECESSARY]</p>
                   <p className={cn("text-muted-foreground text-xs", mode.font)}>
@@ -263,7 +263,7 @@ export function CookieConsent({
               )}
             >
               <div className="flex gap-4">
-                <BarChart3 className="text-primary mt-1 h-5 w-5 flex-shrink-0" />
+                <BarChart3 className="text-primary mt-1 h-5 w-5 shrink-0" />
                 <div className="space-y-1">
                   <p className={cn("text-sm font-medium", mode.font)}>[ANALYTICS]</p>
                   <p className={cn("text-muted-foreground text-xs", mode.font)}>
@@ -290,7 +290,7 @@ export function CookieConsent({
               )}
             >
               <div className="flex gap-4">
-                <Target className="text-primary mt-1 h-5 w-5 flex-shrink-0" />
+                <Target className="text-primary mt-1 h-5 w-5 shrink-0" />
                 <div className="space-y-1">
                   <p className={cn("text-sm font-medium", mode.font)}>[MARKETING]</p>
                   <p className={cn("text-muted-foreground text-xs", mode.font)}>
@@ -317,7 +317,7 @@ export function CookieConsent({
               )}
             >
               <div className="flex gap-4">
-                <Cookie className="text-primary mt-1 h-5 w-5 flex-shrink-0" />
+                <Cookie className="text-primary mt-1 h-5 w-5 shrink-0" />
                 <div className="space-y-1">
                   <p className={cn("text-sm font-medium", mode.font)}>[PREFERENCES]</p>
                   <p className={cn("text-muted-foreground text-xs", mode.font)}>

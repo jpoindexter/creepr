@@ -70,7 +70,7 @@ function CustomNodeComponent({ data, selected, id }: CustomNodeProps) {
       <Handle
         type="target"
         position={Position.Top}
-        className="!h-1 !w-1 !rounded-none !border-0 !bg-white/60"
+        className="!bg-background/60 !h-1 !w-1 !rounded-none !border-0"
         aria-hidden="true"
       />
 
@@ -80,7 +80,7 @@ function CustomNodeComponent({ data, selected, id }: CustomNodeProps) {
         {hasChildren && (
           <button
             onClick={handleToggleCollapse}
-            className="flex min-h-[20px] min-w-[20px] flex-shrink-0 items-center justify-center p-0.5 text-white/70 hover:text-white"
+            className="text-background/70 hover:text-background flex min-h-[20px] min-w-[20px] flex-shrink-0 items-center justify-center p-0.5"
             aria-label={
               isCollapsed
                 ? `Expand ${data.title} (${data.childCount} children)`
@@ -99,7 +99,7 @@ function CustomNodeComponent({ data, selected, id }: CustomNodeProps) {
         {/* API badge */}
         {data.isApiEndpoint && (
           <span
-            className="rounded-sm bg-white/20 px-1 py-0.5 text-[9px] font-semibold tracking-wide text-white uppercase"
+            className="bg-background/20 text-background rounded-none px-1 py-0.5 text-[9px] font-semibold tracking-wide uppercase"
             aria-label="API endpoint"
           >
             API
@@ -111,7 +111,10 @@ function CustomNodeComponent({ data, selected, id }: CustomNodeProps) {
 
         {/* Child count badge */}
         {hasChildren && (
-          <span className="text-[10px] text-white/50" aria-label={`${data.childCount} child pages`}>
+          <span
+            className="text-background/50 text-[10px]"
+            aria-label={`${data.childCount} child pages`}
+          >
             ({isCollapsed ? `+${data.childCount}` : data.childCount})
           </span>
         )}
@@ -119,7 +122,7 @@ function CustomNodeComponent({ data, selected, id }: CustomNodeProps) {
 
       {/* Path - smaller, muted */}
       {!isRoot && (
-        <div className="mt-0.5 truncate text-[10px] text-white/50" title={data.url}>
+        <div className="text-background/50 mt-0.5 truncate text-[10px]" title={data.url}>
           {getPath(data.url)}
         </div>
       )}
@@ -128,7 +131,7 @@ function CustomNodeComponent({ data, selected, id }: CustomNodeProps) {
       <Handle
         type="source"
         position={Position.Bottom}
-        className="!h-1 !w-1 !rounded-none !border-0 !bg-white/60"
+        className="!bg-background/60 !h-1 !w-1 !rounded-none !border-0"
         aria-hidden="true"
       />
     </div>
