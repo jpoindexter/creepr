@@ -11,6 +11,7 @@ import {
   Zap,
 } from "lucide-react";
 import { useAppStore } from "@/lib/store";
+import { createEmptyReport, Inconsistency, DesignSystemAuditReport } from "@/lib/design-system-auditor";
 
 type AuditMode = "comprehensive" | "ai";
 
@@ -193,33 +194,85 @@ export function SourceAuditPanel() {
       if (auditMode === "ai") {
         setAuditProgress({ stage: "Sending to AI model...", percent: 15 });
 
-        // Simulate progress for AI (we can't know exact progress)
+        // Simulate progress for AI (slower for better UX on long tasks)
         const progressInterval = setInterval(() => {
-          progressPercent = Math.min(progressPercent + 5, 85);
-          const stage = progressPercent < 30 ? "Loading model..." :
-                       progressPercent < 50 ? "Analyzing code patterns..." :
-                       progressPercent < 70 ? "Finding inconsistencies..." :
-                       "Generating recommendations...";
+          // Asymptotic progress: fast at first, then very slow
+          const increment = progressPercent < 50 ? 5 : progressPercent < 80 ? 2 : 0.5;
+          progressPercent = Math.min(progressPercent + increment, 95);
+          
+          let stage = "Loading model...";
+          if (progressPercent > 20) stage = "Analyzing code patterns...";
+          if (progressPercent > 50) stage = "Finding inconsistencies...";
+          if (progressPercent > 75) stage = "Generating detailed report (this may take several minutes for large models)...";
+          
           setAuditProgress({ stage, percent: progressPercent });
         }, 2000);
 
-        const response = await fetch("/api/audit/ai", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ files: filesArray, model: selectedModel }),
-        });
+        // Client-side timeout of 10.5 minutes (just above server timeout)
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 630000);
 
-        clearInterval(progressInterval);
-        setAuditProgress({ stage: "Processing results...", percent: 95 });
+        try {
+          const response = await fetch("/api/audit/ai", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ files: filesArray, model: selectedModel }),
+            signal: controller.signal,
+          });
 
-        if (!response.ok) {
-          const error = await response.json();
-          alert(`AI Audit failed: ${error.error}`);
-        } else {
-          // AI report - for now, just log results
-          const aiReport = await response.json();
-          console.log("AI Report:", aiReport);
-          alert(`AI found ${aiReport.inconsistencies?.length || 0} inconsistencies. Check console for details.`);
+          clearTimeout(timeoutId);
+          clearInterval(progressInterval);
+          setAuditProgress({ stage: "Processing results...", percent: 98 });
+
+          if (!response.ok) {
+            const error = await response.json();
+            alert(`AI Audit failed: ${error.error}`);
+          } else {
+            // AI report - update global state
+            const aiReport = await response.json();
+            console.log("AI Report:", aiReport);
+            
+            // Transform AI report to DesignSystemAuditReport structure
+            const fullReport: DesignSystemAuditReport = createEmptyReport();
+            fullReport.generatedAt = aiReport.generatedAt;
+            fullReport.totalFiles = aiReport.filesAnalyzed;
+            fullReport.summary = aiReport.summary;
+            
+            // Map inconsistencies
+            const mappedInconsistencies: Inconsistency[] = (aiReport.inconsistencies || []).map((inc: any) => ({
+              category: inc.category,
+              description: inc.description,
+              dominantPattern: "See description", 
+              dominantCount: 0,
+              dominantPercentage: 0,
+              outliers: [{
+                pattern: "Detected Issue",
+                count: inc.locations?.length || 0,
+                percentage: 100,
+                files: inc.locations?.map((l: any) => ({
+                  file: l.file,
+                  line: l.line || 0
+                })) || []
+              }],
+              severity: (inc.severity === "high" ? "critical" : inc.severity === "medium" ? "warning" : "info"),
+              recommendation: inc.recommendation
+            }));
+
+            fullReport.inconsistencies = {
+              totalInconsistencies: mappedInconsistencies.length,
+              critical: mappedInconsistencies.filter(i => i.severity === "critical").length,
+              warning: mappedInconsistencies.filter(i => i.severity === "warning").length,
+              info: mappedInconsistencies.filter(i => i.severity === "info").length,
+              inconsistencies: mappedInconsistencies
+            };
+
+            setDesignSystemReport(fullReport); // Show results in main view
+            alert(`AI found ${aiReport.inconsistencies?.length || 0} inconsistencies.`);
+          }
+        } catch (fetchError) {
+            clearTimeout(timeoutId);
+            clearInterval(progressInterval);
+            throw fetchError;
         }
       } else {
         // Comprehensive Design System Audit
