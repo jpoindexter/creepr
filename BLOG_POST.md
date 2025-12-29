@@ -1,20 +1,28 @@
 # Building Creepr: A Visual Sitemap Generator & Design System Auditor for Developers
 
 ---
+
 title: Building Creepr: A Visual Sitemap Generator & Design System Auditor for Developers
 published: true
 description: How I built a tool that crawls your localhost apps, generates interactive visual sitemaps, and audits your design system for inconsistencies - with real code examples and implementation details
 tags: nextjs, react, typescript, webdev
 cover_image: https://dev-to-uploads.s3.amazonaws.com/uploads/articles/placeholder.png
+
 ---
 
-## The Problem I Was Trying to Solve
+## Why I Built This
 
-Picture this: You join a new team. The codebase has 200+ React components. There's no documentation. The previous developer is gone. You need to understand how the app is structured and why there are 47 different shades of gray in the UI.
+I'm a UX designer by trade. I did front-end coding about 15 years ago, then stepped away from it for a while. When AI coding assistants came out, I jumped back in. The whole "vibe coding" movement made it easy to ship features fast.
 
-Or maybe you've been on a project for two years. The team has grown from 2 to 12 developers. Everyone picks their own Tailwind classes. Your design system is "whatever felt right at the time."
+Too fast, it turns out.
 
-I built **creepr** to solve both problems:
+After a few months of building apps with AI, I had a realization: **I was skipping my design training.** I was building ungodly apps that weren't well thought out - random pages everywhere, inconsistent navigation, no clear information architecture. The kind of apps I would have torn apart in a UX audit if a client had shown them to me.
+
+Here's the thing about being a UX designer: whenever I'd work on a redesign for a client, the first thing I'd always do is **make a sitemap**. Map out every page, see how they connect, identify the dead ends and orphaned content, understand the user flows. It's UX 101.
+
+So I needed to do that for my own apps. I needed to see all the pages so I could fix them.
+
+That's why I built **creepr**:
 
 1. **Visualize your app structure** - Crawl any localhost app and generate an interactive, zoomable sitemap showing how pages connect
 2. **Audit your design system** - Scan source files to find actual inconsistencies (not just list patterns) and get actionable recommendations
@@ -100,6 +108,7 @@ Page Tree:
 ```
 
 Immediately you can see:
+
 - Someone deleted a product but links still point to it
 - The `/contact` page is throwing a 500 error
 - There's an old promo page that was never cleaned up
@@ -162,7 +171,7 @@ Your codebase has:
 - 89 border radius values
 ```
 
-Cool. But what do I *do* with that? Is 247 colors too many? Which ones should I keep? Where are the problems?
+Cool. But what do I _do_ with that? Is 247 colors too many? Which ones should I keep? Where are the problems?
 
 ### What Creepr Does Differently
 
@@ -210,6 +219,7 @@ Recommendation: Define a standard border-radius. Consider using
 ```
 
 See the difference? Instead of "you have 6 border radius values," you get:
+
 - Which one is most common (your de facto standard)
 - Which ones deviate from that standard
 - Exactly where in your code the deviations are
@@ -218,6 +228,7 @@ See the difference? Instead of "you have 6 border radius values," you get:
 ### Severity Levels Explained
 
 **🔴 Critical** - No clear standard exists. Your team is all over the place.
+
 ```
 Example: 5 different text colors used roughly equally
 - text-gray-600: 23%
@@ -230,6 +241,7 @@ This is chaos. Pick one and standardize.
 ```
 
 **🟡 Warning** - Clear standard exists, but there are outliers.
+
 ```
 Example: rounded-lg is dominant but outliers exist
 - rounded-lg: 78%  ← Your standard
@@ -240,6 +252,7 @@ These outliers are likely accidents. Easy wins to fix.
 ```
 
 **🔵 Info** - Minor variations, good to know about.
+
 ```
 Example: Intentional variations that might be fine
 - shadow-md: 65%
@@ -255,21 +268,25 @@ components). Worth reviewing but not urgent.
 The auditor looks for patterns across these categories:
 
 **Colors**
+
 - Tailwind: `bg-*`, `text-*`, `border-*`, `ring-*`
 - Raw values: `#hex`, `rgb()`, `rgba()`, `hsl()`, `oklch()`
 - CSS Variables: `var(--color-*)`, `var(--bg-*)`
 
 **Spacing**
+
 - Padding: `p-*`, `px-*`, `py-*`, `pt-*`, `pr-*`, `pb-*`, `pl-*`
 - Margin: `m-*`, `mx-*`, `my-*`, `mt-*`, etc.
 - Gap: `gap-*`, `gap-x-*`, `gap-y-*`
 - Space: `space-x-*`, `space-y-*`
 
 **Sizing**
+
 - Width: `w-*`, `min-w-*`, `max-w-*`
 - Height: `h-*`, `min-h-*`, `max-h-*`
 
 **Typography**
+
 - Font size: `text-xs` through `text-9xl`
 - Font weight: `font-thin` through `font-black`
 - Font family: `font-sans`, `font-serif`, `font-mono`
@@ -277,12 +294,14 @@ The auditor looks for patterns across these categories:
 - Letter spacing: `tracking-*`
 
 **Visual**
+
 - Border radius: `rounded-*`
 - Shadows: `shadow-*`
 - Opacity: `opacity-*`
 - Blur: `blur-*`, `backdrop-blur-*`
 
 **Layout**
+
 - Display: `flex`, `grid`, `block`, `hidden`
 - Flex utilities: `flex-*`, `items-*`, `justify-*`
 - Grid utilities: `grid-cols-*`, `col-span-*`
@@ -290,6 +309,7 @@ The auditor looks for patterns across these categories:
 - Z-index: `z-*`
 
 **And more...**
+
 - Transforms, filters, gradients, text styles
 - Inline styles in JSX
 - CSS variable declarations
@@ -298,6 +318,7 @@ The auditor looks for patterns across these categories:
 ### Real-World Example: Before and After
 
 **Before running the audit:**
+
 ```tsx
 // Card.tsx
 <div className="rounded-md shadow-md p-4 bg-white">
@@ -318,6 +339,7 @@ The auditor looks for patterns across these categories:
 5 components, 5 different border radius values. Visual inconsistency.
 
 **After fixing based on audit recommendations:**
+
 ```tsx
 // Card.tsx
 <div className="rounded-lg shadow-md p-4 bg-white">
@@ -402,7 +424,7 @@ export class SitemapCrawler {
       async requestHandler({ page, request, enqueueLinks }) {
         // IMPORTANT: Wait for client-side JS to finish
         // Next.js apps render links dynamically
-        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState("networkidle");
 
         // Get the response to check status codes
         const response = await page.goto(request.url);
@@ -410,10 +432,9 @@ export class SitemapCrawler {
 
         // Extract page metadata
         const title = await page.title();
-        const description = await page.$eval(
-          'meta[name="description"]',
-          el => el.getAttribute('content')
-        ).catch(() => null);
+        const description = await page
+          .$eval('meta[name="description"]', (el) => el.getAttribute("content"))
+          .catch(() => null);
 
         // Extract all links on the page
         const links = await this.extractLinks(page, startUrl);
@@ -435,17 +456,17 @@ export class SitemapCrawler {
 
         // Queue discovered links for crawling
         const internalLinks = links
-          .filter(link => link.isInternal && !this.visitedUrls.has(link.url))
-          .map(link => ({
+          .filter((link) => link.isInternal && !this.visitedUrls.has(link.url))
+          .map((link) => ({
             url: link.url,
             userData: {
               parentUrl: request.url,
-              depth: (request.userData?.depth || 0) + 1
-            }
+              depth: (request.userData?.depth || 0) + 1,
+            },
           }));
 
-        await enqueueLinks({ urls: internalLinks.map(l => l.url) });
-      }
+        await enqueueLinks({ urls: internalLinks.map((l) => l.url) });
+      },
     });
 
     await crawler.run([startUrl]);
@@ -455,10 +476,10 @@ export class SitemapCrawler {
   private async extractLinks(page: Page, baseUrl: string): Promise<LinkInfo[]> {
     return page.evaluate((base) => {
       const links: LinkInfo[] = [];
-      const anchors = document.querySelectorAll('a[href]');
+      const anchors = document.querySelectorAll("a[href]");
 
-      anchors.forEach(anchor => {
-        const href = anchor.getAttribute('href');
+      anchors.forEach((anchor) => {
+        const href = anchor.getAttribute("href");
         if (!href) return;
 
         try {
@@ -467,7 +488,7 @@ export class SitemapCrawler {
 
           links.push({
             url: url.href,
-            text: anchor.textContent?.trim() || '',
+            text: anchor.textContent?.trim() || "",
             isInternal,
           });
         } catch {
@@ -491,11 +512,12 @@ await page.goto(url);
 const links = await extractLinks(page); // Missing links!
 
 // With networkidle - waits for all network requests to finish
-await page.waitForLoadState('networkidle');
+await page.waitForLoadState("networkidle");
 const links = await extractLinks(page); // All links found!
 ```
 
 Next.js apps often:
+
 - Load route data via fetch
 - Render navigation components client-side
 - Lazy load below-the-fold content
@@ -526,14 +548,14 @@ export function buildSitemapTree(pages: PageInfo[]): SitemapNode {
   }
 
   // Find or create root node
-  const rootUrl = normalizeUrl(pages[0]?.url || '/');
+  const rootUrl = normalizeUrl(pages[0]?.url || "/");
   let root = nodeMap.get(rootUrl);
 
   if (!root) {
     root = {
       id: rootUrl,
       url: rootUrl,
-      title: 'Root',
+      title: "Root",
       statusCode: 200,
       depth: 0,
       children: [],
@@ -551,12 +573,12 @@ export function buildSitemapTree(pages: PageInfo[]): SitemapNode {
 
     if (parent) {
       // Avoid duplicates
-      if (!parent.children.find(child => child.id === node.id)) {
+      if (!parent.children.find((child) => child.id === node.id)) {
         parent.children.push(node);
       }
     } else {
       // Orphan node - attach to root
-      if (!root.children.find(child => child.id === node.id)) {
+      if (!root.children.find((child) => child.id === node.id)) {
         root.children.push(node);
       }
     }
@@ -577,13 +599,13 @@ export function normalizeUrl(url: string): string {
 
     // Remove trailing slash
     let path = parsed.pathname;
-    if (path.length > 1 && path.endsWith('/')) {
+    if (path.length > 1 && path.endsWith("/")) {
       path = path.slice(0, -1);
     }
 
     // Remove hash fragments
     // /about#team and /about should be the same page
-    parsed.hash = '';
+    parsed.hash = "";
 
     // Lowercase for consistency
     return `${parsed.origin}${path}${parsed.search}`.toLowerCase();
@@ -594,6 +616,7 @@ export function normalizeUrl(url: string): string {
 ```
 
 Without normalization:
+
 ```
 /about     → Node A
 /about/    → Node B  (duplicate!)
@@ -602,6 +625,7 @@ Without normalization:
 ```
 
 With normalization:
+
 ```
 /about     → Node A
 /about/    → Node A  (same)
@@ -614,9 +638,9 @@ With normalization:
 ```typescript
 // lib/flow/layout-builder.ts
 
-import dagre from 'dagre';
+import dagre from "dagre";
 
-export function buildFlowFromTree(root: SitemapNode): { nodes: Node[], edges: Edge[] } {
+export function buildFlowFromTree(root: SitemapNode): { nodes: Node[]; edges: Edge[] } {
   const nodes: Node[] = [];
   const edges: Edge[] = [];
 
@@ -624,7 +648,7 @@ export function buildFlowFromTree(root: SitemapNode): { nodes: Node[], edges: Ed
   function traverse(node: SitemapNode, parentId?: string) {
     nodes.push({
       id: node.id,
-      type: 'custom',
+      type: "custom",
       data: {
         label: node.title || node.url,
         url: node.url,
@@ -652,9 +676,9 @@ export function buildFlowFromTree(root: SitemapNode): { nodes: Node[], edges: Ed
   // Apply Dagre layout
   const graph = new dagre.graphlib.Graph();
   graph.setGraph({
-    rankdir: 'TB',      // Top to bottom
-    ranksep: 100,       // Vertical spacing between ranks
-    nodesep: 80,        // Horizontal spacing between nodes
+    rankdir: "TB", // Top to bottom
+    ranksep: 100, // Vertical spacing between ranks
+    nodesep: 80, // Horizontal spacing between nodes
     marginx: 50,
     marginy: 50,
   });
@@ -664,12 +688,12 @@ export function buildFlowFromTree(root: SitemapNode): { nodes: Node[], edges: Ed
   const NODE_WIDTH = 280;
   const NODE_HEIGHT = 100;
 
-  nodes.forEach(node => {
+  nodes.forEach((node) => {
     graph.setNode(node.id, { width: NODE_WIDTH, height: NODE_HEIGHT });
   });
 
   // Add edges to graph
-  edges.forEach(edge => {
+  edges.forEach((edge) => {
     graph.setEdge(edge.source, edge.target);
   });
 
@@ -677,7 +701,7 @@ export function buildFlowFromTree(root: SitemapNode): { nodes: Node[], edges: Ed
   dagre.layout(graph);
 
   // Extract calculated positions
-  nodes.forEach(node => {
+  nodes.forEach((node) => {
     const nodeWithPosition = graph.node(node.id);
     node.position = {
       x: nodeWithPosition.x - NODE_WIDTH / 2,
@@ -752,13 +776,9 @@ const AUDIT_PATTERNS = {
   // ... 25 categories total
 };
 
-function findPatterns(
-  content: string,
-  filePath: string,
-  regex: RegExp
-): AuditViolation[] {
+function findPatterns(content: string, filePath: string, regex: RegExp): AuditViolation[] {
   const patterns: AuditViolation[] = [];
-  const lines = content.split('\n');
+  const lines = content.split("\n");
 
   regex.lastIndex = 0; // Reset for global regex
 
@@ -766,10 +786,10 @@ function findPatterns(
   while ((match = regex.exec(content)) !== null) {
     // Calculate line number
     const textBeforeMatch = content.substring(0, match.index);
-    const lineNumber = textBeforeMatch.split('\n').length;
+    const lineNumber = textBeforeMatch.split("\n").length;
 
     // Calculate column
-    const lastNewlineIndex = textBeforeMatch.lastIndexOf('\n');
+    const lastNewlineIndex = textBeforeMatch.lastIndexOf("\n");
     const column = match.index - lastNewlineIndex;
 
     patterns.push({
@@ -810,24 +830,24 @@ function extractPatternBase(code: string): string {
 
   // Rounded patterns - all in one group
   // "rounded-lg", "rounded-md", "rounded" → "rounded"
-  if (code.startsWith('rounded')) {
-    return 'rounded';
+  if (code.startsWith("rounded")) {
+    return "rounded";
   }
 
   // Shadow patterns - all in one group
-  if (code.startsWith('shadow')) {
-    return 'shadow';
+  if (code.startsWith("shadow")) {
+    return "shadow";
   }
 
   // Font sizes - group together
   // "text-sm", "text-lg", "text-2xl" → "text-size"
   const textSizeMatch = code.match(/^text-(xs|sm|base|lg|xl|[2-9]xl)/);
   if (textSizeMatch) {
-    return 'text-size';
+    return "text-size";
   }
 
   // Default: use first segment
-  const dashIndex = code.indexOf('-');
+  const dashIndex = code.indexOf("-");
   return dashIndex > 0 ? code.substring(0, dashIndex) : code;
 }
 ```
@@ -875,28 +895,29 @@ function detectCategoryInconsistencies(
     const dominantPct = Math.round((dominantCount / groupTotal) * 100);
 
     // Get outliers (everything except the dominant pattern)
-    const outliers = sorted.slice(1).filter(p => patternCounts[p] >= 2);
+    const outliers = sorted.slice(1).filter((p) => patternCounts[p] >= 2);
 
     if (outliers.length === 0) continue; // No significant outliers
 
     // Determine severity
-    let severity: 'critical' | 'warning' | 'info';
+    let severity: "critical" | "warning" | "info";
 
     if (dominantPct < 40 && patterns.length >= 3) {
       // Highly fragmented - no clear standard
-      severity = 'critical';
+      severity = "critical";
     } else if (dominantPct >= 70) {
       // Clear standard with outliers - likely accidents
-      severity = 'warning';
+      severity = "warning";
     } else {
-      severity = 'info';
+      severity = "info";
     }
 
     // Generate recommendation
     const outlierCount = outliers.reduce((sum, p) => sum + patternCounts[p], 0);
-    const recommendation = dominantPct >= 60
-      ? `Standardize on \`${dominant}\` (currently ${dominantPct}% of usage). Update ${outlierCount} outlier occurrences.`
-      : `Define a standard for ${base} patterns. Consider using \`${dominant}\` as the base.`;
+    const recommendation =
+      dominantPct >= 60
+        ? `Standardize on \`${dominant}\` (currently ${dominantPct}% of usage). Update ${outlierCount} outlier occurrences.`
+        : `Define a standard for ${base} patterns. Consider using \`${dominant}\` as the base.`;
 
     inconsistencies.push({
       category: categoryName,
@@ -904,14 +925,14 @@ function detectCategoryInconsistencies(
       dominantPattern: dominant,
       dominantCount,
       dominantPercentage: dominantPct,
-      outliers: outliers.map(pattern => ({
+      outliers: outliers.map((pattern) => ({
         pattern,
         count: patternCounts[pattern],
         percentage: Math.round((patternCounts[pattern] / groupTotal) * 100),
         files: violations
-          .filter(v => v.code === pattern)
+          .filter((v) => v.code === pattern)
           .slice(0, 5)
-          .map(v => ({ file: v.file, line: v.line })),
+          .map((v) => ({ file: v.file, line: v.line })),
       })),
       severity,
       recommendation,
@@ -929,17 +950,17 @@ The entire app state is managed with ~50 lines of Zustand:
 ```typescript
 // lib/store.ts
 
-import { create } from 'zustand';
+import { create } from "zustand";
 
 interface AppState {
   // Crawl state
-  crawlStatus: 'idle' | 'crawling' | 'completed' | 'error';
+  crawlStatus: "idle" | "crawling" | "completed" | "error";
   crawlResult: CrawlResult | null;
   flowData: { nodes: Node[]; edges: Edge[] } | null;
   selectedNode: string | null;
 
   // Audit state
-  auditStatus: 'idle' | 'auditing' | 'completed' | 'error';
+  auditStatus: "idle" | "auditing" | "completed" | "error";
   auditProgress: { stage: string; percent: number } | null;
   designSystemReport: DesignSystemAuditReport | null;
 
@@ -955,11 +976,11 @@ interface AppState {
 }
 
 export const useAppStore = create<AppState>((set) => ({
-  crawlStatus: 'idle',
+  crawlStatus: "idle",
   crawlResult: null,
   flowData: null,
   selectedNode: null,
-  auditStatus: 'idle',
+  auditStatus: "idle",
   auditProgress: null,
   designSystemReport: null,
 
@@ -970,15 +991,16 @@ export const useAppStore = create<AppState>((set) => ({
   setAuditStatus: (auditStatus) => set({ auditStatus }),
   setAuditProgress: (auditProgress) => set({ auditProgress }),
   setDesignSystemReport: (designSystemReport) => set({ designSystemReport }),
-  reset: () => set({
-    crawlStatus: 'idle',
-    crawlResult: null,
-    flowData: null,
-    selectedNode: null,
-    auditStatus: 'idle',
-    auditProgress: null,
-    designSystemReport: null,
-  }),
+  reset: () =>
+    set({
+      crawlStatus: "idle",
+      crawlResult: null,
+      flowData: null,
+      selectedNode: null,
+      auditStatus: "idle",
+      auditProgress: null,
+      designSystemReport: null,
+    }),
 }));
 ```
 
@@ -1086,6 +1108,7 @@ inline styles. Found 59 inconsistencies (21 critical, 16 warnings).
 ## Design System Inconsistencies
 
 Found **59** inconsistencies:
+
 - 21 Critical
 - 16 Warnings
 - 22 Info
@@ -1101,11 +1124,11 @@ using `rounded-lg` as the base and update inconsistent usages.
 
 **Outliers to fix:**
 
-| Pattern | Count | % | Locations |
-|---------|-------|---|-----------|
-| `rounded-md` | 245 | 27% | src/components/Card.tsx:23, src/components/Button.tsx:15, src/components/Input.tsx:8 (+242 more) |
-| `rounded-xl` | 156 | 17% | src/components/Modal.tsx:12, src/components/Dropdown.tsx:34 (+154 more) |
-| `rounded` | 98 | 11% | src/pages/dashboard.tsx:67, src/components/Badge.tsx:5 (+96 more) |
+| Pattern      | Count | %   | Locations                                                                                        |
+| ------------ | ----- | --- | ------------------------------------------------------------------------------------------------ |
+| `rounded-md` | 245   | 27% | src/components/Card.tsx:23, src/components/Button.tsx:15, src/components/Input.tsx:8 (+242 more) |
+| `rounded-xl` | 156   | 17% | src/components/Modal.tsx:12, src/components/Dropdown.tsx:34 (+154 more)                          |
+| `rounded`    | 98    | 11% | src/pages/dashboard.tsx:67, src/components/Badge.tsx:5 (+96 more)                                |
 
 ---
 
@@ -1120,23 +1143,23 @@ Update 89 outlier occurrences.
 
 **Outliers to fix:**
 
-| Pattern | Count | % | Locations |
-|---------|-------|---|-----------|
-| `bg-gray-50` | 67 | 17% | src/components/Card.tsx:5, src/pages/settings.tsx:23 (+65 more) |
-| `bg-gray-200` | 22 | 6% | src/components/Skeleton.tsx:8 (+21 more) |
+| Pattern       | Count | %   | Locations                                                       |
+| ------------- | ----- | --- | --------------------------------------------------------------- |
+| `bg-gray-50`  | 67    | 17% | src/components/Card.tsx:5, src/pages/settings.tsx:23 (+65 more) |
+| `bg-gray-200` | 22    | 6%  | src/components/Skeleton.tsx:8 (+21 more)                        |
 
 ---
 
 ## Pattern Frequency (Top 50)
 
-| Pattern | Count |
-|---------|-------|
-| `rounded-lg` | 312 |
-| `rounded-md` | 245 |
-| `bg-white` | 234 |
-| `p-4` | 198 |
-| `flex` | 187 |
-| ... | ... |
+| Pattern      | Count |
+| ------------ | ----- |
+| `rounded-lg` | 312   |
+| `rounded-md` | 245   |
+| `bg-white`   | 234   |
+| `p-4`        | 198   |
+| `flex`       | 187   |
+| ...          | ...   |
 ```
 
 ---
@@ -1148,8 +1171,8 @@ Update 89 outlier occurrences.
 I spent hours debugging why my tree had duplicate nodes. The culprit:
 
 ```javascript
-visitedUrls.add('/about');    // First visit
-visitedUrls.has('/about/');   // false - different string!
+visitedUrls.add("/about"); // First visit
+visitedUrls.has("/about/"); // false - different string!
 ```
 
 Always normalize URLs before comparing or storing them.
@@ -1157,6 +1180,7 @@ Always normalize URLs before comparing or storing them.
 ### 2. Playwright's `networkidle` is Magic
 
 Modern SPAs render content dynamically. Without waiting for network idle, you'll miss:
+
 - Dynamically loaded navigation
 - Client-side rendered links
 - Lazy-loaded content
@@ -1215,6 +1239,7 @@ npm run dev
 ```
 
 Then:
+
 1. **For sitemap**: Enter your localhost URL and click "Crawl"
 2. **For audit**: Pick a source folder and click "Run Audit"
 
@@ -1229,6 +1254,6 @@ Then:
 
 ---
 
-*Built with Next.js 15, React Flow, Crawlee, and an unhealthy amount of coffee.*
+_Built with Next.js 15, React Flow, Crawlee, and an unhealthy amount of coffee._
 
 Have questions? Drop a comment below! I'd love to hear what features would be most useful for your workflow.
