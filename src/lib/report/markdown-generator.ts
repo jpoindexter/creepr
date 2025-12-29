@@ -1,6 +1,4 @@
 import { PageInfo } from "../crawler/types";
-import { LinkStatus } from "@/types/sitemap";
-import { getLinkStatus } from "../crawler/link-validator";
 
 /**
  * Source link reference - where a broken URL is referenced from
@@ -122,7 +120,8 @@ function generateExecutiveSummary(data: ReportData): string {
 
   // Health score (0-100)
   const healthScore = Math.max(0, Math.round(100 - parseFloat(errorRate) * 2));
-  const healthEmoji = healthScore >= 80 ? "🟢" : healthScore >= 60 ? "🟡" : healthScore >= 40 ? "🟠" : "🔴";
+  const healthEmoji =
+    healthScore >= 80 ? "🟢" : healthScore >= 60 ? "🟡" : healthScore >= 40 ? "🟠" : "🔴";
 
   return `## Executive Summary
 
@@ -319,7 +318,7 @@ function generateSourceReferences(data: ReportData): string {
       acc[link.brokenUrl].push(link);
       return acc;
     },
-    {} as Record<string, SourceLink[]>,
+    {} as Record<string, SourceLink[]>
   );
 
   let output = `## Source References
@@ -398,7 +397,8 @@ function groupByPathPattern(pages: PageInfo[]): UrlPattern[] {
           // Replace numbers
           if (/^\d+$/.test(part)) return "*";
           // Replace UUIDs
-          if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(part)) return "*";
+          if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(part))
+            return "*";
           // Replace long alphanumeric strings (likely IDs)
           if (/^[a-z0-9]{20,}$/i.test(part)) return "*";
           return part;
@@ -481,7 +481,9 @@ function detectCommonPatterns(pages: PageInfo[]): Array<{
   }> = [];
 
   // Pattern 1: Old category structure
-  const oldCategoryPattern = pages.filter((p) => p.url.includes("/old/") || p.url.includes("/archive/"));
+  const oldCategoryPattern = pages.filter(
+    (p) => p.url.includes("/old/") || p.url.includes("/archive/")
+  );
   if (oldCategoryPattern.length > 0) {
     patterns.push({
       description: "Old/Archive Category Structure",
@@ -506,7 +508,9 @@ function detectCommonPatterns(pages: PageInfo[]): Array<{
   }
 
   // Pattern 3: Query parameters causing issues
-  const queryParamIssues = pages.filter((p) => p.url.includes("?") && new URL(p.url).searchParams.toString().length > 0);
+  const queryParamIssues = pages.filter(
+    (p) => p.url.includes("?") && new URL(p.url).searchParams.toString().length > 0
+  );
   if (queryParamIssues.length >= 3) {
     patterns.push({
       description: "Query Parameter Issues",
@@ -561,7 +565,8 @@ function generateRecommendations(data: ReportData): FixRecommendation[] {
   if (notFoundUrls && notFoundUrls.count > 0) {
     recommendations.push({
       category: "Implement 301 Redirects",
-      priority: notFoundUrls.count >= 20 ? "critical" : notFoundUrls.count >= 10 ? "high" : "medium",
+      priority:
+        notFoundUrls.count >= 20 ? "critical" : notFoundUrls.count >= 10 ? "high" : "medium",
       action: "Create redirect rules mapping old URLs to new locations",
       affectedUrls: notFoundUrls.urls,
       estimatedEffort: `${Math.ceil(notFoundUrls.count / 10)} hours (bulk redirect setup)`,
@@ -569,7 +574,9 @@ function generateRecommendations(data: ReportData): FixRecommendation[] {
   }
 
   // Recommendation 2: Fix internal links
-  const internalBrokenLinks = data.sourceLinks.filter((link) => link.brokenUrl.includes(data.baseUrl));
+  const internalBrokenLinks = data.sourceLinks.filter((link) =>
+    link.brokenUrl.includes(data.baseUrl)
+  );
   if (internalBrokenLinks.length > 0) {
     const uniqueBrokenUrls = Array.from(new Set(internalBrokenLinks.map((l) => l.brokenUrl)));
     recommendations.push({

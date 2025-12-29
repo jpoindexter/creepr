@@ -1,0 +1,249 @@
+/**
+ * FABRK RETRO DISPLAY ENGINE
+ * Consolidates multiple atomic effects into 3 distinct, high-fidelity presets.
+ * 
+ * PRESETS:
+ * 1. .effect-crt  -> 80s/90s Monitor (Scanlines + Glow + Rolling Line + Flicker)
+ * 2. .effect-lcd  -> Game Boy/Handheld (Pixel Grid + Hard Edges + No Glow)
+ * 3. .effect-vhs  -> Damaged Tape (Chromatic Aberration + Noise + Tracking Issues)
+ */
+
+/* ============================================
+   SHARED UTILITIES
+   ============================================ */
+
+/* GPU Acceleration for all overlays */
+.effect-crt::before,
+.effect-crt::after,
+.effect-crt body::before,
+.effect-crt body::after,
+.effect-lcd::before,
+.effect-lcd::after,
+.effect-lcd body::before,
+.effect-lcd body::after,
+.effect-vhs::before,
+.effect-vhs::after,
+.effect-vhs body::before {
+  pointer-events: none;
+  user-select: none;
+  will-change: opacity, transform;
+  transform: translateZ(0);
+}
+
+/* ============================================
+   1. CRT MONITOR (The "Authentic" Look)
+   Components: Scanlines, Phosphor Glow, Vignette, Rolling Bar, Power Flicker
+   ============================================ */
+
+/* A. Scanlines & Vignette (Body Overlay) */
+.effect-crt body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+
+  /* Scanlines: 2px lines, low opacity */
+  background-image:
+    linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%),
+    linear-gradient(90deg, rgba(255, 0, 0, 0.04), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.04));
+  background-size:
+    100% 2px,
+    3px 100%;
+  background-repeat: repeat;
+  background-blend-mode: overlay;
+}
+
+/* B. Vignette (Dark Corners) */
+.effect-crt body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  background: radial-gradient(circle at center, transparent 60%, rgba(0, 0, 0, 0.2) 100%);
+}
+
+/* C. Phosphor Glow (Text Bloom) */
+.effect-crt body {
+  text-shadow:
+    0 0 2px color-mix(in srgb, currentColor, transparent 70%),
+    0 0 6px color-mix(in srgb, currentColor, transparent 90%);
+}
+
+/* D. Power Flicker (Subtle Brightness Dip) */
+html.effect-crt::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 1);
+  animation: crt-flicker 0.15s infinite; /* Uses fast-flicker logic but tuned down */
+  opacity: 0.02; /* Very subtle base state */
+}
+
+/* E. Rolling Scanline (The "Refresh" Bar) */
+html.effect-crt::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 15px; /* Thinner line */
+  z-index: 9999;
+
+  /* Lighter, blurrier gradient */
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(255, 255, 255, 0.05) 50%,
+    transparent 100%
+  );
+
+  /* Strong blur to make it look like a magnetic wave */
+  filter: blur(4px);
+
+  animation: crt-roll 8s linear infinite;
+}
+
+/* ============================================
+   2. LCD HANDHELD (The "Game Boy" Look)
+   Components: Pixel Grid, No Glow, Sharpness, Inner Shadow
+   ============================================ */
+
+/* A. Pixel Grid (Screen Door) */
+.effect-lcd body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+
+  /* 3px Dot Matrix Pattern */
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.15) 2px,
+      rgba(0, 0, 0, 0.15) 3px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.15) 2px,
+      rgba(0, 0, 0, 0.15) 3px
+    );
+  background-size: 3px 3px;
+}
+
+/* B. No Glow (Flat LCD look) */
+.effect-lcd body {
+  text-shadow: none !important;
+}
+
+/* C. Recessed Screen Shadow */
+.effect-lcd body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+}
+
+/* ============================================
+   3. VHS GLITCH (The "Broken" Look)
+   Components: Color Shift, Noise, Tracking Error
+   ============================================ */
+
+/* A. Chromatic Aberration (Color Shift) */
+.effect-vhs body {
+  animation: vhs-shift 2s infinite;
+}
+
+/* B. Tracking Noise (Scanlines) */
+.effect-vhs body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background-image: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%);
+  background-size: 100% 4px; /* Thicker, coarser lines */
+  background-repeat: repeat;
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+
+/* Optimized Rolling Bar (Uses Transform) */
+@keyframes crt-roll {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100vh);
+  }
+}
+
+/* Realistic Power Flicker (Randomized) */
+@keyframes crt-flicker {
+  0% {
+    opacity: 0.02;
+  }
+  5% {
+    opacity: 0.05;
+  }
+  10% {
+    opacity: 0.02;
+  }
+  15% {
+    opacity: 0.06;
+  }
+  20% {
+    opacity: 0.02;
+  }
+  50% {
+    opacity: 0.02;
+  }
+  55% {
+    opacity: 0.05;
+  }
+  60% {
+    opacity: 0.02;
+  }
+  100% {
+    opacity: 0.02;
+  }
+}
+
+/* Chromatic Aberration Shift */
+@keyframes vhs-shift {
+  0% {
+    text-shadow:
+      1px 0 rgba(255, 0, 0, 0.2),
+      -1px 0 rgba(0, 0, 255, 0.2);
+  }
+  10% {
+    text-shadow:
+      -1px 0 rgba(255, 0, 0, 0.2),
+      1px 0 rgba(0, 0, 255, 0.2);
+  }
+  20% {
+    text-shadow: 0 0 0;
+  }
+  100% {
+    text-shadow: 0 0 0;
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation: none !important;
+  }
+}

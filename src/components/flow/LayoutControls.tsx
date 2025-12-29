@@ -70,41 +70,46 @@ export function LayoutControls() {
   );
 
   return (
-    <Panel position="top-right" className="flex flex-col gap-2">
+    <Panel position="top-right" className="flex flex-col gap-2" aria-label="Layout controls">
       {/* Direction Switcher */}
-      <div className="flex rounded-lg border-2 border-purple-500 bg-white shadow-lg">
+      <div className="border-border bg-card flex border" role="group" aria-label="Layout direction">
         <Button
           variant={layoutDirection === "TB" ? "default" : "ghost"}
           size="sm"
           onClick={() => handleDirectionChange("TB")}
-          className="flex items-center gap-1.5 rounded-none rounded-l-md"
-          title="Vertical Layout (Top to Bottom)"
+          className="flex items-center gap-1.5 rounded-none"
+          aria-label="Vertical layout - top to bottom hierarchy"
+          aria-pressed={layoutDirection === "TB"}
         >
-          <ArrowDown className="h-4 w-4" />
+          <ArrowDown className="h-4 w-4" aria-hidden="true" />
           Vertical
         </Button>
-        <div className="w-px bg-purple-200" />
+        <div className="bg-border w-px" aria-hidden="true" />
         <Button
           variant={layoutDirection === "LR" ? "default" : "ghost"}
           size="sm"
           onClick={() => handleDirectionChange("LR")}
-          className="flex items-center gap-1.5 rounded-none rounded-r-md"
-          title="Horizontal Layout (Left to Right)"
+          className="flex items-center gap-1.5 rounded-none"
+          aria-label="Horizontal layout - left to right hierarchy"
+          aria-pressed={layoutDirection === "LR"}
         >
-          <ArrowRight className="h-4 w-4" />
+          <ArrowRight className="h-4 w-4" aria-hidden="true" />
           Horizontal
         </Button>
       </div>
 
       {/* Spacing Presets Dropdown */}
-      <Select value={spacingPreset} onValueChange={(value) => handleSpacingChange(value as SpacingPreset)}>
-        <SelectTrigger className="rounded-lg border-2 border-purple-500 bg-white shadow-lg" title="Change node spacing">
+      <Select
+        value={spacingPreset}
+        onValueChange={(value) => handleSpacingChange(value as SpacingPreset)}
+      >
+        <SelectTrigger className="border-border bg-card border" aria-label="Node spacing preset">
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="compact">🔸 Compact</SelectItem>
-          <SelectItem value="balanced">🔹 Balanced</SelectItem>
-          <SelectItem value="spacious">🔷 Spacious</SelectItem>
+          <SelectItem value="compact">Compact</SelectItem>
+          <SelectItem value="balanced">Balanced</SelectItem>
+          <SelectItem value="spacious">Spacious</SelectItem>
         </SelectContent>
       </Select>
 
@@ -113,10 +118,10 @@ export function LayoutControls() {
         variant="outline"
         size="sm"
         onClick={handleReLayout}
-        className="flex items-center justify-center gap-2 border-2 border-purple-500 text-purple-700 shadow-lg hover:bg-purple-50"
-        title="Re-apply layout (useful after manual dragging)"
+        className="flex items-center justify-center gap-2"
+        aria-label="Re-apply automatic layout after manual dragging"
       >
-        <RotateCw className="h-4 w-4" />
+        <RotateCw className="h-4 w-4" aria-hidden="true" />
         Re-layout
       </Button>
 
@@ -125,25 +130,26 @@ export function LayoutControls() {
         variant={snapToGrid ? "default" : "outline"}
         size="sm"
         onClick={() => setSnapToGrid(!snapToGrid)}
-        className="flex items-center justify-center gap-2 shadow-lg"
-        title={snapToGrid ? "Snap to Grid: ON" : "Snap to Grid: OFF"}
+        className="flex items-center justify-center gap-2"
+        aria-label={snapToGrid ? "Disable snap to grid" : "Enable snap to grid"}
+        aria-pressed={snapToGrid}
       >
-        <Grid3X3 className="h-4 w-4" />
+        <Grid3X3 className="h-4 w-4" aria-hidden="true" />
         {snapToGrid ? "Grid ON" : "Grid OFF"}
       </Button>
 
       {/* Divider */}
-      <div className="h-px bg-purple-200 my-1" />
+      <div className="bg-border my-1 h-px" aria-hidden="true" />
 
       {/* Collapse/Expand Controls */}
       <Button
         variant="outline"
         size="sm"
         onClick={collapseAll}
-        className="flex items-center justify-center gap-2 border-2 border-purple-500 text-purple-700 shadow-lg hover:bg-purple-50"
-        title="Collapse all nodes with children"
+        className="flex items-center justify-center gap-2"
+        aria-label="Collapse all nodes with children"
       >
-        <ChevronsUp className="h-4 w-4" />
+        <ChevronsUp className="h-4 w-4" aria-hidden="true" />
         Collapse All
       </Button>
 
@@ -151,10 +157,10 @@ export function LayoutControls() {
         variant="outline"
         size="sm"
         onClick={expandAll}
-        className="flex items-center justify-center gap-2 border-2 border-purple-500 text-purple-700 shadow-lg hover:bg-purple-50"
-        title="Expand all collapsed nodes"
+        className="flex items-center justify-center gap-2"
+        aria-label="Expand all collapsed nodes"
       >
-        <ChevronsDown className="h-4 w-4" />
+        <ChevronsDown className="h-4 w-4" aria-hidden="true" />
         Expand All
       </Button>
     </Panel>

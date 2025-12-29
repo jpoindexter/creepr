@@ -16,7 +16,16 @@ function downloadFile(blob: Blob, filename: string) {
 }
 
 export function exportToCSV(nodes: NodeWithParent[]) {
-  const headers = ["URL", "Title", "Status Code", "Parent URL", "Depth", "Children", "Node Type", "Is Broken"];
+  const headers = [
+    "URL",
+    "Title",
+    "Status Code",
+    "Parent URL",
+    "Depth",
+    "Children",
+    "Node Type",
+    "Is Broken",
+  ];
   const rows = nodes.map((node) => [
     node.data.url,
     node.data.title,
@@ -85,7 +94,8 @@ function extractFromElementStyles(
   }
 ) {
   const addToUsage = (map: Record<string, string[]>, value: string | undefined) => {
-    if (!value || value === "none" || value === "normal" || value === "auto" || value === "0px") return;
+    if (!value || value === "none" || value === "normal" || value === "auto" || value === "0px")
+      return;
     if (!map[value]) map[value] = [];
     if (!map[value].includes(pageUrl)) map[value].push(pageUrl);
   };
@@ -183,10 +193,13 @@ export function exportStylesToJSON(crawlResult: CrawlResult | null) {
   const sortByUsage = (usageMap: Record<string, string[]>) =>
     Object.entries(usageMap)
       .sort((a, b) => b[1].length - a[1].length)
-      .reduce((acc, [key, pages]) => {
-        acc[key] = { count: pages.length, pages };
-        return acc;
-      }, {} as Record<string, { count: number; pages: string[] }>);
+      .reduce(
+        (acc, [key, pages]) => {
+          acc[key] = { count: pages.length, pages };
+          return acc;
+        },
+        {} as Record<string, { count: number; pages: string[] }>
+      );
 
   const exportData = {
     crawledAt: new Date().toISOString(),
@@ -218,9 +231,11 @@ export function exportStylesToJSON(crawlResult: CrawlResult | null) {
 }
 
 export function getStatusColor(statusCode: number, isBroken: boolean) {
-  if (isBroken || statusCode >= 400) return "text-red-600 bg-red-50";
-  if (statusCode >= 300) return "text-orange-600 bg-orange-50";
-  return "text-green-600 bg-green-50";
+  // Grayscale design system tokens
+  if (isBroken || statusCode >= 400)
+    return "text-destructive bg-destructive/10 border border-destructive/30";
+  if (statusCode >= 300) return "text-muted-foreground bg-muted border border-border";
+  return "text-foreground bg-muted border border-border";
 }
 
 /**
@@ -256,4 +271,65 @@ export async function runSourceAudit(scanPath: string = "src"): Promise<FullAudi
 export function exportAuditReport(report: FullAuditReport) {
   const blob = new Blob([JSON.stringify(report, null, 2)], { type: "application/json" });
   downloadFile(blob, `creepr-audit-${Date.now()}.json`);
+}
+
+/**
+ * Generate and export a standard sitemap.xml file
+ * @see https://www.sitemaps.org/protocol.html
+ */
+export function exportSitemapXML(crawlResult: CrawlResult | null) {
+  if (!crawlResult?.pages) {
+    alert("No crawl data available to export sitemap");
+    return;
+  }
+
+  // Filter out broken pages (4xx/5xx) - they shouldn't be in sitemap
+  const validPages = crawlResult.pages.filter(
+    (page) => page.statusCode >= 200 && page.statusCode < 400
+  );
+
+  // Build XML content
+  const xmlHeader = '<?xml version="1.0" encoding="UTF-8"?>';
+  const urlsetOpen = '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
+  const urlsetClose = "</urlset>";
+
+  // Calculate priority based on depth (root=1.0, decreasing by 0.1 per depth level, min 0.1)
+  const getPriority = (depth: number): string => {
+    const priority = Math.max(0.1, 1.0 - depth * 0.1);
+    return priority.toFixed(1);
+  };
+
+  // Map depth to changefreq (root pages change more frequently)
+  const getChangeFreq = (depth: number): string => {
+    if (depth === 0) return "daily";
+    if (depth === 1) return "weekly";
+    if (depth <= 3) return "monthly";
+    return "yearly";
+  };
+
+  const urlEntries = validPages.map((page) => {
+    const loc = `  <loc>${escapeXml(page.url)}</loc>`;
+    const lastmod = `  <lastmod>${new Date().toISOString().split("T")[0]}</lastmod>`;
+    const changefreq = `  <changefreq>${getChangeFreq(page.depth)}</changefreq>`;
+    const priority = `  <priority>${getPriority(page.depth)}</priority>`;
+
+    return `<url>\n${loc}\n${lastmod}\n${changefreq}\n${priority}\n</url>`;
+  });
+
+  const xmlContent = [xmlHeader, urlsetOpen, ...urlEntries, urlsetClose].join("\n");
+
+  const blob = new Blob([xmlContent], { type: "application/xml" });
+  downloadFile(blob, `sitemap-${Date.now()}.xml`);
+}
+
+/**
+ * Escape special XML characters
+ */
+function escapeXml(str: string): string {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&apos;");
 }

@@ -3,6 +3,34 @@ import { SitemapNode } from "@/types/sitemap";
 import { getLinkStatus } from "../crawler/link-validator";
 import { isBrokenLink, normalizeUrl, getPathParent, getPathSegments } from "../utils";
 
+/**
+ * Get a human-readable title for a page, falling back to URL path if title is empty/generic
+ */
+function getDisplayTitle(title: string, url: string): string {
+  // If title is meaningful, use it
+  if (
+    title &&
+    title.trim() !== "" &&
+    title !== "Untitled" &&
+    title !== "Error" &&
+    title !== "Failed"
+  ) {
+    return title;
+  }
+
+  // Fall back to URL path segment
+  const segments = getPathSegments(url);
+  if (segments.length > 0) {
+    // Use the last path segment, formatted nicely
+    const lastSegment = segments[segments.length - 1];
+    // Convert kebab-case or snake_case to Title Case
+    return lastSegment.replace(/[-_]/g, " ").replace(/\b\w/g, (char) => char.toUpperCase());
+  }
+
+  // If no path segments (root), use "Home"
+  return "Home";
+}
+
 export function buildSitemapTree(pages: PageInfo[], rootUrl: string): SitemapNode {
   // Create nodes map (includes both real pages and virtual folders)
   const nodesMap = new Map<string, SitemapNode>();
@@ -12,7 +40,7 @@ export function buildSitemapTree(pages: PageInfo[], rootUrl: string): SitemapNod
     const node: SitemapNode = {
       id: page.url,
       url: page.url,
-      title: page.title,
+      title: getDisplayTitle(page.title, page.url),
       statusCode: page.statusCode,
       status: getLinkStatus(page.statusCode),
       depth: page.depth,
@@ -22,6 +50,9 @@ export function buildSitemapTree(pages: PageInfo[], rootUrl: string): SitemapNod
       interactionType: page.interactionType,
       parentPageUrl: page.parentPageUrl,
       isVirtual: false,
+      isApiEndpoint: page.isApiEndpoint,
+      contentType: page.contentType,
+      securityHeaders: page.securityHeaders,
     };
     nodesMap.set(page.url, node);
   });
@@ -135,5 +166,6 @@ export function getTreeStats(root: SitemapNode) {
     maxDepth: Math.max(...nodes.map((n) => n.depth), 0),
     successPages: nodes.filter((n) => n.status === "success").length,
     redirectPages: nodes.filter((n) => n.status === "redirect").length,
+    apiEndpoints: nodes.filter((n) => n.isApiEndpoint).length,
   };
 }

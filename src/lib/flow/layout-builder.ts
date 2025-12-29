@@ -35,7 +35,7 @@ export function buildFlowData(
   const flowEdges: Edge<CustomEdgeData>[] = [];
   allNodes.forEach((node) => {
     if (node.parentId) {
-      flowEdges.push(createFlowEdge(node.parentId, node.id, node.isBroken));
+      flowEdges.push(createFlowEdge(node.parentId, node.id, node.status, node.isBroken));
     }
   });
 
@@ -53,10 +53,9 @@ function getLayoutedElements(
   const dagreGraph = new dagre.graphlib.Graph();
   dagreGraph.setDefaultEdgeLabel(() => ({}));
 
-  // Use professional sitemap node dimensions
+  // Use compact text-based node dimensions
   const nodeWidth = SITEMAP_SPACING.regularNode.minWidth;
-  // Remove fixed height - let nodes auto-size based on content for better adaptability
-  const nodeHeight = 120; // Approximate height for layout, but nodes will auto-size
+  const nodeHeight = 50; // Compact height for text-based layout
 
   dagreGraph.setGraph({
     rankdir: options.direction,
@@ -64,18 +63,13 @@ function getLayoutedElements(
     ranksep: options.rankSpacing,
     marginx: SITEMAP_SPACING.marginX,
     marginy: SITEMAP_SPACING.marginY,
-    align: "UL", // Align nodes to upper-left for cleaner tree structure
-    ranker: "network-simplex", // Use network-simplex for better vertical tree layouts (avoids wide horizontal spreads)
-    acyclicer: "greedy", // Handle any cycles in the graph
   });
 
-  // Add nodes to dagre with explicit rank based on depth for proper hierarchical layout
+  // Add nodes to dagre
   nodes.forEach((node) => {
-    const depth = node.data.depth ?? 0;
     dagreGraph.setNode(node.id, {
       width: nodeWidth,
       height: nodeHeight,
-      rank: depth, // Explicitly set rank based on depth to ensure hierarchical layout
     });
   });
 

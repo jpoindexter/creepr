@@ -1,5 +1,5 @@
 import { Node, Edge } from "@xyflow/react";
-import { NodeType } from "./sitemap";
+import { NodeType, LinkStatus } from "./sitemap";
 
 // Custom node data
 export interface CustomNodeData extends Record<string, unknown> {
@@ -12,6 +12,7 @@ export interface CustomNodeData extends Record<string, unknown> {
   childCount: number; // Number of child nodes
   nodeType: NodeType; // Type of element (page, tab, modal, etc.)
   isVirtual?: boolean; // Whether this is a virtual folder (not actually crawled)
+  isApiEndpoint?: boolean; // Whether this is an API endpoint
 }
 
 // Custom node type
@@ -20,6 +21,7 @@ export type CustomNode = Node<CustomNodeData>;
 // Custom edge data
 export interface CustomEdgeData extends Record<string, unknown> {
   isBroken: boolean;
+  status?: LinkStatus;
 }
 
 // Custom edge type

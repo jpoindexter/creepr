@@ -1,5 +1,56 @@
 import { NodeType } from "@/types/sitemap";
 
+// Mobile responsiveness analysis
+export interface MobileResponsiveness {
+  // Viewport meta tag
+  hasViewportMeta: boolean;
+  viewportContent?: string;
+  // Mobile-friendly indicators
+  hasMobileMediaQueries: boolean;
+  hasFlexboxOrGrid: boolean;
+  hasResponsiveImages: boolean;
+  // Touch target analysis
+  smallTouchTargets: number; // Count of elements < 44px
+  // Score and issues
+  score: number; // 0-100
+  issues: string[];
+  passed: string[];
+}
+
+// Keyword density analysis
+export interface KeywordDensity {
+  // Top keywords by frequency
+  topKeywords: Array<{
+    word: string;
+    count: number;
+    density: number; // percentage
+  }>;
+  // Total word count
+  totalWords: number;
+  // Unique words count
+  uniqueWords: number;
+  // Average word length
+  averageWordLength: number;
+}
+
+// Security headers analysis
+export interface SecurityHeaders {
+  // Required/recommended headers
+  contentSecurityPolicy?: string;
+  strictTransportSecurity?: string; // HSTS
+  xFrameOptions?: string;
+  xContentTypeOptions?: string;
+  referrerPolicy?: string;
+  permissionsPolicy?: string;
+  // Optional security headers
+  xXssProtection?: string;
+  cacheControl?: string;
+  // Analysis summary
+  score: number; // 0-100
+  missingHeaders: string[];
+  presentHeaders: string[];
+}
+
 export interface CrawlerOptions {
   maxDepth?: number;
   maxPages?: number;
@@ -156,4 +207,13 @@ export interface PageInfo {
   contentMetrics?: ContentMetrics;
   // Full style extraction for design system analysis
   styles?: PageStyles;
+  // API endpoint detection
+  isApiEndpoint?: boolean;
+  contentType?: string;
+  // Security headers analysis
+  securityHeaders?: SecurityHeaders;
+  // Keyword density analysis
+  keywordDensity?: KeywordDensity;
+  // Mobile responsiveness analysis
+  mobileResponsiveness?: MobileResponsiveness;
 }

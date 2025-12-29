@@ -4,124 +4,137 @@
  */
 
 export const SITEMAP_COLORS = {
-  // Root/Homepage node
+  // Root/Homepage node - Black, high contrast on white bg
   root: {
-    background:
-      "linear-gradient(135deg, oklch(70.28% 0.1753 295.36) 0%, oklch(60% 0.18 295.36) 100%)",
-    border: "oklch(60% 0.18 295.36)",
-    text: "#FFFFFF",
-    shadow: "0 8px 24px rgba(153, 69, 255, 0.25), 0 4px 8px rgba(0, 0, 0, 0.1)",
+    background: "#0A0A0A", // Near black
+    border: "#000000", // Pure black border
+    text: "#FFFFFF", // White text
+    shadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
   },
 
-  // Success status (200-299)
+  // Success status (200-299) - Dark node
   success: {
-    background: "#FFFFFF",
-    border: "oklch(70.28% 0.1753 295.36)", // Purple theme
-    text: "#1A202C",
-    shadow: "0 4px 16px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.06)",
+    background: "#1A1A1A", // Dark background
+    border: "#333333", // Dark border
+    text: "#FFFFFF", // White text
+    shadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
   },
 
-  // Redirect status (300-399)
+  // Redirect status (300-399) - Medium gray
   redirect: {
-    background: "#FEF3C7", // Light yellow
-    border: "#F59E0B", // Orange
-    text: "#78350F",
-    shadow: "0 2px 8px rgba(245, 158, 11, 0.2)",
+    background: "#4A4A4A", // Medium gray
+    border: "#666666", // Medium border
+    text: "#FFFFFF", // White text
+    shadow: "0 2px 6px rgba(0, 0, 0, 0.1)",
   },
 
-  // Error status (400-599)
+  // Error status (400-599) - Lighter gray (muted)
   error: {
-    background: "#FEE2E2", // Light red
-    border: "#DC2626", // Red
-    text: "#991B1B",
-    shadow: "0 2px 8px rgba(220, 38, 38, 0.2)",
+    background: "#888888", // Light gray for errors
+    border: "#AAAAAA", // Light border
+    text: "#FFFFFF", // White text
+    shadow: "0 2px 6px rgba(0, 0, 0, 0.1)",
   },
 
-  // Interactive element types
+  // Interactive element types - Grayscale variants
   tab: {
-    background: "#DBEAFE", // Light blue
-    border: "#3B82F6", // Blue
-    text: "#1E40AF",
-    shadow: "0 2px 8px rgba(59, 130, 246, 0.2)",
+    background: "#2A2A2A",
+    border: "#444444",
+    text: "#FFFFFF",
+    shadow: "0 2px 6px rgba(0, 0, 0, 0.1)",
   },
 
   modal: {
-    background: "#FEF3C7", // Light yellow
-    border: "#F59E0B", // Orange
-    text: "#92400E",
-    shadow: "0 2px 8px rgba(245, 158, 11, 0.2)",
+    background: "#333333",
+    border: "#555555",
+    text: "#FFFFFF",
+    shadow: "0 2px 6px rgba(0, 0, 0, 0.1)",
   },
 
   accordion: {
-    background: "#D1FAE5", // Light green
-    border: "#10B981", // Green
-    text: "#065F46",
-    shadow: "0 2px 8px rgba(16, 185, 129, 0.2)",
+    background: "#3A3A3A",
+    border: "#5A5A5A",
+    text: "#FFFFFF",
+    shadow: "0 2px 6px rgba(0, 0, 0, 0.1)",
   },
 
   dropdown: {
-    background: "#FFEDD5", // Light orange
-    border: "#F97316", // Orange
-    text: "#9A3412",
-    shadow: "0 2px 8px rgba(249, 115, 22, 0.2)",
+    background: "#404040",
+    border: "#606060",
+    text: "#FFFFFF",
+    shadow: "0 2px 6px rgba(0, 0, 0, 0.1)",
   },
 
   button: {
-    background: "#F3F4F6", // Light gray
-    border: "#6B7280", // Gray
-    text: "#374151",
-    shadow: "0 2px 8px rgba(107, 114, 128, 0.2)",
+    background: "#484848",
+    border: "#686868",
+    text: "#FFFFFF",
+    shadow: "0 2px 6px rgba(0, 0, 0, 0.1)",
   },
 
-  // Edge colors
+  // API endpoint - Distinguished with blue tint
+  api: {
+    background: "#1a365d", // Dark blue
+    border: "#2a4a7f", // Medium blue border
+    text: "#FFFFFF",
+    shadow: "0 2px 6px rgba(26, 54, 93, 0.2)",
+  },
+
+  // Edge colors - Dark on white bg, by link status
   edge: {
-    normal: "#CBD5E0", // Light gray
-    broken: "#DC2626", // Red for broken links
-    hover: "oklch(70.28% 0.1753 295.36)", // Purple on hover
+    success: "#333333", // Dark gray for success
+    redirect: "#666666", // Medium gray for redirects
+    clientError: "#999999", // Light gray for 4xx errors
+    serverError: "#AAAAAA", // Lighter gray for 5xx errors
+    unknown: "#888888", // Default gray for unknown
+    hover: "#000000", // Pure black on hover
+    // Legacy compatibility
+    normal: "#333333",
+    broken: "#888888",
   },
 } as const;
 
 export const SITEMAP_SPACING = {
-  // Layout spacing - generous spacing for professional appearance and readability
-  rankSeparation: 150, // Vertical spacing between hierarchy levels
-  nodeSeparation: 120, // Horizontal spacing between sibling nodes
-  marginX: 40, // Left/right margins
-  marginY: 40, // Top/bottom margins
+  // Layout spacing - compact for text-based tree
+  rankSeparation: 80, // Vertical spacing between hierarchy levels
+  nodeSeparation: 40, // Horizontal spacing between sibling nodes
+  marginX: 30, // Left/right margins
+  marginY: 30, // Top/bottom margins
 
-  // Node sizing - spacious and readable like professional sitemap tools
+  // Node sizing - compact text-based nodes
   rootNode: {
-    minWidth: 320,
-    padding: 24,
-    borderRadius: 16,
-    borderWidth: 3,
+    minWidth: 180,
+    padding: 12,
+    borderRadius: 0,
+    borderWidth: 2,
   },
   regularNode: {
-    minWidth: 280,
-    padding: 24,
-    borderRadius: 14,
-    borderWidth: 3,
+    minWidth: 140,
+    padding: 8,
+    borderRadius: 0,
+    borderWidth: 1,
   },
 
   // Edge styling
-  edgeStrokeWidth: 2,
+  edgeStrokeWidth: 1,
 } as const;
 
 export const SITEMAP_TYPOGRAPHY = {
   root: {
-    titleSize: "20px",
-    titleWeight: "700",
-    urlSize: "15px",
+    titleSize: "13px",
+    titleWeight: "600",
+    urlSize: "11px",
     urlWeight: "400",
   },
   regular: {
-    titleSize: "17px",
-    titleWeight: "600",
-    urlSize: "14px",
+    titleSize: "12px",
+    titleWeight: "500",
+    urlSize: "10px",
     urlWeight: "400",
   },
   badge: {
-    fontSize: "12px",
-    fontWeight: "600",
+    fontSize: "9px",
+    fontWeight: "500",
   },
 } as const;
 
@@ -141,18 +154,18 @@ export const SITEMAP_EFFECTS = {
  */
 export const LAYOUT_PRESETS = {
   compact: {
-    nodeSpacing: 80,
-    rankSpacing: 100,
-    description: "Tighter spacing for large sitemaps (100+ nodes)",
+    nodeSpacing: 25,
+    rankSpacing: 50,
+    description: "Tight spacing for large sitemaps",
   },
   balanced: {
-    nodeSpacing: 120,
-    rankSpacing: 150,
-    description: "Default professional spacing (recommended)",
+    nodeSpacing: 40,
+    rankSpacing: 80,
+    description: "Default spacing",
   },
   spacious: {
-    nodeSpacing: 160,
-    rankSpacing: 200,
-    description: "Maximum spacing for presentations",
+    nodeSpacing: 60,
+    rankSpacing: 120,
+    description: "Generous spacing",
   },
 } as const;

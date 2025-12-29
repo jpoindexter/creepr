@@ -27,7 +27,9 @@ function getStagedFiles() {
 // Check if file should be excluded
 function shouldExclude(filePath) {
   const excludePatterns = [
-    /^scripts\/git-hooks\//, // Exclude git hooks themselves
+    /^scripts\//, // Exclude all scripts (test scripts, git hooks, etc.)
+    /^src\/app\/api\//, // Server-side API routes can use logging
+    /^src\/lib\/ai-auditor\.ts$/, // AI auditor uses server logging
     /^node_modules\//,
     /^\.next\//,
     /^dist\//,

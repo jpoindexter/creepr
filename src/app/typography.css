@@ -1,0 +1,207 @@
+/* ============================================
+   FABRK TYPOGRAPHY SYSTEM
+   Industry-Standard 13-Class Hierarchy
+   Replaces 39 ad-hoc text styles
+   ============================================ */
+
+/* ============================================
+   DISPLAY & HEADLINES
+   ============================================ */
+
+/* Display - Hero sections, marketing headers */
+.text-display {
+  font-family: var(--font-mono);
+  font-size: 2.25rem; /* 36px */
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+/* Headline - Page titles, H1 */
+.text-headline {
+  font-family: var(--font-mono);
+  font-size: 1.875rem; /* 30px */
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+/* Title - Section headers, H2 */
+.text-title {
+  font-family: var(--font-mono);
+  font-size: 1.5rem; /* 24px */
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+/* Subtitle - Subsection headers, H3 */
+.text-subtitle {
+  font-family: var(--font-mono);
+  font-size: 1.25rem; /* 20px */
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+/* ============================================
+   BODY TEXT
+   ============================================ */
+
+/* Body Large - Primary content, paragraphs */
+.text-body-l {
+  font-family: var(--font-mono);
+  font-size: 1rem; /* 16px */
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+/* Body Medium - Secondary content, descriptions */
+.text-body-m {
+  font-family: var(--font-mono);
+  font-size: 0.875rem; /* 14px */
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+/* Body Small - Tertiary content, helper text */
+.text-body-s {
+  font-family: var(--font-mono);
+  font-size: 0.75rem; /* 12px */
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+/* ============================================
+   UI LABELS & METADATA
+   ============================================ */
+
+/* Label - Form labels, UI labels, badges */
+.text-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem; /* 12px */
+  font-weight: 500;
+  line-height: 1.5;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Overline - Eyebrows, categories, tags */
+.text-overline {
+  font-family: var(--font-mono);
+  font-size: 0.75rem; /* 12px */
+  font-weight: 600;
+  line-height: 1.5;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* Caption - Metadata, timestamps, fine print */
+.text-caption {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem; /* 11px */
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+/* ============================================
+   CODE STYLES
+   ============================================ */
+
+/* Code Large - Code blocks, documentation */
+.text-code-l {
+  font-family: var(--font-mono);
+  font-size: 0.875rem; /* 14px */
+  font-weight: 400;
+  line-height: 1.6;
+  font-variant-ligatures: none; /* Disable ligatures for code */
+}
+
+/* Code Medium - Inline code, terminal output */
+.text-code-m {
+  font-family: var(--font-mono);
+  font-size: 0.75rem; /* 12px */
+  font-weight: 400;
+  line-height: 1.6;
+  font-variant-ligatures: none;
+}
+
+/* Code Small - Compact code, tooltips */
+.text-code-s {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem; /* 11px */
+  font-weight: 400;
+  line-height: 1.6;
+  font-variant-ligatures: none;
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+/* Responsive heading scales */
+@media (max-width: 640px) {
+  .text-display {
+    font-size: 1.875rem; /* 30px on mobile */
+  }
+
+  .text-headline {
+    font-size: 1.5rem; /* 24px on mobile */
+  }
+
+  .text-title {
+    font-size: 1.25rem; /* 20px on mobile */
+  }
+}
+
+/* Text color utilities (use with typography classes) */
+.text-primary {
+  color: oklch(var(--color-text-primary));
+}
+
+.text-secondary {
+  color: oklch(var(--color-text-secondary));
+}
+
+.text-tertiary {
+  color: oklch(var(--color-text-tertiary));
+}
+
+.text-inverse {
+  color: oklch(var(--color-text-inverse));
+}
+
+.text-disabled {
+  color: oklch(var(--color-text-disabled));
+  opacity: var(--state-disabled-opacity);
+}
+
+/* ============================================
+   USAGE GUIDE
+   ============================================ */
+
+/*
+BEFORE (39 ad-hoc styles):
+<div className="font-mono text-xs">...</div>
+<div className="font-mono text-sm">...</div>
+<div className="font-mono text-base">...</div>
+<div className="text-2xl font-bold">...</div>
+
+AFTER (13 semantic classes):
+<div className="text-body-s">...</div>
+<div className="text-body-m">...</div>
+<div className="text-body-l">...</div>
+<div className="text-headline">...</div>
+
+MAPPING:
+text-xs (12px) → text-body-s or text-label or text-code-m
+text-sm (14px) → text-body-m or text-code-l
+text-base (16px) → text-body-l
+text-lg (18px) → text-subtitle
+text-xl (20px) → text-subtitle
+text-2xl (24px) → text-title
+text-3xl (30px) → text-headline
+text-4xl (36px) → text-display
+
+ALL UPPERCASE LABELS → text-label or text-overline
+Metadata/timestamps → text-caption
+Code examples → text-code-l/m/s
+*/

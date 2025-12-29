@@ -16,10 +16,7 @@ export async function POST(request: NextRequest) {
 
     if (!body.files || body.files.length === 0) {
       console.log("[AI Audit] ERROR: No files provided");
-      return NextResponse.json(
-        { error: "No files provided" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "No files provided" }, { status: 400 });
     }
 
     // Calculate total content size
@@ -52,10 +49,7 @@ export async function GET() {
   try {
     const models = await getAvailableModels();
     return NextResponse.json({ models });
-  } catch (error) {
-    return NextResponse.json(
-      { error: "Failed to fetch models", models: [] },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json({ error: "Failed to fetch models", models: [] }, { status: 500 });
   }
 }

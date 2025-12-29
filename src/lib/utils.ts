@@ -6,12 +6,41 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 // URL utilities
+
+// Dangerous URL protocols that should be blocked for security
+const BLOCKED_PROTOCOLS = ["javascript:", "data:", "vbscript:", "file:"];
+
+/**
+ * Check if a URL is valid and safe (not using dangerous protocols)
+ */
 export function isValidUrl(url: string): boolean {
   try {
-    new URL(url);
+    const parsed = new URL(url);
+    // Block dangerous protocols
+    if (BLOCKED_PROTOCOLS.some((proto) => parsed.protocol === proto)) {
+      return false;
+    }
+    // Only allow http and https
+    if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+      return false;
+    }
     return true;
   } catch {
     return false;
+  }
+}
+
+/**
+ * Check if a URL uses a potentially dangerous protocol
+ */
+export function isDangerousUrl(url: string): boolean {
+  try {
+    const parsed = new URL(url);
+    return BLOCKED_PROTOCOLS.some((proto) => parsed.protocol === proto);
+  } catch {
+    // If we can't parse, check string prefix as fallback
+    const lower = url.toLowerCase().trim();
+    return BLOCKED_PROTOCOLS.some((proto) => lower.startsWith(proto));
   }
 }
 
@@ -30,6 +59,9 @@ export function normalizeUrl(url: string): string {
     const u = new URL(url);
     // Remove trailing slash and hash
     u.hash = "";
+    // Strip authentication credentials for security
+    u.username = "";
+    u.password = "";
     let pathname = u.pathname;
     if (pathname.endsWith("/") && pathname.length > 1) {
       pathname = pathname.slice(0, -1);
@@ -117,4 +149,151 @@ export function formatDuration(ms: number): string {
   const minutes = Math.floor(seconds / 60);
   const remainingSeconds = seconds % 60;
   return `${minutes}m ${remainingSeconds}s`;
+}
+
+// SEO Score Calculation
+export interface SEOScoreResult {
+  score: number; // 0-100
+  grade: "A" | "B" | "C" | "D" | "F";
+  issues: string[];
+  passed: string[];
+}
+
+export interface SEOPageData {
+  title?: string;
+  meta?: {
+    description?: string;
+    ogTitle?: string;
+    ogDescription?: string;
+    ogImage?: string;
+    canonical?: string;
+    robots?: string;
+  };
+  headings?: Array<{ tag: string; text: string }>;
+  images?: Array<{ hasAlt: boolean }>;
+  contentMetrics?: {
+    wordCount: number;
+  };
+}
+
+export function calculateSEOScore(page: SEOPageData): SEOScoreResult {
+  const issues: string[] = [];
+  const passed: string[] = [];
+  let score = 0;
+  const maxScore = 100;
+
+  // Title checks (20 points)
+  if (page.title && page.title.trim() !== "Untitled") {
+    const titleLen = page.title.length;
+    if (titleLen >= 30 && titleLen <= 60) {
+      score += 20;
+      passed.push("Title length is optimal (30-60 chars)");
+    } else if (titleLen > 0 && titleLen < 30) {
+      score += 10;
+      issues.push(`Title too short (${titleLen} chars, aim for 30-60)`);
+    } else if (titleLen > 60) {
+      score += 15;
+      issues.push(`Title too long (${titleLen} chars, may be truncated in search)`);
+    }
+  } else {
+    issues.push("Missing page title");
+  }
+
+  // Meta description (15 points)
+  if (page.meta?.description) {
+    const descLen = page.meta.description.length;
+    if (descLen >= 120 && descLen <= 160) {
+      score += 15;
+      passed.push("Meta description length is optimal");
+    } else if (descLen > 0 && descLen < 120) {
+      score += 8;
+      issues.push(`Meta description too short (${descLen} chars, aim for 120-160)`);
+    } else if (descLen > 160) {
+      score += 10;
+      issues.push(`Meta description too long (${descLen} chars, may be truncated)`);
+    }
+  } else {
+    issues.push("Missing meta description");
+  }
+
+  // H1 heading (15 points)
+  const h1s = page.headings?.filter((h) => h.tag === "h1") || [];
+  if (h1s.length === 1) {
+    score += 15;
+    passed.push("Page has exactly one H1 heading");
+  } else if (h1s.length === 0) {
+    issues.push("Missing H1 heading");
+  } else {
+    score += 5;
+    issues.push(`Multiple H1 headings found (${h1s.length})`);
+  }
+
+  // Open Graph tags (15 points)
+  let ogScore = 0;
+  if (page.meta?.ogTitle) ogScore += 5;
+  if (page.meta?.ogDescription) ogScore += 5;
+  if (page.meta?.ogImage) ogScore += 5;
+  score += ogScore;
+  if (ogScore === 15) {
+    passed.push("All Open Graph tags present");
+  } else if (ogScore > 0) {
+    issues.push("Some Open Graph tags missing");
+  } else {
+    issues.push("No Open Graph tags found");
+  }
+
+  // Canonical URL (10 points)
+  if (page.meta?.canonical) {
+    score += 10;
+    passed.push("Canonical URL is set");
+  } else {
+    issues.push("Missing canonical URL");
+  }
+
+  // Image alt texts (15 points)
+  const images = page.images || [];
+  if (images.length === 0) {
+    score += 15; // No images = no issue
+    passed.push("No images to check");
+  } else {
+    const withAlt = images.filter((img) => img.hasAlt).length;
+    const altPercent = (withAlt / images.length) * 100;
+    if (altPercent === 100) {
+      score += 15;
+      passed.push("All images have alt text");
+    } else if (altPercent >= 80) {
+      score += 10;
+      issues.push(`${images.length - withAlt} images missing alt text`);
+    } else {
+      score += 5;
+      issues.push(`Many images (${images.length - withAlt}) missing alt text`);
+    }
+  }
+
+  // Content length (10 points)
+  const wordCount = page.contentMetrics?.wordCount || 0;
+  if (wordCount >= 300) {
+    score += 10;
+    passed.push(`Good content length (${wordCount} words)`);
+  } else if (wordCount >= 100) {
+    score += 5;
+    issues.push(`Light content (${wordCount} words, aim for 300+)`);
+  } else {
+    issues.push(`Very light content (${wordCount} words)`);
+  }
+
+  // Calculate grade
+  let grade: "A" | "B" | "C" | "D" | "F";
+  if (score >= 90) grade = "A";
+  else if (score >= 80) grade = "B";
+  else if (score >= 70) grade = "C";
+  else if (score >= 60) grade = "D";
+  else grade = "F";
+
+  return {
+    score: Math.min(score, maxScore),
+    grade,
+    issues,
+    passed,
+  };
 }

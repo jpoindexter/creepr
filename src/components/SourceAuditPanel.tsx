@@ -1,17 +1,16 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Card, CardContent, CardHeader } from "./ui/card";
 import { Button } from "./ui/button";
-import {
-  Code,
-  Loader2,
-  FolderOpen,
-  Sparkles,
-  Zap,
-} from "lucide-react";
+import { Code, Loader2, FolderOpen, Sparkles, Zap } from "lucide-react";
 import { useAppStore } from "@/lib/store";
-import { createEmptyReport, Inconsistency, DesignSystemAuditReport } from "@/lib/design-system-auditor";
+import {
+  createEmptyReport,
+  Inconsistency,
+  DesignSystemAuditReport,
+} from "@/lib/design-system-auditor";
+import { useToast } from "@/hooks/use-toast";
 
 type AuditMode = "comprehensive" | "ai";
 
@@ -26,13 +25,9 @@ export function SourceAuditPanel() {
   const [availableModels, setAvailableModels] = useState<string[]>([]);
   const [selectedModel, setSelectedModel] = useState<string>("qwen2.5:32b");
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { toast } = useToast();
 
-  const {
-    auditStatus,
-    setAuditStatus,
-    setAuditProgress,
-    setDesignSystemReport,
-  } = useAppStore();
+  const { auditStatus, setAuditStatus, setAuditProgress, setDesignSystemReport } = useAppStore();
 
   // Fetch available Ollama models on mount
   useEffect(() => {
@@ -42,8 +37,15 @@ export function SourceAuditPanel() {
         if (data.models?.length > 0) {
           setAvailableModels(data.models);
           // Prefer smaller models to avoid OOM - 7-22B work best
-          const preferred = ["codestral:22b", "qwen2.5-coder:7b", "llama3.1:latest", "mistral:latest"];
-          const found = preferred.find((m) => data.models.some((model: string) => model.includes(m.split(":")[0])));
+          const preferred = [
+            "codestral:22b",
+            "qwen2.5-coder:7b",
+            "llama3.1:latest",
+            "mistral:latest",
+          ];
+          const found = preferred.find((m) =>
+            data.models.some((model: string) => model.includes(m.split(":")[0]))
+          );
           if (found) {
             const match = data.models.find((model: string) => model.includes(found.split(":")[0]));
             if (match) setSelectedModel(match);
@@ -133,7 +135,7 @@ export function SourceAuditPanel() {
       if (processed % 50 === 0) {
         setAuditProgress({
           stage: `Reading files... (${processed}/${totalFiles})`,
-          percent: Math.min(50, (processed / totalFiles) * 100)
+          percent: Math.min(50, (processed / totalFiles) * 100),
         });
       }
     }
@@ -175,7 +177,11 @@ export function SourceAuditPanel() {
 
   const handleAudit = async () => {
     if (fileHandles.size === 0) {
-      alert("Please select a directory first");
+      toast({
+        variant: "destructive",
+        title: "No directory selected",
+        description: "Please select a directory first",
+      });
       return;
     }
 
@@ -199,12 +205,14 @@ export function SourceAuditPanel() {
           // Asymptotic progress: fast at first, then very slow
           const increment = progressPercent < 50 ? 5 : progressPercent < 80 ? 2 : 0.5;
           progressPercent = Math.min(progressPercent + increment, 95);
-          
+
           let stage = "Loading model...";
           if (progressPercent > 20) stage = "Analyzing code patterns...";
           if (progressPercent > 50) stage = "Finding inconsistencies...";
-          if (progressPercent > 75) stage = "Generating detailed report (this may take several minutes for large models)...";
-          
+          if (progressPercent > 75)
+            stage =
+              "Generating detailed report (this may take several minutes for large models)...";
+
           setAuditProgress({ stage, percent: progressPercent });
         }, 2000);
 
@@ -226,53 +234,69 @@ export function SourceAuditPanel() {
 
           if (!response.ok) {
             const error = await response.json();
-            alert(`AI Audit failed: ${error.error}`);
+            toast({
+              variant: "destructive",
+              title: "AI Audit failed",
+              description: error.error || "Unknown error occurred",
+            });
           } else {
             // AI report - update global state
             const aiReport = await response.json();
-            console.log("AI Report:", aiReport);
-            
+
             // Transform AI report to DesignSystemAuditReport structure
             const fullReport: DesignSystemAuditReport = createEmptyReport();
             fullReport.generatedAt = aiReport.generatedAt;
             fullReport.totalFiles = aiReport.filesAnalyzed;
             fullReport.summary = aiReport.summary;
-            
+
             // Map inconsistencies
-            const mappedInconsistencies: Inconsistency[] = (aiReport.inconsistencies || []).map((inc: any) => ({
-              category: inc.category,
-              description: inc.description,
-              dominantPattern: "See description", 
-              dominantCount: 0,
-              dominantPercentage: 0,
-              outliers: [{
-                pattern: "Detected Issue",
-                count: inc.locations?.length || 0,
-                percentage: 100,
-                files: inc.locations?.map((l: any) => ({
-                  file: l.file,
-                  line: l.line || 0
-                })) || []
-              }],
-              severity: (inc.severity === "high" ? "critical" : inc.severity === "medium" ? "warning" : "info"),
-              recommendation: inc.recommendation
-            }));
+            const mappedInconsistencies: Inconsistency[] = (aiReport.inconsistencies || []).map(
+              (inc: any) => ({
+                category: inc.category,
+                description: inc.description,
+                dominantPattern: "See description",
+                dominantCount: 0,
+                dominantPercentage: 0,
+                outliers: [
+                  {
+                    pattern: "Detected Issue",
+                    count: inc.locations?.length || 0,
+                    percentage: 100,
+                    files:
+                      inc.locations?.map((l: any) => ({
+                        file: l.file,
+                        line: l.line || 0,
+                      })) || [],
+                  },
+                ],
+                severity:
+                  inc.severity === "high"
+                    ? "critical"
+                    : inc.severity === "medium"
+                      ? "warning"
+                      : "info",
+                recommendation: inc.recommendation,
+              })
+            );
 
             fullReport.inconsistencies = {
               totalInconsistencies: mappedInconsistencies.length,
-              critical: mappedInconsistencies.filter(i => i.severity === "critical").length,
-              warning: mappedInconsistencies.filter(i => i.severity === "warning").length,
-              info: mappedInconsistencies.filter(i => i.severity === "info").length,
-              inconsistencies: mappedInconsistencies
+              critical: mappedInconsistencies.filter((i) => i.severity === "critical").length,
+              warning: mappedInconsistencies.filter((i) => i.severity === "warning").length,
+              info: mappedInconsistencies.filter((i) => i.severity === "info").length,
+              inconsistencies: mappedInconsistencies,
             };
 
             setDesignSystemReport(fullReport); // Show results in main view
-            alert(`AI found ${aiReport.inconsistencies?.length || 0} inconsistencies.`);
+            toast({
+              title: "AI Audit complete",
+              description: `Found ${aiReport.inconsistencies?.length || 0} inconsistencies`,
+            });
           }
         } catch (fetchError) {
-            clearTimeout(timeoutId);
-            clearInterval(progressInterval);
-            throw fetchError;
+          clearTimeout(timeoutId);
+          clearInterval(progressInterval);
+          throw fetchError;
         }
       } else {
         // Comprehensive Design System Audit
@@ -288,14 +312,26 @@ export function SourceAuditPanel() {
 
         if (!response.ok) {
           const error = await response.json();
-          alert(`Audit failed: ${error.error}`);
+          toast({
+            variant: "destructive",
+            title: "Audit failed",
+            description: error.error || "Unknown error occurred",
+          });
         } else {
           const report = await response.json();
           setDesignSystemReport(report); // Save to global store for main content display
+          toast({
+            title: "Audit complete",
+            description: `Analyzed ${report.totalFiles || 0} files`,
+          });
         }
       }
     } catch (error) {
-      alert(`Audit error: ${error instanceof Error ? error.message : "Unknown error"}`);
+      toast({
+        variant: "destructive",
+        title: "Audit error",
+        description: error instanceof Error ? error.message : "Unknown error occurred",
+      });
     }
 
     setAuditProgress({ stage: "Complete!", percent: 100 });
@@ -307,12 +343,7 @@ export function SourceAuditPanel() {
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-lg">
-          <Code className="h-5 w-5" />
-          Design System Audit
-        </CardTitle>
-      </CardHeader>
+      <CardHeader title="DESIGN_SYSTEM_AUDIT" icon={<Code className="h-4 w-4" />} />
       <CardContent className="space-y-4">
         <p className="text-sm text-gray-600">
           Comprehensive scan for design inconsistencies with file:line locations
@@ -343,7 +374,9 @@ export function SourceAuditPanel() {
         {/* AI Model Selector */}
         {auditMode === "ai" && availableModels.length > 0 && (
           <div className="space-y-1">
-            <label htmlFor="ollama-model-select" className="text-xs font-medium text-gray-500">Ollama Model</label>
+            <label htmlFor="ollama-model-select" className="text-xs font-medium text-gray-500">
+              Ollama Model
+            </label>
             <select
               id="ollama-model-select"
               name="ollama-model"
@@ -353,13 +386,14 @@ export function SourceAuditPanel() {
             >
               {availableModels.map((model) => (
                 <option key={model} value={model}>
-                  {model} {(model.includes("70b") || model.includes("32b")) ? "⚠️" : ""}
+                  {model} {model.includes("70b") || model.includes("32b") ? "⚠️" : ""}
                 </option>
               ))}
             </select>
             {(selectedModel.includes("70b") || selectedModel.includes("32b")) && (
               <p className="text-xs text-orange-600">
-                ⚠️ Large models may run out of memory. Try a smaller model like codestral:22b or mistral.
+                ⚠️ Large models may run out of memory. Try a smaller model like codestral:22b or
+                mistral.
               </p>
             )}
           </div>
@@ -393,8 +427,7 @@ export function SourceAuditPanel() {
               <FolderOpen className="h-4 w-4 text-blue-500" />
               {directoryName ? (
                 <span>
-                  {directoryName}{" "}
-                  <span className="text-gray-400">({fileHandles.size} files)</span>
+                  {directoryName} <span className="text-gray-400">({fileHandles.size} files)</span>
                 </span>
               ) : (
                 <span className="text-gray-500">Choose folder...</span>

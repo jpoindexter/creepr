@@ -8,6 +8,7 @@ import { DesignSystemAuditReport } from "@/lib/design-system-auditor";
 export type LayoutDirection = "TB" | "LR" | "BT" | "RL";
 export type SpacingPreset = "compact" | "balanced" | "spacious";
 export type ViewMode = "tree" | "list";
+export type ThemeMode = "light" | "dark";
 
 export interface AuditProgress {
   stage: string;
@@ -51,6 +52,11 @@ interface AppState {
   // Collapsed nodes (for tree expansion/collapse)
   collapsedNodes: Set<string>;
 
+  // UI state
+  sidebarOpen: boolean;
+  themeMode: ThemeMode;
+  layoutStatus: "idle" | "calculating" | "done";
+
   // Actions
   setCrawlStatus: (status: "idle" | "crawling" | "completed" | "error" | "cancelled") => void;
   setCrawlError: (error: string | null) => void;
@@ -73,13 +79,35 @@ interface AppState {
   expandAll: () => void;
   cancelCrawl: () => Promise<void>;
   reset: () => void;
+  setSidebarOpen: (open: boolean) => void;
+  toggleSidebar: () => void;
+  setThemeMode: (mode: ThemeMode) => void;
+  toggleTheme: () => void;
+  setLayoutStatus: (status: "idle" | "calculating" | "done") => void;
 }
 
-// Helper to get initial view mode from localStorage
+// Note: These helpers are called during store initialization.
+// To avoid hydration mismatches, they must return consistent values for SSR.
+// The actual stored values are synced in useEffect hooks in components.
+
+// Helper to get initial view mode - always return SSR-safe default
 const getInitialViewMode = (): ViewMode => {
-  if (typeof window === "undefined") return "list"; // SSR default
-  const stored = localStorage.getItem("creepr-view-mode");
-  return (stored === "tree" || stored === "list") ? stored : "list";
+  // Always return "list" to avoid hydration mismatch
+  // Component will sync with localStorage after mount
+  return "list";
+};
+
+// Helper to get initial theme - always return SSR-safe default
+const getInitialTheme = (): ThemeMode => {
+  // Always return "light" to avoid hydration mismatch
+  // Component will sync with localStorage/system preference after mount
+  return "light";
+};
+
+// Apply theme to DOM
+const applyTheme = (mode: ThemeMode): void => {
+  if (typeof document === "undefined") return;
+  document.documentElement.setAttribute("data-theme", mode === "dark" ? "bw-dark" : "bw");
 };
 
 export const useAppStore = create<AppState>((set, get) => ({
@@ -102,6 +130,9 @@ export const useAppStore = create<AppState>((set, get) => ({
   spacingPreset: "balanced",
   snapToGrid: false,
   collapsedNodes: new Set<string>(),
+  sidebarOpen: true, // Default open on desktop, will be handled by component
+  themeMode: getInitialTheme(),
+  layoutStatus: "idle",
 
   // Actions
   setCrawlStatus: (status) => set({ crawlStatus: status }),
@@ -154,7 +185,9 @@ export const useAppStore = create<AppState>((set, get) => ({
 
   collapseAll: () => {
     const { flowNodes } = get();
-    const nodesWithChildren = flowNodes.filter((node) => node.data.childCount && node.data.childCount > 0);
+    const nodesWithChildren = flowNodes.filter(
+      (node) => node.data.childCount && node.data.childCount > 0
+    );
     const allNodeIds = new Set(nodesWithChildren.map((node) => node.id));
     set({ collapsedNodes: allNodeIds });
   },
@@ -193,4 +226,23 @@ export const useAppStore = create<AppState>((set, get) => ({
       selectedNodeId: null,
       collapsedNodes: new Set<string>(),
     }),
+
+  setSidebarOpen: (open) => set({ sidebarOpen: open }),
+
+  toggleSidebar: () => set((state) => ({ sidebarOpen: !state.sidebarOpen })),
+
+  setThemeMode: (mode) => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("creepr-theme", mode);
+    }
+    applyTheme(mode);
+    set({ themeMode: mode });
+  },
+
+  toggleTheme: () => {
+    const { themeMode, setThemeMode } = get();
+    setThemeMode(themeMode === "light" ? "dark" : "light");
+  },
+
+  setLayoutStatus: (status) => set({ layoutStatus: status }),
 }));

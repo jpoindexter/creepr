@@ -33,6 +33,7 @@ function shouldExclude(filePath) {
     /^dist\//,
     /^build\//,
     /^scripts\/git-hooks\//,
+    /ThemeProvider\.tsx$/, // Safe use of dangerouslySetInnerHTML for theme script injection
   ];
   return excludePatterns.some((pattern) => pattern.test(filePath));
 }

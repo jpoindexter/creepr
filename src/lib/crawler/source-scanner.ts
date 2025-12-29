@@ -110,7 +110,8 @@ async function findFiles(
 /**
  * Determines if a URL is internal (relative or absolute path)
  */
-function isInternalUrl(url: string): boolean {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function _isInternalUrl(url: string): boolean {
   // Relative paths
   if (url.startsWith("./") || url.startsWith("../")) {
     return true;

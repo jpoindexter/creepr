@@ -1,65 +1,2527 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* 💡 STYLING TIP: Customize theme colors below in the :root section.
+ * Colors use OKLCH format (lightness% chroma hue) for better color accuracy.
+ * Default: Black & White monochrome theme (chroma = 0 for grayscale).
+ */
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "../styles/crt-effects.css";
 
-@layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-    --radius: 0.5rem;
+@plugin '@tailwindcss/typography';
+
+/* ============================================
+   CUSTOM UTILITIES
+   ============================================ */
+
+/* Dynamic radius utility - responds to --radius CSS variable */
+@utility rounded-dynamic {
+  border-radius: var(--radius);
+}
+
+/* Dynamic font utilities - for runtime typography switching */
+@utility font-body {
+  font-family: var(--font-body);
+}
+
+@utility font-headline {
+  font-family: var(--font-headline);
+}
+
+/* ===========================================
+   DESIGN SYSTEM TOKENS
+   8-point grid compliant sizing utilities
+   =========================================== */
+
+/* Typography: Extra small text (10px = 0.625rem) */
+@utility text-2xs {
+  font-size: 0.625rem;
+  line-height: 1rem;
+}
+
+/* Typography: Micro text (8px = 0.5rem) - for decorative/ASCII art */
+@utility text-3xs {
+  font-size: 0.5rem;
+  line-height: 0.75rem;
+}
+
+/* Sizing: Panel heights (600px = 37.5rem, 400px = 25rem) */
+@utility h-panel {
+  height: 37.5rem;
+}
+
+@utility min-h-panel {
+  min-height: 37.5rem;
+}
+
+@utility h-panel-sm {
+  height: 25rem;
+}
+
+@utility min-h-panel-sm {
+  min-height: 25rem;
+}
+
+/* Sizing: Sidebar widths (288px = 18rem = w-72) */
+@utility w-sidebar {
+  width: 18rem;
+}
+
+/* Sizing: Auth page container (400px = 25rem) */
+@utility max-w-auth {
+  max-width: 25rem;
+}
+
+/* Sizing: Dropdown/Select minimum widths */
+@utility min-w-dropdown {
+  min-width: 8rem;
+}
+
+@utility min-w-select {
+  min-width: 5rem;
+}
+
+/* Sizing: Command/Dropdown max height (300px = 18.75rem) */
+@utility max-h-dropdown {
+  max-height: 18.75rem;
+}
+
+/* Sizing: Chat/TextArea max height (200px = 12.5rem) */
+@utility max-h-textarea {
+  max-height: 12.5rem;
+}
+
+/* Sizing: WCAG 2.1 AA touch targets (44px minimum) */
+@utility min-h-touch {
+  min-height: 2.75rem;
+}
+
+@utility min-w-touch {
+  min-width: 2.75rem;
+}
+
+/* ===========================================
+   Z-INDEX SCALE
+   Standardized layering for overlays
+   =========================================== */
+
+/* z-banner: Cookie consent, floating notices (60) */
+@utility z-banner {
+  z-index: 60;
+}
+
+/* z-modal: Modals, navigation, toast, impersonation (100) */
+@utility z-modal {
+  z-index: 100;
+}
+
+/* ===========================================
+   VIEWPORT HEIGHT TOKENS
+   For modal/panel max heights
+   =========================================== */
+
+/* max-h-modal: Cookie consent, scrollable modals (60vh) */
+@utility max-h-modal {
+  max-height: 60vh;
+}
+
+/* max-h-panel-view: Hero lab panels, theme dropdowns (70vh) */
+@utility max-h-panel-view {
+  max-height: 70vh;
+}
+
+/* max-h-dialog: Blog reference dialogs, large modals (80vh) */
+@utility max-h-dialog {
+  max-height: 80vh;
+}
+
+/* ===========================================
+   FIXED HEIGHT TOKENS
+   8-point grid aligned where possible
+   =========================================== */
+
+/* h-card-preview: Blog card preview area (180px = 11.25rem) */
+@utility h-card-preview {
+  height: 11.25rem;
+}
+
+/* h-chart: Chart containers, floating cards (300px = 18.75rem) */
+@utility h-chart {
+  height: 18.75rem;
+}
+
+/* min-h-onboarding: Onboarding step containers (400px = 25rem) */
+@utility min-h-onboarding {
+  min-height: 25rem;
+}
+
+/* min-h-demo: Demo/modal containers (600px = 37.5rem) */
+@utility min-h-demo {
+  min-height: 37.5rem;
+}
+
+/* h-embed: Interactive demo iframe (700px = 43.75rem) */
+@utility h-embed {
+  height: 43.75rem;
+}
+
+/* ===========================================
+   FIXED WIDTH TOKENS
+   Table columns and select triggers
+   =========================================== */
+
+/* w-column-xs: Extra small table columns (70px = 4.375rem) */
+@utility w-column-xs {
+  width: 4.375rem;
+}
+
+/* w-column-sm: Small table columns (100px = 6.25rem) */
+@utility w-column-sm {
+  width: 6.25rem;
+}
+
+/* w-column-md: Medium table columns, min-widths (120px = 7.5rem) */
+@utility w-column-md {
+  width: 7.5rem;
+}
+
+/* w-select-md: Medium select triggers (140px = 8.75rem) */
+@utility w-select-md {
+  width: 8.75rem;
+}
+
+/* w-select-lg: Large select triggers, table columns (180px = 11.25rem) */
+@utility w-select-lg {
+  width: 11.25rem;
+}
+
+/* min-w-column-md: Minimum column width (120px) */
+@utility min-w-column-md {
+  min-width: 7.5rem;
+}
+
+/* ===========================================
+   MAX WIDTH TOKENS
+   Form and container constraints
+   =========================================== */
+
+/* max-w-form: Auth forms, compact forms (380px = 23.75rem) */
+@utility max-w-form {
+  max-width: 23.75rem;
+}
+
+/* max-w-email: Email templates (600px = 37.5rem) */
+@utility max-w-email {
+  max-width: 37.5rem;
+}
+
+/* max-w-table: Comparison tables (700px = 43.75rem) */
+@utility max-w-table {
+  min-width: 43.75rem;
+}
+
+/* max-w-playground: Full-width playground (1800px = 112.5rem) */
+@utility max-w-playground {
+  max-width: 112.5rem;
+}
+
+/* ===========================================
+   SIDEBAR INDICATOR OFFSETS
+   Tree view connecting lines
+   =========================================== */
+
+/* ml-sidebar-sm: Small sidebar indicator offset (5px) */
+@utility ml-sidebar-sm {
+  margin-left: 0.3125rem;
+}
+
+/* ml-sidebar: Standard sidebar indicator offset (7px) */
+@utility ml-sidebar-indicator {
+  margin-left: 0.4375rem;
+}
+
+/* left-activity: Activity feed timeline position (19px) */
+@utility left-activity {
+  left: 1.1875rem;
+}
+
+/* ===========================================
+   MICRO ADJUSTMENTS
+   Sub-pixel and em-based sizing
+   =========================================== */
+
+/* mt-micro: Micro top margin for alignment (1px) */
+@utility mt-micro {
+  margin-top: 0.0625rem;
+}
+
+/* w-cursor: Blinking cursor width (0.5em) */
+@utility w-cursor {
+  width: 0.5em;
+}
+
+/* h-cursor: Blinking cursor height (1em) */
+@utility h-cursor {
+  height: 1em;
+}
+
+/* min-h-card-desc: Card description min height for 3-line clamp (60px = 3.75rem) */
+@utility min-h-card-desc {
+  min-height: 3.75rem;
+}
+
+/* min-h-headline: Headline min height to prevent layout shift (1.2em) */
+@utility min-h-headline {
+  min-height: 1.2em;
+}
+
+/* w-cursor-lg: Large blinking cursor width (0.55em) */
+@utility w-cursor-lg {
+  width: 0.55em;
+}
+
+/* -mb-cursor: Cursor vertical alignment adjustment (-0.1em) */
+@utility -mb-cursor {
+  margin-bottom: -0.1em;
+}
+
+/* min-h-bar: Chart bar minimum height (2px) */
+@utility min-h-bar {
+  min-height: 2px;
+}
+
+/* ===========================================
+   HAIRLINE UTILITIES
+   For 1px borders and separators
+   =========================================== */
+
+/* h-hairline: Horizontal separator (1px) */
+@utility h-hairline {
+  height: 1px;
+}
+
+/* w-hairline: Vertical separator (1px) */
+@utility w-hairline {
+  width: 1px;
+}
+
+/* p-hairline: Scrollbar padding (1px) */
+@utility p-hairline {
+  padding: 1px;
+}
+
+/* ===========================================
+   LINE CLAMP MIN HEIGHTS
+   Consistent card text areas
+   =========================================== */
+
+/* min-h-line-2: 2-line clamp min height (2.5rem = 40px) */
+@utility min-h-line-2 {
+  min-height: 2.5rem;
+}
+
+/* min-h-line-3: 3-line clamp min height (3.75rem = 60px) - alias for min-h-card-desc */
+@utility min-h-line-3 {
+  min-height: 3.75rem;
+}
+
+/* ===========================================
+   MOTION CURSOR TOKENS
+   For animated text cursors
+   =========================================== */
+
+/* w-cursor-motion: Motion component cursor (0.6em) */
+@utility w-cursor-motion {
+  width: 0.6em;
+}
+
+/* h-cursor-motion: Motion component cursor height (1.1em) */
+@utility h-cursor-motion {
+  height: 1.1em;
+}
+
+/* ===========================================
+   PERCENTAGE WIDTH TOKENS
+   For fluid layouts
+   =========================================== */
+
+/* max-w-message: Chat message max width (80%) */
+@utility max-w-message {
+  max-width: 80%;
+}
+
+/* ===========================================
+   DISPLAY/INTERACTION TOKENS
+   =========================================== */
+
+/* min-h-display: Display effect minimum height (80px = 5rem) */
+@utility min-h-display {
+  min-height: 5rem;
+}
+
+/* min-w-typewriter: Typewriter text min width (280px = 17.5rem) */
+@utility min-w-typewriter {
+  min-width: 17.5rem;
+}
+
+/* min-w-typewriter-lg: Large typewriter min width (320px = 20rem) */
+@utility min-w-typewriter-lg {
+  min-width: 20rem;
+}
+
+/* ===========================================
+   LETTER SPACING
+   =========================================== */
+
+/* tracking-caps: Standard uppercase letter spacing (0.05em) */
+@utility tracking-caps {
+  letter-spacing: 0.05em;
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+
+@keyframes bar-grow {
+  0% {
+    transform: scaleY(0);
+    transform-origin: bottom;
   }
+  100% {
+    transform: scaleY(1);
+    transform-origin: bottom;
+  }
+}
 
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes glitch {
+  0%,
+  90%,
+  100% {
+    transform: translate(0);
+    opacity: 1;
+  }
+  91% {
+    transform: translate(-2px, 2px);
+    opacity: 0.8;
+  }
+  92% {
+    transform: translate(2px, -2px);
+    opacity: 0.9;
+  }
+  93% {
+    transform: translate(-1px, 1px);
+    opacity: 0.85;
+  }
+  94% {
+    transform: translate(0);
+    opacity: 1;
+  }
+}
+
+.glitch-text {
+  position: relative;
+  animation: glitch 5s infinite;
+}
+
+.glitch-text::before,
+.glitch-text::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+
+.glitch-text::before {
+  animation: glitch-1 5s infinite;
+  color: oklch(from var(--accent) l c h / 0.8);
+  z-index: -1;
+}
+
+.glitch-text::after {
+  animation: glitch-2 5s infinite;
+  color: oklch(from var(--accent) l c h / 0.8);
+  z-index: -2;
+}
+
+@keyframes glitch-1 {
+  0%,
+  90%,
+  100% {
+    transform: translate(0);
+    opacity: 0;
+  }
+  91% {
+    transform: translate(-3px, 0);
+    opacity: 0.7;
+  }
+  93% {
+    transform: translate(3px, 0);
+    opacity: 0;
+  }
+}
+
+@keyframes glitch-2 {
+  0%,
+  90%,
+  100% {
+    transform: translate(0);
+    opacity: 0;
+  }
+  92% {
+    transform: translate(3px, 0);
+    opacity: 0.7;
+  }
+  94% {
+    transform: translate(-3px, 0);
+    opacity: 0;
+  }
+}
+
+@keyframes flicker {
+  0%,
+  19.999%,
+  22%,
+  62.999%,
+  64%,
+  64.999%,
+  70%,
+  100% {
+    opacity: 1;
+  }
+  20%,
+  21.999%,
+  63%,
+  63.999%,
+  65%,
+  69.999% {
+    opacity: 0.4;
+  }
+}
+
+.flicker-text {
+  animation: flicker 8s linear infinite;
+}
+
+/* Rolling scanline effect - moves from top to bottom */
+@keyframes roll-scanline {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100vh);
   }
 }
 
 @layer base {
-  * {
-    @apply border-border;
+  /* ============================================
+     TERMINAL THEME STYLING (Default and Only Mode)
+     ============================================ */
+
+  [data-slot="alert-dialog-overlay"] {
+    background-color: oklch(from var(--background) 0% c h / 0.8) !important;
   }
-  body {
-    @apply bg-background text-foreground;
+
+  [data-sonner-toast] {
+    border-radius: 0 !important;
+    font-family: var(--font-mono) !important;
+    font-size: 0.75rem !important;
+  }
+
+  [data-sonner-toast] [data-content] {
+    font-family: var(--font-mono) !important;
+  }
+
+  ::selection {
+    background-color: oklch(var(--primary));
+    color: oklch(var(--primary-foreground));
+  }
+
+  /* ============================================
+     REACT-DAY-PICKER OVERRIDES
+     ============================================ */
+  [data-slot="calendar"] {
+    --rdp-accent-color: oklch(var(--primary)) !important;
+    --rdp-accent-background-color: oklch(var(--primary)) !important;
+    --rdp-day_button-border-radius: 0 !important;
+    --rdp-day_button-height: 2.25rem !important;
+    --rdp-day_button-width: 2.25rem !important;
+    --rdp-selected-border: none !important;
+    --rdp-disabled-opacity: 0.5 !important;
+    --rdp-outside-opacity: 0.5 !important;
+    --rdp-today-color: oklch(var(--foreground)) !important;
+    --rdp-range_start-color: oklch(var(--primary-foreground)) !important;
+    --rdp-range_start-background: oklch(var(--primary)) !important;
+    --rdp-range_end-color: oklch(var(--primary-foreground)) !important;
+    --rdp-range_end-background: oklch(var(--primary)) !important;
+    --rdp-range_middle-color: oklch(var(--foreground)) !important;
+    --rdp-range_middle-background: oklch(var(--muted)) !important;
+  }
+
+  [data-slot="calendar"] * {
+    border-radius: 0 !important;
+  }
+
+  /* Terminal mode - Enhanced font rendering for clean monospace */
+  html body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    letter-spacing: 0.01em;
+  }
+
+  /* ============================================
+     AUTOFILL STYLING (Prevent white backgrounds)
+     ============================================ */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active,
+  textarea:-webkit-autofill,
+  textarea:-webkit-autofill:hover,
+  textarea:-webkit-autofill:focus,
+  textarea:-webkit-autofill:active,
+  select:-webkit-autofill,
+  select:-webkit-autofill:hover,
+  select:-webkit-autofill:focus,
+  select:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px oklch(var(--background)) inset !important;
+    -webkit-text-fill-color: oklch(var(--foreground)) !important;
+    caret-color: oklch(var(--foreground)) !important;
+    transition: background-color 5000s ease-in-out 0s;
   }
 }
 
-/* React Flow custom edge styles */
-.react-flow__edge-path.broken {
-  stroke: #ef4444;
-  stroke-width: 2;
+/* ============================================
+   DISPLAY FONTS (Headlines)
+   ============================================ */
+
+/* TT Bluescreens - Condensed display font */
+@font-face {
+  font-family: "TT Bluescreens";
+  src: url("/fonts/display/TT-Bluescreens-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "TT Bluescreens";
+  src: url("/fonts/display/TT-Bluescreens-ExtraBold.woff2") format("woff2");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "TT Bluescreens";
+  src: url("/fonts/display/TT-Bluescreens-Black.woff2") format("woff2");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Bebas Neue - Clean condensed sans */
+@font-face {
+  font-family: "Bebas Neue";
+  src: url("/fonts/display/bebas-neue-regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Oswald - Variable condensed gothic */
+@font-face {
+  font-family: "Oswald";
+  src: url("/fonts/display/oswald.woff2") format("woff2");
+  font-weight: 200 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Anton - Bold impact display */
+@font-face {
+  font-family: "Anton";
+  src: url("/fonts/display/anton-regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* League Gothic - Classic condensed gothic */
+@font-face {
+  font-family: "League Gothic";
+  src: url("/fonts/display/league-gothic-regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  /* Font families */
+  --font-sans: var(--font-geist-sans);
+  --font-mono:
+    var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+
+  /* Pixelbasel pixel font for Terminal mode */
+  --font-terminal: var(--font-pixelbasel), "Pixelbasel", monospace;
+
+  /* Border radius - Terminal default is 0, theme playground overrides */
+  --radius: 0;
+
+  /* Color mappings for Tailwind v4 */
+  --color-background: oklch(var(--background));
+  --color-foreground: oklch(var(--foreground));
+  --color-card: oklch(var(--card));
+  --color-card-foreground: oklch(var(--card-foreground));
+  --color-popover: oklch(var(--popover));
+  --color-popover-foreground: oklch(var(--popover-foreground));
+  --color-primary: oklch(var(--primary));
+  --color-primary-foreground: oklch(var(--primary-foreground));
+  --color-secondary: oklch(var(--secondary));
+  --color-secondary-foreground: oklch(var(--secondary-foreground));
+  --color-muted: oklch(var(--muted));
+  --color-muted-foreground: oklch(var(--muted-foreground));
+  --color-accent: oklch(var(--accent));
+  --color-accent-foreground: oklch(var(--accent-foreground));
+  --color-destructive: oklch(var(--destructive));
+  --color-destructive-foreground: oklch(var(--destructive-foreground));
+  --color-success: oklch(var(--success));
+  --color-success-foreground: oklch(var(--success-foreground));
+  --color-warning: oklch(var(--warning));
+  --color-warning-foreground: oklch(var(--warning-foreground));
+  --color-info: oklch(var(--info));
+  --color-info-foreground: oklch(var(--info-foreground));
+  --color-border: oklch(var(--border));
+  --color-input: oklch(var(--input));
+  --color-ring: oklch(var(--ring));
+
+  --color-accent-surface: oklch(var(--accent-surface));
+
+  /* Chart colors */
+  --color-chart-1: oklch(var(--chart-1));
+  --color-chart-2: oklch(var(--chart-2));
+  --color-chart-3: oklch(var(--chart-3));
+  --color-chart-4: oklch(var(--chart-4));
+  --color-chart-5: oklch(var(--chart-5));
+  --color-chart-6: oklch(var(--chart-6));
+  --color-chart-7: oklch(var(--chart-7));
+  --color-chart-8: oklch(var(--chart-8));
+  --color-chart-9: oklch(var(--chart-9));
+
+  /* New Semantic Tokens - These are already OKLCH values, no wrapper needed */
+  /* The raw values are defined in :root and theme-specific blocks */
+}
+
+/* ============================================
+   ROOT VARIABLES (Default: Green CRT)
+   ============================================ */
+:root {
+  /* Typography - Runtime switchable fonts */
+  --font-body:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
+    monospace;
+  --font-headline:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
+    monospace;
+
+  /* Default Theme: Black & White Monochrome */
+  --background: 5% 0 0;
+  --foreground: 95% 0 0;
+  --card: 10% 0 0;
+  --card-foreground: 95% 0 0;
+  --popover: 12% 0 0;
+  --popover-foreground: 95% 0 0;
+  --primary: 95% 0 0;
+  --primary-foreground: 5% 0 0;
+  --secondary: 25% 0 0;
+  --secondary-foreground: 95% 0 0;
+  --muted: 18% 0 0;
+  --muted-foreground: 72% 0 0; /* WCAG AA: 4.5:1 contrast ratio on dark backgrounds */
+  --accent: 85% 0 0;
+  --accent-foreground: 5% 0 0;
+  --destructive: 70% 0 0; /* WCAG AA: Improved contrast for error states */
+  --destructive-foreground: 95% 0 0;
+  --border: 30% 0 0;
+
+  --success: 80% 0 0; /* WCAG AA: Higher contrast for success */
+  --success-foreground: 5% 0 0;
+
+  --warning: 75% 0 0; /* WCAG AA: Higher contrast for warnings */
+  --warning-foreground: 5% 0 0;
+
+  --info: 78% 0 0; /* WCAG AA: Higher contrast for info */
+  --info-foreground: 5% 0 0;
+
+  --input: 25% 0 0;
+  --ring: 85% 0 0; /* WCAG AA: High contrast focus ring */
+
+  /* Chart Colors - Grayscale gradient */
+  --chart-1: 95% 0 0;
+  --chart-2: 85% 0 0;
+  --chart-3: 75% 0 0;
+  --chart-4: 65% 0 0;
+  --chart-5: 55% 0 0;
+  --chart-6: 45% 0 0;
+  --chart-7: 35% 0 0;
+  --chart-8: 25% 0 0;
+  --chart-9: 15% 0 0;
+  --status-away: 50% 0 0;
+
+  /* Semantic mappings - Required for Theme Completeness Gate */
+  --color-bg-canvas: var(--background);
+  --color-bg-surface: var(--card);
+  --color-bg-elevated: var(--popover);
+  --color-bg-sunken: var(--muted);
+
+  --color-text-primary: var(--foreground);
+  --color-text-secondary: var(--muted-foreground);
+  --color-text-tertiary: var(--secondary-foreground);
+  --color-text-inverse: var(--primary-foreground);
+  --color-text-disabled: var(--muted-foreground);
+
+  --color-border-default: var(--border);
+  --color-border-muted: var(--input);
+  --color-border-strong: var(--ring);
+  --color-border-focus: var(--ring);
+
+  --color-status-success: var(--success);
+  --color-status-success-bg: var(--success);
+  --color-status-warning: var(--warning);
+  --color-status-warning-bg: var(--warning);
+  --color-status-error: var(--destructive);
+  --color-status-error-bg: var(--destructive);
+  --color-status-info: var(--info);
+  --color-status-info-bg: var(--info);
+
+  /* Code syntax highlighting (Prism) - Grayscale */
+  --code-fg: oklch(90% 0 0);
+  --code-bg: oklch(12% 0 0);
+  --code-comment: oklch(50% 0 0);
+  --code-string: oklch(85% 0 0);
+  --code-punctuation: oklch(70% 0 0);
+  --code-number: oklch(75% 0 0);
+  --code-keyword: oklch(95% 0 0);
+  --code-function: oklch(80% 0 0);
+  --code-selector: oklch(85% 0 0);
+
+  /* State Opacity Tokens */
+  --state-hover-opacity: 0.9;
+  --state-secondary-opacity: 0.7;
+  --state-completed-opacity: 0.6;
+  --state-muted-opacity: 0.5;
+  --state-subtle-opacity: 0.4;
+  --state-disabled-opacity: 0.38;
+
+  /* Background Dot Pattern Opacity */
+  --bg-dot-opacity: 0.3;
+}
+
+/* ============================================
+   ADDITIONAL THEMES
+   ============================================ */
+
+/* Red Theme - Monochrome Red CRT (hue 25) */
+[data-theme="red"] {
+  --background: 5% 0.01 25;
+  --foreground: 78% 0.28 25;
+  --card: 8% 0.02 25;
+  --card-foreground: 78% 0.28 25;
+  --popover: 10% 0.03 25;
+  --popover-foreground: 78% 0.28 25;
+  --primary: 55% 0.28 25; /* Bold red */
+  --primary-foreground: 5% 0.01 25;
+  --secondary: 60% 0.26 25;
+  --secondary-foreground: 5% 0.01 25;
+  --muted: 18% 0.05 25;
+  --muted-foreground: 68% 0.22 25;
+  --accent: 65% 0.28 25;
+  --accent-foreground: 5% 0.01 25;
+  --destructive: 75% 0.32 25;
+  --destructive-foreground: 5% 0.01 25;
+  --border: 42% 0.2 25;
+  --input: 42% 0.2 25;
+  --ring: 60% 0.25 25;
+
+  /* Status colors - all monochrome red */
+  --success: 65% 0.28 25;
+  --success-foreground: 5% 0.01 25;
+  --warning: 70% 0.26 25;
+  --warning-foreground: 5% 0.01 25;
+  --info: 60% 0.24 25;
+  --info-foreground: 5% 0.01 25;
+
+  /* Chart colors - all monochrome red */
+  --chart-1: 65% 0.28 25;
+  --chart-2: 55% 0.24 25;
+  --chart-3: 70% 0.26 25;
+  --chart-4: 60% 0.22 25;
+  --chart-5: 50% 0.2 25;
+  --chart-6: 75% 0.3 25;
+  --chart-7: 45% 0.18 25;
+  --chart-8: 62% 0.25 25;
+  --chart-9: 58% 0.23 25;
+
+  /* Semantic mappings */
+  --color-bg-canvas: var(--background);
+  --color-bg-surface: var(--card);
+  --color-bg-elevated: var(--popover);
+  --color-bg-sunken: var(--muted);
+
+  --color-text-primary: var(--foreground);
+  --color-text-secondary: var(--muted-foreground);
+  --color-text-tertiary: var(--secondary-foreground);
+  --color-text-inverse: var(--primary-foreground);
+  --color-text-disabled: var(--muted-foreground);
+
+  --color-border-default: var(--border);
+  --color-border-muted: var(--input);
+  --color-border-strong: var(--ring);
+  --color-border-focus: var(--ring);
+
+  --color-status-success: var(--success);
+  --color-status-success-bg: var(--success);
+  --color-status-warning: var(--warning);
+  --color-status-warning-bg: var(--warning);
+  --color-status-error: var(--destructive);
+  --color-status-error-bg: var(--destructive);
+  --color-status-info: var(--info);
+  --color-status-info-bg: var(--info);
+
+  /* Code syntax highlighting (Prism) - red hue 25 */
+  --code-fg: oklch(65% 0.25 25);
+  --code-bg: oklch(8% 0.02 25);
+  --code-comment: oklch(50% 0.15 25);
+  --code-string: oklch(60% 0.22 25);
+  --code-punctuation: oklch(50% 0.2 25);
+  --code-number: oklch(55% 0.22 25);
+  --code-keyword: oklch(65% 0.25 25);
+  --code-function: oklch(70% 0.28 25);
+  --code-selector: oklch(60% 0.22 25);
+}
+
+/* Blue Theme - Monochrome Blue CRT (hue 200) */
+[data-theme="blue"] {
+  --background: 4% 0.01 200;
+  --foreground: 80% 0.22 200;
+  --card: 8% 0.02 200;
+  --card-foreground: 80% 0.22 200;
+  --popover: 10% 0.03 200;
+  --popover-foreground: 80% 0.22 200;
+  --primary: 40% 0.2 200;
+  --primary-foreground: 95% 0.01 200;
+  --secondary: 70% 0.2 200;
+  --secondary-foreground: 4% 0.01 200;
+  --muted: 18% 0.05 200;
+  --muted-foreground: 70% 0.18 200;
+  --accent: 60% 0.2 200;
+  --accent-foreground: 4% 0.01 200;
+  --destructive: 75% 0.22 200;
+  --destructive-foreground: 4% 0.01 200;
+  --border: 45% 0.16 200;
+  --input: 45% 0.16 200;
+  --ring: 60% 0.2 200;
+
+  /* Status colors - all monochrome blue */
+  --success: 75% 0.22 200;
+  --success-foreground: 4% 0.01 200;
+  --warning: 78% 0.2 200;
+  --warning-foreground: 4% 0.01 200;
+  --info: 70% 0.2 200;
+  --info-foreground: 4% 0.01 200;
+
+  /* Chart colors - all monochrome blue */
+  --chart-1: 75% 0.22 200;
+  --chart-2: 65% 0.18 200;
+  --chart-3: 80% 0.24 200;
+  --chart-4: 70% 0.2 200;
+  --chart-5: 60% 0.16 200;
+  --chart-6: 85% 0.24 200;
+  --chart-7: 55% 0.14 200;
+  --chart-8: 72% 0.21 200;
+  --chart-9: 68% 0.19 200;
+
+  /* Semantic mappings */
+  --color-bg-canvas: var(--background);
+  --color-bg-surface: var(--card);
+  --color-bg-elevated: var(--popover);
+  --color-bg-sunken: var(--muted);
+
+  --color-text-primary: var(--foreground);
+  --color-text-secondary: var(--muted-foreground);
+  --color-text-tertiary: var(--secondary-foreground);
+  --color-text-inverse: var(--primary-foreground);
+  --color-text-disabled: var(--muted-foreground);
+
+  --color-border-default: var(--border);
+  --color-border-muted: var(--input);
+  --color-border-strong: var(--ring);
+  --color-border-focus: var(--ring);
+
+  --color-status-success: var(--success);
+  --color-status-success-bg: var(--success);
+  --color-status-warning: var(--warning);
+  --color-status-warning-bg: var(--warning);
+  --color-status-error: var(--destructive);
+  --color-status-error-bg: var(--destructive);
+  --color-status-info: var(--info);
+  --color-status-info-bg: var(--info);
+
+  /* Code syntax highlighting (Prism) */
+  --code-fg: oklch(82% 0.1 274);
+  --code-bg: oklch(14% 0.02 278);
+  --code-comment: oklch(62% 0.09 278);
+  --code-string: oklch(86% 0.08 269);
+  --code-punctuation: oklch(72% 0.09 276);
+  --code-number: oklch(77% 0.09 274);
+  --code-keyword: oklch(82% 0.1 274);
+  --code-function: oklch(89% 0.06 261);
+  --code-selector: oklch(82% 0.1 274);
+}
+
+/* Green Theme - Monochrome Green CRT (hue 145) */
+[data-theme="green"] {
+  --background: 5% 0.01 145;
+  --foreground: 85% 0.3 145;
+  --card: 8% 0.02 145;
+  --card-foreground: 85% 0.3 145;
+  --popover: 10% 0.03 145;
+  --popover-foreground: 85% 0.3 145;
+  --primary: 40% 0.25 145;
+  --primary-foreground: 95% 0.01 145;
+  --secondary: 70% 0.25 145;
+  --secondary-foreground: 5% 0.01 145;
+  --muted: 18% 0.05 145;
+  --muted-foreground: 70% 0.22 145;
+  --accent: 60% 0.25 145;
+  --accent-foreground: 5% 0.01 145;
+  --destructive: 80% 0.28 145;
+  --destructive-foreground: 5% 0.01 145;
+  --border: 40% 0.18 145;
+  --input: 40% 0.18 145;
+  --ring: 60% 0.25 145;
+
+  /* Semantic mappings */
+  --color-bg-canvas: var(--background);
+  --color-bg-surface: var(--card);
+  --color-bg-elevated: var(--popover);
+  --color-bg-sunken: var(--muted);
+
+  --color-text-primary: var(--foreground);
+  --color-text-secondary: var(--muted-foreground);
+  --color-text-tertiary: var(--secondary-foreground);
+  --color-text-inverse: var(--primary-foreground);
+  --color-text-disabled: var(--muted-foreground);
+
+  --color-border-default: var(--border);
+  --color-border-muted: var(--input);
+  --color-border-strong: var(--ring);
+  --color-border-focus: var(--ring);
+
+  --color-status-success: var(--success);
+  --color-status-success-bg: var(--success);
+  --color-status-warning: var(--warning);
+  --color-status-warning-bg: var(--warning);
+  --color-status-error: var(--destructive);
+  --color-status-error-bg: var(--destructive);
+  --color-status-info: var(--info);
+  --color-status-info-bg: var(--info);
+
+  /* Status colors - all monochrome green */
+  --success: 75% 0.28 145;
+  --success-foreground: 5% 0.01 145;
+  --warning: 80% 0.26 145;
+  --warning-foreground: 5% 0.01 145;
+  --info: 70% 0.24 145;
+  --info-foreground: 5% 0.01 145;
+
+  /* Chart colors - all monochrome green */
+  --chart-1: 75% 0.28 145;
+  --chart-2: 65% 0.24 145;
+  --chart-3: 80% 0.26 145;
+  --chart-4: 70% 0.22 145;
+  --chart-5: 60% 0.2 145;
+  --chart-6: 85% 0.3 145;
+  --chart-7: 55% 0.18 145;
+  --chart-8: 72% 0.25 145;
+  --chart-9: 68% 0.23 145;
+
+  /* Code syntax highlighting (Prism) - Grayscale */
+  --code-fg: oklch(90% 0 0);
+  --code-bg: oklch(12% 0 0);
+  --code-comment: oklch(50% 0 0);
+  --code-string: oklch(85% 0 0);
+  --code-punctuation: oklch(70% 0 0);
+  --code-number: oklch(75% 0 0);
+  --code-keyword: oklch(95% 0 0);
+  --code-function: oklch(80% 0 0);
+  --code-selector: oklch(85% 0 0);
+}
+
+/* Amber Theme - Monochrome Amber CRT (hue 50) */
+[data-theme="amber"] {
+  --background: 5% 0.01 50;
+  --foreground: 88% 0.25 50;
+  --card: 10% 0.02 50;
+  --card-foreground: 88% 0.25 50;
+  --popover: 12% 0.03 50;
+  --popover-foreground: 88% 0.25 50;
+  --primary: 35% 0.2 50;
+  --primary-foreground: 95% 0.01 50;
+  --secondary: 75% 0.22 50;
+  --secondary-foreground: 5% 0.01 50;
+  --muted: 18% 0.05 50;
+  --muted-foreground: 75% 0.2 50;
+  --accent: 60% 0.2 50;
+  --accent-foreground: 5% 0.01 50;
+  --destructive: 82% 0.28 50;
+  --destructive-foreground: 5% 0.01 50;
+  --border: 40% 0.15 50;
+  --input: 40% 0.15 50;
+  --ring: 60% 0.2 50;
+
+  /* Semantic mappings */
+  --color-bg-canvas: var(--background);
+  --color-bg-surface: var(--card);
+  --color-bg-elevated: var(--popover);
+  --color-bg-sunken: var(--muted);
+
+  --color-text-primary: var(--foreground);
+  --color-text-secondary: var(--muted-foreground);
+  --color-text-tertiary: var(--secondary-foreground);
+  --color-text-inverse: var(--primary-foreground);
+  --color-text-disabled: var(--muted-foreground);
+
+  --color-border-default: var(--border);
+  --color-border-muted: var(--input);
+  --color-border-strong: var(--ring);
+  --color-border-focus: var(--ring);
+
+  --color-status-success: var(--success);
+  --color-status-success-bg: var(--success);
+  --color-status-warning: var(--warning);
+  --color-status-warning-bg: var(--warning);
+  --color-status-error: var(--destructive);
+  --color-status-error-bg: var(--destructive);
+  --color-status-info: var(--info);
+  --color-status-info-bg: var(--info);
+
+  /* Status colors - all monochrome amber */
+  --success: 75% 0.22 50;
+  --success-foreground: 5% 0.01 50;
+  --warning: 82% 0.28 50;
+  --warning-foreground: 5% 0.01 50;
+  --info: 70% 0.2 50;
+  --info-foreground: 5% 0.01 50;
+
+  /* Chart colors - all monochrome amber */
+  --chart-1: 75% 0.22 50;
+  --chart-2: 65% 0.18 50;
+  --chart-3: 82% 0.28 50;
+  --chart-4: 70% 0.2 50;
+  --chart-5: 60% 0.16 50;
+  --chart-6: 88% 0.25 50;
+  --chart-7: 55% 0.14 50;
+  --chart-8: 72% 0.21 50;
+  --chart-9: 68% 0.19 50;
+
+  /* Semantic mappings */
+  --color-bg-canvas: var(--background);
+  --color-bg-surface: var(--card);
+  --color-bg-elevated: var(--popover);
+  --color-bg-sunken: var(--muted);
+
+  --color-text-primary: var(--foreground);
+  --color-text-secondary: var(--muted-foreground);
+  --color-text-tertiary: var(--secondary-foreground);
+  --color-text-inverse: var(--primary-foreground);
+  --color-text-disabled: var(--muted-foreground);
+
+  --color-border-default: var(--border);
+  --color-border-muted: var(--input);
+  --color-border-strong: var(--ring);
+  --color-border-focus: var(--ring);
+
+  --color-status-success: var(--success);
+  --color-status-success-bg: var(--success);
+  --color-status-warning: var(--warning);
+  --color-status-warning-bg: var(--warning);
+  --color-status-error: var(--destructive);
+  --color-status-error-bg: var(--destructive);
+
+  /* Code syntax highlighting (Prism) */
+  --code-fg: oklch(81% 0.14 108);
+  --code-bg: oklch(14% 0.02 113);
+  --code-comment: oklch(62% 0.11 110);
+  --code-string: oklch(84% 0.14 110);
+  --code-punctuation: oklch(75% 0.13 102);
+  --code-number: oklch(78% 0.13 105);
+  --code-keyword: oklch(73% 0.13 98);
+  --code-function: oklch(87% 0.14 112);
+  --code-selector: oklch(81% 0.14 108);
+}
+
+/* Purple Theme - Monochrome Purple CRT (hue 300) */
+[data-theme="purple"] {
+  --background: 5% 0.01 300;
+  --foreground: 85% 0.25 300;
+  --card: 8% 0.02 300;
+  --card-foreground: 85% 0.25 300;
+  --popover: 10% 0.03 300;
+  --popover-foreground: 85% 0.25 300;
+  --primary: 45% 0.22 300;
+  --primary-foreground: 98% 0.01 300;
+  --secondary: 70% 0.2 300;
+  --secondary-foreground: 5% 0.01 300;
+  --muted: 12% 0.03 300;
+  --muted-foreground: 75% 0.18 300;
+  --accent: 60% 0.2 300;
+  --accent-foreground: 5% 0.01 300;
+  --destructive: 82% 0.28 300;
+  --destructive-foreground: 5% 0.01 300;
+  --border: 50% 0.2 300;
+  --input: 50% 0.2 300;
+  --ring: 60% 0.2 300;
+
+  /* Status colors - all monochrome purple */
+  --success: 70% 0.2 300;
+  --success-foreground: 5% 0.01 300;
+  --warning: 75% 0.22 300;
+  --warning-foreground: 5% 0.01 300;
+  --info: 65% 0.18 300;
+  --info-foreground: 5% 0.01 300;
+
+  /* Chart colors - all monochrome purple */
+  --chart-1: 70% 0.2 300;
+  --chart-2: 60% 0.16 300;
+  --chart-3: 75% 0.22 300;
+  --chart-4: 65% 0.18 300;
+  --chart-5: 55% 0.14 300;
+  --chart-6: 85% 0.25 300;
+  --chart-7: 50% 0.12 300;
+  --chart-8: 72% 0.21 300;
+  --chart-9: 68% 0.19 300;
+
+  /* Semantic mappings */
+  --color-bg-canvas: var(--background);
+  --color-bg-surface: var(--card);
+  --color-bg-elevated: var(--popover);
+  --color-bg-sunken: var(--muted);
+
+  --color-text-primary: var(--foreground);
+  --color-text-secondary: var(--muted-foreground);
+  --color-text-tertiary: var(--secondary-foreground);
+  --color-text-inverse: var(--primary-foreground);
+  --color-text-disabled: var(--muted-foreground);
+
+  --color-border-default: var(--border);
+  --color-border-muted: var(--input);
+  --color-border-strong: var(--ring);
+  --color-border-focus: var(--ring);
+
+  --color-status-success: var(--success);
+  --color-status-success-bg: var(--success);
+  --color-status-warning: var(--warning);
+  --color-status-warning-bg: var(--warning);
+  --color-status-error: var(--destructive);
+  --color-status-error-bg: var(--destructive);
+
+  /* Code syntax highlighting (Prism) */
+  --code-fg: oklch(76% 0.13 294);
+  --code-bg: oklch(14% 0.05 294);
+  --code-comment: oklch(52% 0.12 293);
+  --code-string: oklch(80% 0.11 295);
+  --code-punctuation: oklch(66% 0.13 294);
+  --code-number: oklch(71% 0.13 294);
+  --code-keyword: oklch(78% 0.13 296);
+  --code-function: oklch(84% 0.09 296);
+  --code-selector: oklch(76% 0.13 294);
+}
+
+/* Game Boy Theme - Authentic DMG-01 LCD green (hue 85) */
+[data-theme="gameboy"] {
+  --background: 85% 0.18 85; /* #9bbc0f iconic Game Boy green */
+  --foreground: 15% 0.12 85; /* #0f380f dark olive text */
+  --card: 80% 0.16 85;
+  --card-foreground: 15% 0.12 85;
+  --popover: 75% 0.14 85;
+  --popover-foreground: 15% 0.12 85;
+  --primary: 25% 0.14 85;
+  --primary-foreground: 85% 0.18 85;
+  --secondary: 65% 0.16 85;
+  --secondary-foreground: 15% 0.12 85;
+  --muted: 78% 0.15 85;
+  --muted-foreground: 28% 0.12 85;
+  --accent: 20% 0.14 85;
+  --accent-foreground: 85% 0.18 85;
+  --destructive: 30% 0.14 85;
+  --destructive-foreground: 85% 0.18 85;
+  --border: 32% 0.14 85;
+  --input: 32% 0.14 85;
+  --ring: 20% 0.14 85;
+
+  --bg-dot-opacity: 0.25;
+
+  /* Status colors - Game Boy green spectrum */
+  --success: 25% 0.14 85;
+  --success-foreground: 85% 0.18 85;
+  --warning: 30% 0.14 85;
+  --warning-foreground: 85% 0.18 85;
+  --info: 22% 0.12 85;
+  --info-foreground: 85% 0.18 85;
+
+  /* Chart colors - olive green spectrum */
+  --chart-1: 25% 0.14 85;
+  --chart-2: 30% 0.14 85;
+  --chart-3: 35% 0.14 85;
+  --chart-4: 40% 0.14 85;
+  --chart-5: 45% 0.14 85;
+  --chart-6: 20% 0.12 85;
+  --chart-7: 32% 0.14 85;
+  --chart-8: 38% 0.14 85;
+  --chart-9: 42% 0.14 85;
+
+  /* Semantic mappings */
+  --color-bg-canvas: var(--background);
+  --color-bg-surface: var(--card);
+  --color-bg-elevated: var(--popover);
+  --color-bg-sunken: var(--muted);
+
+  --color-text-primary: var(--foreground);
+  --color-text-secondary: var(--muted-foreground);
+  --color-text-tertiary: var(--secondary-foreground);
+  --color-text-inverse: var(--primary-foreground);
+  --color-text-disabled: var(--muted-foreground);
+
+  --color-border-default: var(--border);
+  --color-border-muted: var(--input);
+  --color-border-strong: var(--ring);
+  --color-border-focus: var(--ring);
+
+  --color-status-success: var(--success);
+  --color-status-success-bg: var(--success);
+  --color-status-warning: var(--warning);
+  --color-status-warning-bg: var(--warning);
+  --color-status-error: var(--destructive);
+  --color-status-error-bg: var(--destructive);
+
+  /* Code syntax highlighting - authentic Game Boy palette */
+  --code-fg: oklch(29% 0.04 132);
+  --code-bg: oklch(72% 0.13 120);
+  --code-comment: oklch(43% 0.05 133);
+  --code-string: oklch(29% 0.04 132);
+  --code-punctuation: oklch(36% 0.05 132);
+  --code-number: oklch(29% 0.04 132);
+  --code-keyword: oklch(29% 0.04 132);
+  --code-function: oklch(36% 0.05 132);
+  --code-selector: oklch(29% 0.04 132);
+}
+
+/* C64 Theme - Commodore 64 blue (hue 280) */
+[data-theme="c64"] {
+  --background: 25% 0.1 280; /* Dark Blue (#352879 approx) */
+  --foreground: 82% 0.15 280;
+  --card: 28% 0.1 280;
+  --card-foreground: 82% 0.15 280;
+  --popover: 30% 0.1 280;
+  --popover-foreground: 82% 0.15 280;
+  --primary: 68% 0.2 280;
+  --primary-foreground: 25% 0.1 280;
+  --secondary: 40% 0.15 280;
+  --secondary-foreground: 80% 0.1 280;
+  --muted: 35% 0.05 280;
+  --muted-foreground: 82% 0.1 280;
+  --accent: 75% 0.2 280;
+  --accent-foreground: 25% 0.1 280;
+  --destructive: 45% 0.2 0;
+  --destructive-foreground: 98% 0.05 0;
+  --border: 60% 0.1 280;
+  --input: 60% 0.1 280;
+  --ring: 75% 0.2 280;
+
+  /* Status colors - blue spectrum */
+  --success: 65% 0.2 280;
+  --success-foreground: 15% 0.1 280;
+  --warning: 70% 0.18 280;
+  --warning-foreground: 15% 0.1 280;
+  --info: 60% 0.18 280;
+  --info-foreground: 15% 0.1 280;
+
+  /* Chart colors - blue spectrum */
+  --chart-1: 65% 0.2 280;
+  --chart-2: 55% 0.18 280;
+  --chart-3: 70% 0.22 280;
+  --chart-4: 60% 0.16 280;
+  --chart-5: 50% 0.14 280;
+  --chart-6: 75% 0.24 280;
+  --chart-7: 45% 0.12 280;
+  --chart-8: 62% 0.19 280;
+  --chart-9: 68% 0.21 280;
+
+  /* Semantic mappings */
+  --color-bg-canvas: var(--background);
+  --color-bg-surface: var(--card);
+  --color-bg-elevated: var(--popover);
+  --color-bg-sunken: var(--muted);
+
+  --color-text-primary: var(--foreground);
+  --color-text-secondary: var(--muted-foreground);
+  --color-text-tertiary: var(--secondary-foreground);
+  --color-text-inverse: var(--primary-foreground);
+  --color-text-disabled: var(--muted-foreground);
+
+  --color-border-default: var(--border);
+  --color-border-muted: var(--input);
+  --color-border-strong: var(--ring);
+  --color-border-focus: var(--ring);
+
+  --color-status-success: var(--success);
+  --color-status-success-bg: var(--success);
+  --color-status-warning: var(--warning);
+  --color-status-warning-bg: var(--warning);
+  --color-status-error: var(--destructive);
+  --color-status-error-bg: var(--destructive);
+
+  /* Code syntax highlighting - C64 blue */
+  --code-fg: oklch(76% 0.08 289);
+  --code-bg: oklch(38% 0.11 290);
+  --code-comment: oklch(65% 0.13 290);
+  --code-string: oklch(69% 0.12 290);
+  --code-punctuation: oklch(72% 0.1 290);
+  --code-number: oklch(87% 0.07 283);
+  --code-keyword: oklch(76% 0.08 289);
+  --code-function: oklch(87% 0.07 283);
+  --code-selector: oklch(76% 0.08 289);
+}
+
+/* Game Boy Pocket Theme - Silver/gray monochrome LCD */
+[data-theme="gbpocket"] {
+  --background: 94% 0.01 0; /* Silver LCD background */
+  --foreground: 15% 0.01 0;
+  --card: 90% 0.01 0;
+  --card-foreground: 15% 0.01 0;
+  --popover: 86% 0.01 0;
+  --popover-foreground: 15% 0.01 0;
+  --primary: 20% 0.01 0;
+  --primary-foreground: 94% 0.01 0;
+  --secondary: 80% 0.01 0;
+  --secondary-foreground: 15% 0.01 0;
+  --muted: 88% 0.01 0;
+  --muted-foreground: 30% 0.01 0;
+  --accent: 18% 0.01 0;
+  --accent-foreground: 94% 0.01 0;
+  --destructive: 25% 0.01 0;
+  --destructive-foreground: 94% 0.01 0;
+  --border: 35% 0.01 0;
+  --input: 35% 0.01 0;
+  --ring: 18% 0.01 0;
+
+  --bg-dot-opacity: 0.25;
+
+  /* Status colors - grayscale */
+  --success: 22% 0.01 0;
+  --success-foreground: 94% 0.01 0;
+  --warning: 28% 0.01 0;
+  --warning-foreground: 94% 0.01 0;
+  --info: 24% 0.01 0;
+  --info-foreground: 94% 0.01 0;
+
+  /* Chart colors - grayscale spectrum */
+  --chart-1: 20% 0.01 0;
+  --chart-2: 28% 0.01 0;
+  --chart-3: 36% 0.01 0;
+  --chart-4: 44% 0.01 0;
+  --chart-5: 52% 0.01 0;
+  --chart-6: 24% 0.01 0;
+  --chart-7: 32% 0.01 0;
+  --chart-8: 40% 0.01 0;
+  --chart-9: 48% 0.01 0;
+
+  /* Semantic mappings */
+  --color-bg-canvas: var(--background);
+  --color-bg-surface: var(--card);
+  --color-bg-elevated: var(--popover);
+  --color-bg-sunken: var(--muted);
+
+  --color-text-primary: var(--foreground);
+  --color-text-secondary: var(--muted-foreground);
+  --color-text-tertiary: var(--secondary-foreground);
+  --color-text-inverse: var(--primary-foreground);
+  --color-text-disabled: var(--muted-foreground);
+
+  --color-border-default: var(--border);
+  --color-border-muted: var(--input);
+  --color-border-strong: var(--ring);
+  --color-border-focus: var(--ring);
+
+  --color-status-success: var(--success);
+  --color-status-success-bg: var(--success);
+  --color-status-warning: var(--warning);
+  --color-status-warning-bg: var(--warning);
+  --color-status-error: var(--destructive);
+  --color-status-error-bg: var(--destructive);
+
+  /* Code syntax highlighting - grayscale */
+  --code-fg: oklch(28% 0 261);
+  --code-bg: oklch(93% 0.01 261);
+  --code-comment: oklch(47% 0.01 261);
+  --code-string: oklch(28% 0 261);
+  --code-punctuation: oklch(35% 0 261);
+  --code-number: oklch(28% 0 261);
+  --code-keyword: oklch(28% 0 261);
+  --code-function: oklch(35% 0 261);
+  --code-selector: oklch(28% 0 261);
+}
+
+/* VIC-20 Theme - Commodore VIC-20 cyan (hue 180) */
+[data-theme="vic20"] {
+  --background: 90% 0.06 180; /* Light cyan background */
+  --foreground: 18% 0.1 180;
+  --card: 86% 0.05 180;
+  --card-foreground: 18% 0.1 180;
+  --popover: 82% 0.05 180;
+  --popover-foreground: 18% 0.1 180;
+  --primary: 25% 0.12 180;
+  --primary-foreground: 90% 0.06 180;
+  --secondary: 74% 0.08 180;
+  --secondary-foreground: 18% 0.1 180;
+  --muted: 84% 0.05 180;
+  --muted-foreground: 30% 0.08 180;
+  --accent: 22% 0.12 180;
+  --accent-foreground: 90% 0.06 180;
+  --destructive: 30% 0.1 180;
+  --destructive-foreground: 90% 0.06 180;
+  --border: 38% 0.08 180;
+  --input: 38% 0.08 180;
+  --ring: 22% 0.12 180;
+
+  --bg-dot-opacity: 0.25;
+
+  /* Status colors - cyan spectrum */
+  --success: 25% 0.12 180;
+  --success-foreground: 90% 0.06 180;
+  --warning: 32% 0.1 180;
+  --warning-foreground: 90% 0.06 180;
+  --info: 26% 0.12 180;
+  --info-foreground: 90% 0.06 180;
+
+  /* Chart colors - cyan spectrum */
+  --chart-1: 25% 0.12 180;
+  --chart-2: 30% 0.1 180;
+  --chart-3: 35% 0.1 180;
+  --chart-4: 40% 0.08 180;
+  --chart-5: 45% 0.08 180;
+  --chart-6: 22% 0.12 180;
+  --chart-7: 32% 0.1 180;
+  --chart-8: 38% 0.08 180;
+  --chart-9: 42% 0.08 180;
+
+  /* Semantic mappings */
+  --color-bg-canvas: var(--background);
+  --color-bg-surface: var(--card);
+  --color-bg-elevated: var(--popover);
+  --color-bg-sunken: var(--muted);
+
+  --color-text-primary: var(--foreground);
+  --color-text-secondary: var(--muted-foreground);
+  --color-text-tertiary: var(--secondary-foreground);
+  --color-text-inverse: var(--primary-foreground);
+  --color-text-disabled: var(--muted-foreground);
+
+  --color-border-default: var(--border);
+  --color-border-muted: var(--input);
+  --color-border-strong: var(--ring);
+  --color-border-focus: var(--ring);
+
+  --color-status-success: var(--success);
+  --color-status-success-bg: var(--success);
+  --color-status-warning: var(--warning);
+  --color-status-warning-bg: var(--warning);
+  --color-status-error: var(--destructive);
+  --color-status-error-bg: var(--destructive);
+
+  /* Code syntax highlighting - cyan */
+  --code-fg: oklch(43% 0.03 247);
+  --code-bg: oklch(93% 0.02 254);
+  --code-comment: oklch(54% 0.03 248);
+  --code-string: oklch(43% 0.03 247);
+  --code-punctuation: oklch(48% 0.03 248);
+  --code-number: oklch(43% 0.03 247);
+  --code-keyword: oklch(43% 0.03 247);
+  --code-function: oklch(48% 0.03 248);
+  --code-selector: oklch(43% 0.03 247);
+}
+
+/* Atari 800 Theme - Authentic Blue background (Hue 220) */
+[data-theme="atari"] {
+  --background: 35% 0.1 220; /* Atari Blue background */
+  --foreground: 96% 0.05 220;
+  --card: 40% 0.1 220;
+  --card-foreground: 96% 0.05 220;
+  --popover: 38% 0.1 220;
+  --popover-foreground: 96% 0.05 220;
+  --primary: 73% 0.2 220;
+  --primary-foreground: 15% 0.05 220;
+  --secondary: 30% 0.1 220;
+  --secondary-foreground: 80% 0.1 220;
+  --muted: 25% 0.05 220;
+  --muted-foreground: 85% 0.1 220;
+  --accent: 70% 0.2 220;
+  --accent-foreground: 30% 0.1 220;
+  --destructive: 45% 0.2 0;
+  --destructive-foreground: 98% 0.05 0;
+  --border: 65% 0.1 220;
+  --input: 65% 0.1 220;
+  --ring: 70% 0.2 220;
+
+  /* Status colors - blue spectrum */
+  --success: 70% 0.2 220;
+  --success-foreground: 15% 0.1 220;
+  --warning: 75% 0.18 220;
+  --warning-foreground: 15% 0.1 220;
+  --info: 65% 0.18 220;
+  --info-foreground: 15% 0.1 220;
+
+  /* Chart colors - blue spectrum */
+  --chart-1: 70% 0.2 220;
+  --chart-2: 60% 0.18 220;
+  --chart-3: 75% 0.22 220;
+  --chart-4: 65% 0.16 220;
+  --chart-5: 55% 0.14 220;
+  --chart-6: 80% 0.24 220;
+  --chart-7: 50% 0.12 220;
+  --chart-8: 68% 0.19 220;
+  --chart-9: 72% 0.21 220;
+
+  /* Semantic mappings */
+  --color-bg-canvas: var(--background);
+  --color-bg-surface: var(--card);
+  --color-bg-elevated: var(--popover);
+  --color-bg-sunken: var(--muted);
+
+  --color-text-primary: var(--foreground);
+  --color-text-secondary: var(--muted-foreground);
+  --color-text-tertiary: var(--secondary-foreground);
+  --color-text-inverse: var(--primary-foreground);
+  --color-text-disabled: var(--muted-foreground);
+
+  --color-border-default: var(--border);
+  --color-border-muted: var(--input);
+  --color-border-strong: var(--ring);
+  --color-border-focus: var(--ring);
+
+  --color-status-success: var(--success);
+  --color-status-success-bg: var(--success);
+  --color-status-warning: var(--warning);
+  --color-status-warning-bg: var(--warning);
+  --color-status-error: var(--destructive);
+  --color-status-error-bg: var(--destructive);
+
+  /* Code syntax highlighting - Atari Blue */
+  --code-fg: oklch(90% 0.06 277);
+  --code-bg: oklch(44% 0.06 280);
+  --code-comment: oklch(65% 0.06 279);
+  --code-string: oklch(80% 0.06 275);
+  --code-punctuation: oklch(70% 0.06 278);
+  --code-number: oklch(100% 0.01 261);
+  --code-keyword: oklch(90% 0.06 277);
+  --code-function: oklch(100% 0.01 261);
+  --code-selector: oklch(90% 0.06 277);
+}
+
+/* ZX Spectrum Theme - Sinclair ZX Spectrum bright (hue 250) */
+[data-theme="spectrum"] {
+  --background: 96% 0.02 250; /* Near-white with subtle blue */
+  --foreground: 10% 0.08 250;
+  --card: 92% 0.02 250;
+  --card-foreground: 10% 0.08 250;
+  --popover: 88% 0.02 250;
+  --popover-foreground: 10% 0.08 250;
+  --primary: 18% 0.12 250;
+  --primary-foreground: 96% 0.02 250;
+  --secondary: 82% 0.06 250;
+  --secondary-foreground: 10% 0.08 250;
+  --muted: 90% 0.02 250;
+  --muted-foreground: 38% 0.08 250;
+  --accent: 15% 0.12 250;
+  --accent-foreground: 96% 0.02 250;
+  --destructive: 22% 0.1 250;
+  --destructive-foreground: 96% 0.02 250;
+  --border: 47% 0.06 250;
+  --input: 47% 0.06 250;
+  --ring: 15% 0.12 250;
+
+  --bg-dot-opacity: 0.25;
+
+  /* Status colors - spectrum */
+  --success: 20% 0.12 250;
+  --success-foreground: 96% 0.02 250;
+  --warning: 26% 0.1 250;
+  --warning-foreground: 96% 0.02 250;
+  --info: 18% 0.12 250;
+  --info-foreground: 96% 0.02 250;
+
+  /* Chart colors - spectrum */
+  --chart-1: 18% 0.12 250;
+  --chart-2: 24% 0.1 250;
+  --chart-3: 30% 0.1 250;
+  --chart-4: 36% 0.08 250;
+  --chart-5: 42% 0.08 250;
+  --chart-6: 20% 0.12 250;
+  --chart-7: 27% 0.1 250;
+  --chart-8: 33% 0.08 250;
+  --chart-9: 39% 0.08 250;
+
+  /* Semantic mappings */
+  --color-bg-canvas: var(--background);
+  --color-bg-surface: var(--card);
+  --color-bg-elevated: var(--popover);
+  --color-bg-sunken: var(--muted);
+
+  --color-text-primary: var(--foreground);
+  --color-text-secondary: var(--muted-foreground);
+  --color-text-tertiary: var(--secondary-foreground);
+  --color-text-inverse: var(--primary-foreground);
+  --color-text-disabled: var(--muted-foreground);
+
+  --color-border-default: var(--border);
+  --color-border-muted: var(--input);
+  --color-border-strong: var(--ring);
+  --color-border-focus: var(--ring);
+
+  --color-status-success: var(--success);
+  --color-status-success-bg: var(--success);
+  --color-status-warning: var(--warning);
+  --color-status-warning-bg: var(--warning);
+  --color-status-error: var(--destructive);
+  --color-status-error-bg: var(--destructive);
+
+  /* Code syntax highlighting - bright spectrum */
+  --code-fg: oklch(30% 0.09 288);
+  --code-bg: oklch(97% 0.02 275);
+  --code-comment: oklch(45% 0.07 288);
+  --code-string: oklch(30% 0.09 288);
+  --code-punctuation: oklch(36% 0.09 288);
+  --code-number: oklch(30% 0.09 288);
+  --code-keyword: oklch(30% 0.09 288);
+  --code-function: oklch(36% 0.09 288);
+  --code-selector: oklch(30% 0.09 288);
+}
+
+/* ============================================
+   Black & White Theme - Pure grayscale (hue 0, zero saturation)
+   High contrast for accessibility and minimalist aesthetic
+   ============================================ */
+
+[data-theme="bw"] {
+  /* Base colors - Pure black & white (no saturation) */
+  --background: 100% 0 0; /* Pure white */
+  --foreground: 0% 0 0; /* Pure black */
+  --card: 100% 0 0;
+  --card-foreground: 0% 0 0;
+  --popover: 100% 0 0;
+  --popover-foreground: 0% 0 0;
+
+  /* Primary - Black (accent color is pure black) */
+  --primary: 0% 0 0;
+  --primary-foreground: 100% 0 0;
+
+  /* Secondary - Black background for contrast */
+  --secondary: 0% 0 0;
+  --secondary-foreground: 100% 0 0;
+
+  /* Muted - Light gray background for contrast, Black text */
+  --muted: 92% 0 0;
+  --muted-foreground: 0% 0 0;
+
+  /* Accent - Black */
+  --accent: 0% 0 0;
+  --accent-foreground: 100% 0 0;
+
+  /* Destructive - Black (differentiate via icon/text) */
+  --destructive: 0% 0 0;
+  --destructive-foreground: 100% 0 0;
+
+  /* Borders - Pure black for true B&W aesthetic */
+  --border: 0% 0 0;
+  --input: 0% 0 0;
+
+  /* Ring - Focus indicator (pure black) */
+  --ring: 0% 0 0;
+
+  --bg-dot-opacity: 0.3;
+
+  /* Status colors - Grayscale spectrum */
+  --success: 20% 0 0; /* Dark gray for success */
+  --success-foreground: 100% 0 0; /* White text */
+  --warning: 40% 0 0; /* Medium gray for warning */
+  --warning-foreground: 100% 0 0; /* White text */
+  --info: 60% 0 0; /* Light gray for info */
+  --info-foreground: 0% 0 0; /* Black text */
+
+  /* Chart colors - Grayscale spectrum (20%, 40%, 60%, 80%) */
+  --chart-1: 20% 0 0; /* Dark gray */
+  --chart-2: 40% 0 0; /* Medium-dark gray */
+  --chart-3: 60% 0 0; /* Medium-light gray */
+  --chart-4: 80% 0 0; /* Light gray */
+  --chart-5: 25% 0 0; /* Dark gray variant */
+  --chart-6: 35% 0 0; /* Medium-dark gray variant */
+  --chart-7: 50% 0 0; /* Medium gray */
+  --chart-8: 70% 0 0; /* Medium-light gray variant */
+  --chart-9: 90% 0 0; /* Very light gray */
+
+  /* Semantic mappings */
+  --color-bg-canvas: var(--background);
+  --color-bg-surface: var(--card);
+  --color-bg-elevated: var(--popover);
+  --color-bg-sunken: var(--muted);
+
+  --color-text-primary: var(--foreground);
+  --color-text-secondary: var(--muted-foreground);
+  --color-text-tertiary: var(--secondary-foreground);
+  --color-text-inverse: var(--primary-foreground);
+  --color-text-disabled: var(--muted-foreground);
+
+  --color-border-default: var(--border);
+  --color-border-muted: var(--input);
+  --color-border-strong: var(--ring);
+  --color-border-focus: var(--ring);
+
+  --color-status-success: var(--success);
+  --color-status-success-bg: var(--success);
+  --color-status-warning: var(--warning);
+  --color-status-warning-bg: var(--warning);
+  --color-status-error: var(--destructive);
+  --color-status-error-bg: var(--destructive);
+
+  /* Syntax highlighting - Pure B&W */
+  --code-bg: oklch(100% 0.01 261);
+  --code-fg: oklch(0% 0 0);
+  --code-comment: oklch(0% 0 0);
+  --code-string: oklch(0% 0 0);
+  --code-punctuation: oklch(0% 0 0);
+  --code-number: oklch(0% 0 0);
+  --code-keyword: oklch(0% 0 0);
+  --code-function: oklch(0% 0 0);
+  --code-selector: oklch(0% 0 0);
+}
+
+/* DARK B&W - Inverted black & white (dark mode) */
+[data-theme="bw-dark"] {
+  /* Base colors - Inverted black & white */
+  --background: 10% 0 0; /* Near black */
+  --foreground: 95% 0 0; /* Near white */
+  --card: 15% 0 0; /* Dark gray */
+  --card-foreground: 95% 0 0;
+  --popover: 12% 0 0;
+  --popover-foreground: 95% 0 0;
+
+  /* Primary - White accent on dark */
+  --primary: 95% 0 0;
+  --primary-foreground: 10% 0 0;
+
+  /* Secondary - Dark gray background */
+  --secondary: 20% 0 0;
+  --secondary-foreground: 95% 0 0;
+
+  /* Muted - Dark gray background for contrast */
+  --muted: 18% 0 0;
+  --muted-foreground: 72% 0 0; /* WCAG AA compliant */
+
+  /* Accent */
+  --accent: 25% 0 0;
+  --accent-foreground: 95% 0 0;
+
+  /* Destructive - Light gray for visibility */
+  --destructive: 70% 0 0;
+  --destructive-foreground: 10% 0 0;
+
+  /* Borders - Light gray for visibility */
+  --border: 30% 0 0;
+  --input: 30% 0 0;
+
+  /* Ring - Focus indicator */
+  --ring: 85% 0 0;
+
+  --bg-dot-opacity: 0.15;
+
+  /* Status colors - Grayscale spectrum (inverted) */
+  --success: 80% 0 0;
+  --success-foreground: 10% 0 0;
+  --warning: 60% 0 0;
+  --warning-foreground: 10% 0 0;
+  --info: 45% 0 0;
+  --info-foreground: 95% 0 0;
+
+  /* Chart colors - Grayscale spectrum */
+  --chart-1: 80% 0 0;
+  --chart-2: 60% 0 0;
+  --chart-3: 45% 0 0;
+  --chart-4: 30% 0 0;
+  --chart-5: 75% 0 0;
+  --chart-6: 55% 0 0;
+  --chart-7: 50% 0 0;
+  --chart-8: 35% 0 0;
+  --chart-9: 20% 0 0;
+
+  /* Semantic mappings */
+  --color-bg-canvas: var(--background);
+  --color-bg-surface: var(--card);
+  --color-bg-elevated: var(--popover);
+  --color-bg-muted: var(--muted);
+  --color-text-primary: var(--foreground);
+  --color-text-secondary: var(--muted-foreground);
+  --color-text-muted: var(--muted-foreground);
+  --color-border-default: var(--border);
+  --color-border-subtle: var(--border);
+
+  /* Syntax highlighting - Dark B&W */
+  --code-bg: oklch(15% 0 0);
+  --code-fg: oklch(95% 0 0);
+  --code-comment: oklch(60% 0 0);
+  --code-string: oklch(85% 0 0);
+  --code-punctuation: oklch(70% 0 0);
+  --code-number: oklch(80% 0 0);
+  --code-keyword: oklch(90% 0 0);
+  --code-function: oklch(85% 0 0);
+  --code-selector: oklch(75% 0 0);
+}
+
+/* INFRARED - Inverted red MONOTONE (only red hues) - WCAG 2.2 AA compliant */
+[data-theme="infrared"] {
+  --background: 65% 0.22 25; /* Light red background */
+  --foreground: 12% 0.15 25; /* Very dark red text */
+  --card: 60% 0.2 25; /* Slightly darker red */
+  --card-foreground: 12% 0.15 25;
+  --popover: 58% 0.18 25;
+  --popover-foreground: 12% 0.15 25;
+  --primary: 18% 0.18 25; /* Dark red primary */
+  --primary-foreground: 75% 0.2 25; /* Light red on primary */
+  --secondary: 55% 0.18 25;
+  --secondary-foreground: 12% 0.15 25;
+  --muted: 58% 0.16 25;
+  --muted-foreground: 15% 0.12 25; /* Dark red muted text */
+  --accent: 20% 0.2 25; /* Dark red accent */
+  --accent-foreground: 75% 0.2 25;
+  --destructive: 25% 0.22 25; /* Darker red for destructive */
+  --destructive-foreground: 75% 0.18 25;
+  --border: 35% 0.15 25; /* Medium-dark red border */
+  --input: 35% 0.15 25;
+  --ring: 18% 0.18 25;
+
+  --bg-dot-opacity: 0.25;
+
+  --success: 28% 0.2 25; /* Dark red badge */
+  --success-foreground: 75% 0.18 25;
+  --warning: 22% 0.18 25; /* Darker red badge */
+  --warning-foreground: 75% 0.18 25;
+  --info: 30% 0.2 25; /* Medium-dark red badge */
+  --info-foreground: 76% 0.18 25;
+
+  --chart-1: 15% 0.15 25;
+  --chart-2: 20% 0.16 25;
+  --chart-3: 25% 0.17 25;
+  --chart-4: 30% 0.18 25;
+  --chart-5: 35% 0.19 25;
+  --chart-6: 18% 0.15 25;
+  --chart-7: 23% 0.16 25;
+  --chart-8: 28% 0.17 25;
+  --chart-9: 33% 0.18 25;
+
+  --color-bg-canvas: var(--background);
+  --color-bg-surface: var(--card);
+  --color-bg-elevated: var(--popover);
+  --color-bg-sunken: var(--muted);
+  --color-text-primary: var(--foreground);
+  --color-text-secondary: var(--muted-foreground);
+  --color-text-tertiary: var(--secondary-foreground);
+  --color-text-inverse: var(--primary-foreground);
+  --color-text-disabled: var(--muted-foreground);
+  --color-border-default: var(--border);
+  --color-border-muted: var(--input);
+  --color-border-strong: var(--ring);
+  --color-border-focus: var(--ring);
+  --color-status-success: var(--success);
+  --color-status-success-bg: var(--success);
+  --color-status-warning: var(--warning);
+  --color-status-warning-bg: var(--warning);
+  --color-status-error: var(--destructive);
+  --color-status-error-bg: var(--destructive);
+  --color-status-info: var(--info);
+  --color-status-info-bg: var(--info);
+
+  --code-fg: oklch(12% 0.15 25);
+  --code-bg: oklch(58% 0.16 25);
+  --code-comment: oklch(28% 0.12 25);
+  --code-string: oklch(18% 0.16 25);
+  --code-punctuation: oklch(25% 0.14 25);
+  --code-number: oklch(15% 0.15 25);
+  --code-keyword: oklch(20% 0.18 25);
+  --code-function: oklch(22% 0.17 25);
+  --code-selector: oklch(18% 0.16 25);
+}
+
+/* ============================================
+   FUI THEMES - Futuristic User Interface
+   ============================================ */
+
+/* BLUEPRINT - Classic blueprint blue with white lines */
+[data-theme="blueprint"] {
+  --background: 25% 0.12 230; /* Classic blueprint blue */
+  --foreground: 95% 0.02 230; /* Off-white/cream text */
+  --card: 28% 0.1 230;
+  --card-foreground: 95% 0.02 230;
+  --popover: 30% 0.1 230;
+  --popover-foreground: 95% 0.02 230;
+  --primary: 92% 0.02 230; /* White primary */
+  --primary-foreground: 25% 0.12 230;
+  --secondary: 35% 0.08 230;
+  --secondary-foreground: 92% 0.02 230;
+  --muted: 22% 0.1 230;
+  --muted-foreground: 75% 0.04 230;
+  --accent: 88% 0.03 230;
+  --accent-foreground: 25% 0.12 230;
+  --destructive: 65% 0.2 25;
+  --destructive-foreground: 95% 0.02 230;
+  --border: 55% 0.08 230;
+  --input: 55% 0.08 230;
+  --ring: 92% 0.02 230;
+  --success: 70% 0.15 145;
+  --success-foreground: 25% 0.12 230;
+  --warning: 80% 0.15 85;
+  --warning-foreground: 25% 0.12 230;
+  --info: 85% 0.05 230;
+  --info-foreground: 25% 0.12 230;
+  --chart-1: 95% 0.02 230;
+  --chart-2: 85% 0.04 230;
+  --chart-3: 75% 0.06 230;
+  --chart-4: 65% 0.08 230;
+  --chart-5: 55% 0.1 230;
+  --chart-6: 45% 0.12 230;
+  --chart-7: 80% 0.05 230;
+  --chart-8: 60% 0.09 230;
+  --chart-9: 70% 0.07 230;
+
+  /* Code syntax - blueprint style */
+  --code-fg: oklch(92% 0.02 230);
+  --code-bg: oklch(22% 0.1 230);
+  --code-comment: oklch(60% 0.06 230);
+  --code-string: oklch(85% 0.04 230);
+  --code-punctuation: oklch(70% 0.05 230);
+  --code-number: oklch(80% 0.04 230);
+  --code-keyword: oklch(95% 0.02 230);
+  --code-function: oklch(90% 0.03 230);
+  --code-selector: oklch(85% 0.04 230);
+}
+
+/* CYBERPUNK - Neon pink on black */
+[data-theme="cyberpunk"] {
+  --background: 6% 0.02 330;
+  --foreground: 85% 0.08 330;
+  --card: 8% 0.02 330;
+  --card-foreground: 85% 0.08 330;
+  --popover: 10% 0.02 330;
+  --popover-foreground: 85% 0.08 330;
+  --primary: 55% 0.25 330;
+  --primary-foreground: 98% 0 0;
+  --secondary: 12% 0.02 330;
+  --secondary-foreground: 85% 0.08 330;
+  --muted: 12% 0.02 330;
+  --muted-foreground: 65% 0.1 330;
+  --accent: 60% 0.22 330;
+  --accent-foreground: 98% 0 0;
+  --destructive: 60% 0.3 25;
+  --destructive-foreground: 98% 0 0;
+  --border: 38% 0.1 330;
+  --input: 38% 0.1 330;
+  --ring: 55% 0.25 330;
+  --success: 60% 0.2 145;
+  --success-foreground: 98% 0 0;
+  --warning: 70% 0.2 85;
+  --warning-foreground: 6% 0 0;
+  --info: 60% 0.2 210;
+  --info-foreground: 98% 0 0;
+  --chart-1: 55% 0.25 330;
+  --chart-2: 60% 0.22 330;
+  --chart-3: 50% 0.2 330;
+  --chart-4: 65% 0.18 330;
+  --chart-5: 45% 0.15 330;
+  --chart-6: 70% 0.2 330;
+  --chart-7: 40% 0.12 330;
+  --chart-8: 75% 0.15 330;
+  --chart-9: 35% 0.1 330;
+
+  /* Code syntax - cyberpunk neon */
+  --code-fg: oklch(85% 0.08 330);
+  --code-bg: oklch(8% 0.02 330);
+  --code-comment: oklch(50% 0.12 330);
+  --code-string: oklch(70% 0.22 145);
+  --code-punctuation: oklch(65% 0.15 330);
+  --code-number: oklch(75% 0.18 50);
+  --code-keyword: oklch(80% 0.25 330);
+  --code-function: oklch(70% 0.2 195);
+  --code-selector: oklch(75% 0.2 330);
+}
+
+/* NAVIGATOR - Amber technical */
+[data-theme="navigator"] {
+  --background: 5% 0.01 50;
+  --foreground: 80% 0.12 50;
+  --card: 7% 0.01 50;
+  --card-foreground: 80% 0.12 50;
+  --popover: 9% 0.01 50;
+  --popover-foreground: 80% 0.12 50;
+  --primary: 65% 0.18 50;
+  --primary-foreground: 5% 0 0;
+  --secondary: 10% 0.01 50;
+  --secondary-foreground: 80% 0.12 50;
+  --muted: 10% 0.01 50;
+  --muted-foreground: 65% 0.1 50;
+  --accent: 70% 0.15 50;
+  --accent-foreground: 5% 0 0;
+  --destructive: 55% 0.28 25;
+  --destructive-foreground: 98% 0 0;
+  --border: 36% 0.08 50;
+  --input: 36% 0.08 50;
+  --ring: 65% 0.18 50;
+  --success: 60% 0.18 50;
+  --success-foreground: 5% 0 0;
+  --warning: 70% 0.15 50;
+  --warning-foreground: 5% 0 0;
+  --info: 55% 0.12 50;
+  --info-foreground: 98% 0 0;
+  --chart-1: 65% 0.18 50;
+  --chart-2: 55% 0.15 50;
+  --chart-3: 75% 0.12 50;
+  --chart-4: 60% 0.1 50;
+  --chart-5: 50% 0.08 50;
+  --chart-6: 80% 0.14 50;
+  --chart-7: 45% 0.06 50;
+  --chart-8: 70% 0.16 50;
+  --chart-9: 40% 0.05 50;
+
+  /* Code syntax - navigator amber */
+  --code-fg: oklch(80% 0.12 50);
+  --code-bg: oklch(7% 0.01 50);
+  --code-comment: oklch(50% 0.08 50);
+  --code-string: oklch(70% 0.15 50);
+  --code-punctuation: oklch(60% 0.1 50);
+  --code-number: oklch(75% 0.18 50);
+  --code-keyword: oklch(85% 0.2 50);
+  --code-function: oklch(72% 0.14 50);
+  --code-selector: oklch(78% 0.16 50);
+}
+
+/* PHOSPHOR - Green CRT terminal */
+[data-theme="phosphor"] {
+  --background: 3% 0.015 140;
+  --foreground: 75% 0.2 140;
+  --card: 5% 0.015 140;
+  --card-foreground: 75% 0.2 140;
+  --popover: 7% 0.015 140;
+  --popover-foreground: 75% 0.2 140;
+  --primary: 60% 0.2 140;
+  --primary-foreground: 3% 0 0;
+  --secondary: 8% 0.02 140;
+  --secondary-foreground: 75% 0.2 140;
+  --muted: 8% 0.02 140;
+  --muted-foreground: 60% 0.12 140;
+  --accent: 65% 0.18 140;
+  --accent-foreground: 3% 0 0;
+  --destructive: 55% 0.28 25;
+  --destructive-foreground: 98% 0 0;
+  --border: 35% 0.1 140;
+  --input: 35% 0.1 140;
+  --ring: 60% 0.2 140;
+  --success: 65% 0.2 140;
+  --success-foreground: 3% 0 0;
+  --warning: 70% 0.18 85;
+  --warning-foreground: 3% 0 0;
+  --info: 55% 0.15 200;
+  --info-foreground: 98% 0 0;
+  --chart-1: 60% 0.2 140;
+  --chart-2: 50% 0.15 140;
+  --chart-3: 70% 0.18 140;
+  --chart-4: 55% 0.12 140;
+  --chart-5: 45% 0.1 140;
+  --chart-6: 75% 0.22 140;
+  --chart-7: 40% 0.08 140;
+  --chart-8: 65% 0.16 140;
+  --chart-9: 35% 0.06 140;
+
+  /* Code syntax - phosphor green CRT */
+  --code-fg: oklch(75% 0.2 140);
+  --code-bg: oklch(5% 0.015 140);
+  --code-comment: oklch(45% 0.1 140);
+  --code-string: oklch(68% 0.18 140);
+  --code-punctuation: oklch(55% 0.12 140);
+  --code-number: oklch(70% 0.2 140);
+  --code-keyword: oklch(80% 0.25 140);
+  --code-function: oklch(72% 0.18 140);
+  --code-selector: oklch(65% 0.15 140);
+}
+
+/* HOLOGRAPHIC - Cyan minimal */
+[data-theme="holographic"] {
+  --background: 8% 0.015 210;
+  --foreground: 92% 0.04 210;
+  --card: 10% 0.015 210;
+  --card-foreground: 92% 0.04 210;
+  --popover: 12% 0.015 210;
+  --popover-foreground: 92% 0.04 210;
+  --primary: 70% 0.12 195;
+  --primary-foreground: 8% 0 0;
+  --secondary: 14% 0.015 210;
+  --secondary-foreground: 92% 0.04 210;
+  --muted: 14% 0.015 210;
+  --muted-foreground: 65% 0.05 210;
+  --accent: 75% 0.1 195;
+  --accent-foreground: 8% 0 0;
+  --destructive: 55% 0.28 25;
+  --destructive-foreground: 98% 0 0;
+  --border: 40% 0.06 195;
+  --input: 40% 0.06 195;
+  --ring: 70% 0.12 195;
+  --success: 65% 0.15 145;
+  --success-foreground: 8% 0 0;
+  --warning: 70% 0.15 85;
+  --warning-foreground: 8% 0 0;
+  --info: 70% 0.12 195;
+  --info-foreground: 8% 0 0;
+  --chart-1: 70% 0.12 195;
+  --chart-2: 60% 0.1 195;
+  --chart-3: 80% 0.08 195;
+  --chart-4: 65% 0.06 195;
+  --chart-5: 55% 0.04 195;
+  --chart-6: 75% 0.14 195;
+  --chart-7: 50% 0.08 195;
+  --chart-8: 85% 0.1 195;
+  --chart-9: 45% 0.05 195;
+
+  /* Code syntax - holographic cyan */
+  --code-fg: oklch(92% 0.04 210);
+  --code-bg: oklch(10% 0.015 210);
+  --code-comment: oklch(50% 0.06 210);
+  --code-string: oklch(75% 0.1 195);
+  --code-punctuation: oklch(65% 0.08 195);
+  --code-number: oklch(80% 0.12 195);
+  --code-keyword: oklch(85% 0.15 195);
+  --code-function: oklch(78% 0.1 195);
+  --code-selector: oklch(72% 0.09 195);
+}
+
+/* FUI Theme body effects */
+[data-theme="blueprint"] body {
+  /* Blueprint grid - white lines on blue */
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+[data-theme="cyberpunk"] body {
+  text-shadow: 0 0 15px oklch(55% 0.25 330 / 0.4);
+  background-image:
+    linear-gradient(rgba(255, 0, 80, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 0, 80, 0.04) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+[data-theme="navigator"] body {
+  text-shadow: 0 0 10px oklch(65% 0.18 50 / 0.3);
+  background-image:
+    linear-gradient(rgba(255, 140, 0, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 140, 0, 0.06) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+[data-theme="phosphor"] body {
+  text-shadow: 0 0 8px oklch(60% 0.2 140 / 0.5);
+  background-image:
+    linear-gradient(rgba(0, 255, 65, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 65, 0.05) 1px, transparent 1px);
+  background-size: 12px 12px;
+}
+
+[data-theme="holographic"] body {
+  text-shadow: 0 0 12px oklch(70% 0.12 195 / 0.3);
+  background-image:
+    linear-gradient(rgba(0, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* ============================================
+   CRT GLOW EFFECTS - Apply to all text
+   ============================================ */
+
+[data-theme="infrared"] body {
+  /* Dark text on light red - subtle shadow for depth */
+  text-shadow: 0 1px 0 oklch(65% 0.25 25 / 0.15);
+}
+[data-theme="red"] body {
+  text-shadow:
+    0 0 2px oklch(70% 0.3 25 / 0.3),
+    0 0 4px oklch(70% 0.3 25 / 0.15);
+}
+[data-theme="blue"] body {
+  text-shadow:
+    0 0 2px oklch(80% 0.22 200 / 0.3),
+    0 0 4px oklch(80% 0.22 200 / 0.15);
+}
+[data-theme="green"] body {
+  text-shadow:
+    0 0 2px oklch(85% 0.3 145 / 0.3),
+    0 0 4px oklch(85% 0.3 145 / 0.15);
+}
+[data-theme="amber"] body {
+  text-shadow:
+    0 0 2px oklch(88% 0.25 50 / 0.3),
+    0 0 4px oklch(88% 0.25 50 / 0.15);
+}
+[data-theme="purple"] body {
+  text-shadow:
+    0 0 2px oklch(70% 0.25 300 / 0.3),
+    0 0 4px oklch(70% 0.25 300 / 0.15);
+}
+[data-theme="gameboy"] body {
+  text-shadow:
+    0 0 1px oklch(15% 0.12 85 / 0.25),
+    0 0 3px oklch(15% 0.12 85 / 0.12);
+}
+[data-theme="c64"] body {
+  text-shadow:
+    0 0 1px oklch(20% 0.12 210 / 0.2),
+    0 0 2px oklch(20% 0.12 210 / 0.1);
+}
+[data-theme="gbpocket"] body {
+  text-shadow:
+    0 0 1px oklch(15% 0.01 0 / 0.15),
+    0 0 2px oklch(15% 0.01 0 / 0.08);
+}
+[data-theme="vic20"] body {
+  text-shadow:
+    0 0 1px oklch(18% 0.1 180 / 0.2),
+    0 0 2px oklch(18% 0.1 180 / 0.1);
+}
+[data-theme="atari"] body {
+  text-shadow:
+    0 0 1px oklch(20% 0.14 35 / 0.2),
+    0 0 2px oklch(20% 0.14 35 / 0.1);
+}
+[data-theme="spectrum"] body {
+  text-shadow:
+    0 0 1px oklch(10% 0.08 250 / 0.15),
+    0 0 2px oklch(10% 0.08 250 / 0.08);
+}
+
+/* ============================================
+   UTILITIES
+   ============================================ */
+
+/* Scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: oklch(var(--border)) transparent;
+}
+*:hover {
+  scrollbar-color: oklch(var(--primary) / 0.5) transparent;
+}
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: oklch(var(--border));
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: oklch(var(--primary) / 0.5);
+}
+
+/* Terminal Utilities */
+.terminal-label {
+  font-family: var(--font-jetbrains-mono), monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.terminal-header {
+  @apply border-border flex items-center gap-2 border-b px-4 py-2;
+}
+.terminal-header-title {
+  @apply text-muted-foreground font-mono text-xs;
+}
+
+/* Typography Utilities */
+.heading-section {
+  @apply text-primary font-mono text-sm font-semibold;
+}
+.heading-subsection {
+  @apply text-foreground font-mono text-sm font-semibold;
+}
+.body-text {
+  @apply text-muted-foreground font-mono text-sm leading-relaxed;
+}
+
+/* Accessibility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Animation utilities */
+.animate-blink {
+  animation: blink 0.8s infinite;
+}
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: oklch(var(--background));
+  color: oklch(var(--foreground));
+  padding: 0.5rem 1rem;
+  z-index: 100;
+  text-decoration: none;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  border: 1px solid oklch(var(--border));
+  transition: top 0.2s ease;
+}
+.skip-link:focus {
+  top: 0.5rem;
+  outline: 2px solid oklch(var(--ring));
+  outline-offset: 2px;
+}
+
+/* ============================================
+   GRADIENT TEXT UTILITIES
+   ============================================ */
+
+/* Gradient effect for hero headlines - uses theme accent color */
+.text-gradient-purple {
+  background: linear-gradient(
+    135deg,
+    oklch(from var(--accent) calc(l + 0.15) c h),
+    oklch(var(--accent)),
+    oklch(from var(--accent) calc(l - 0.1) c h)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Text glow effect for accent elements - uses theme accent color */
+.text-glow-purple {
+  text-shadow:
+    0 0 20px oklch(var(--accent) / 0.5),
+    0 0 40px oklch(var(--accent) / 0.3),
+    0 0 60px oklch(var(--accent) / 0.2);
+}
+
+/* Button glow effect - uses theme accent color */
+.button-glow-purple {
+  box-shadow:
+    0 0 20px oklch(var(--accent) / 0.4),
+    0 0 40px oklch(var(--accent) / 0.2);
+}
+
+/* Animate gradient on hover */
+@keyframes gradient-shift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.text-gradient-animated {
+  background-size: 200% 200%;
+  animation: gradient-shift 3s ease infinite;
+}
+
+/* ============================================
+   FUI (Futuristic UI) Background Animations
+   ============================================ */
+
+@keyframes scan-vertical {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(calc(100vh + 100%));
+  }
+}
+
+@keyframes ping-slow {
+  0% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+@keyframes flow-down {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(calc(100vh + 100%));
+    opacity: 0;
+  }
+}
+
+.animate-scan-vertical {
+  animation: scan-vertical linear infinite;
+}
+
+.animate-ping-slow {
+  animation: ping-slow 3s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+.animate-flow-down {
+  animation: flow-down linear infinite;
 }

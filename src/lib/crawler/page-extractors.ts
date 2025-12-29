@@ -8,7 +8,8 @@ export async function extractMetaInfo(page: Page): Promise<MetaInfo> {
       const el = document.querySelector(`meta[name="${name}"], meta[property="${name}"]`);
       return el?.getAttribute("content") || undefined;
     };
-    const canonical = document.querySelector('link[rel="canonical"]')?.getAttribute("href") || undefined;
+    const canonical =
+      document.querySelector('link[rel="canonical"]')?.getAttribute("href") || undefined;
     return {
       description: getMeta("description"),
       ogTitle: getMeta("og:title"),
@@ -64,56 +65,102 @@ export async function extractContentMetrics(page: Page): Promise<ContentMetrics>
   });
 }
 
-export async function extractLinks(page: Page, baseUrl: string): Promise<{ links: string[]; linksWithText: LinkInfo[] }> {
+export async function extractLinks(
+  page: Page,
+  baseUrl: string
+): Promise<{ links: string[]; linksWithText: LinkInfo[] }> {
   const linkElements = await page.locator("a[href]").all();
   const links: string[] = [];
   const linksWithText: LinkInfo[] = [];
 
-  for (const linkElement of linkElements) {
+  // Helper to normalize URL
+  const normalizeUrlPath = (href: string): string | null => {
     try {
-      const href = await linkElement.getAttribute("href");
-      if (href) {
-        const absoluteUrl = new URL(href, baseUrl);
-        absoluteUrl.hash = "";
-        let pathname = absoluteUrl.pathname;
-        if (pathname.endsWith("/") && pathname.length > 1) {
-          pathname = pathname.slice(0, -1);
-        }
-        absoluteUrl.pathname = pathname;
-        const normalizedUrl = absoluteUrl.toString().toLowerCase();
-        links.push(normalizedUrl);
-
-        const anchorText = (await linkElement.textContent())?.trim().substring(0, 200) || "";
-        const titleAttr = await linkElement.getAttribute("title");
-        linksWithText.push({ url: normalizedUrl, anchorText, title: titleAttr || undefined });
+      const absoluteUrl = new URL(href, baseUrl);
+      absoluteUrl.hash = "";
+      let pathname = absoluteUrl.pathname;
+      if (pathname.endsWith("/") && pathname.length > 1) {
+        pathname = pathname.slice(0, -1);
       }
+      absoluteUrl.pathname = pathname;
+      return absoluteUrl.toString().toLowerCase();
     } catch {
-      continue;
+      return null;
+    }
+  };
+
+  // Process all link elements in parallel using Promise.all
+  const linkResults = await Promise.all(
+    linkElements.map(async (linkElement) => {
+      try {
+        const [href, anchorText, titleAttr] = await Promise.all([
+          linkElement.getAttribute("href"),
+          linkElement.textContent(),
+          linkElement.getAttribute("title"),
+        ]);
+
+        if (href) {
+          const normalizedUrl = normalizeUrlPath(href);
+          if (normalizedUrl) {
+            return {
+              url: normalizedUrl,
+              anchorText: anchorText?.trim().substring(0, 200) || "",
+              title: titleAttr || undefined,
+            };
+          }
+        }
+        return null;
+      } catch {
+        return null;
+      }
+    })
+  );
+
+  // Filter out null results and add to arrays
+  for (const result of linkResults) {
+    if (result) {
+      links.push(result.url);
+      linksWithText.push(result);
     }
   }
 
   // Check for Next.js Link components and buttons with routing
-  const extraNavElements = await page.locator('[data-href], [data-url], [role="link"], button[data-testid*="nav"]').all();
+  const extraNavElements = await page
+    .locator('[data-href], [data-url], [role="link"], button[data-testid*="nav"]')
+    .all();
 
-  for (const element of extraNavElements) {
-    try {
-      const dataHref = (await element.getAttribute("data-href")) || (await element.getAttribute("data-url"));
-      if (dataHref) {
-        const absoluteUrl = new URL(dataHref, baseUrl);
-        absoluteUrl.hash = "";
-        let pathname = absoluteUrl.pathname;
-        if (pathname.endsWith("/") && pathname.length > 1) {
-          pathname = pathname.slice(0, -1);
+  // Process extra nav elements in parallel
+  const extraResults = await Promise.all(
+    extraNavElements.map(async (element) => {
+      try {
+        const [dataHref, dataUrl, anchorText] = await Promise.all([
+          element.getAttribute("data-href"),
+          element.getAttribute("data-url"),
+          element.textContent(),
+        ]);
+
+        const href = dataHref || dataUrl;
+        if (href) {
+          const normalizedUrl = normalizeUrlPath(href);
+          if (normalizedUrl) {
+            return {
+              url: normalizedUrl,
+              anchorText: anchorText?.trim().substring(0, 200) || "",
+            };
+          }
         }
-        absoluteUrl.pathname = pathname;
-        const normalizedUrl = absoluteUrl.toString().toLowerCase();
-        links.push(normalizedUrl);
-
-        const anchorText = (await element.textContent())?.trim().substring(0, 200) || "";
-        linksWithText.push({ url: normalizedUrl, anchorText });
+        return null;
+      } catch {
+        return null;
       }
-    } catch {
-      continue;
+    })
+  );
+
+  // Filter out null results and add to arrays
+  for (const result of extraResults) {
+    if (result) {
+      links.push(result.url);
+      linksWithText.push(result);
     }
   }
 

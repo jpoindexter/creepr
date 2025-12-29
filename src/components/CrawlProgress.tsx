@@ -2,7 +2,7 @@
 
 import { useAppStore } from "@/lib/store";
 import { Loader2 } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Card, CardContent, CardHeader } from "./ui/card";
 
 export function CrawlProgress() {
   const { crawlProgress } = useAppStore();
@@ -21,41 +21,59 @@ export function CrawlProgress() {
       : 0;
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-lg">Crawl Progress</CardTitle>
-      </CardHeader>
+    <Card role="region" aria-label="Crawl progress">
+      <CardHeader title="CRAWL_PROGRESS" />
       <CardContent className="space-y-3">
         {/* Progress percentage */}
         <div className="flex items-center justify-between text-sm">
-          <span className="text-muted-foreground">Progress</span>
-          <span className="font-medium">{percentage}%</span>
+          <span className="text-muted-foreground" id="progress-label">
+            Progress
+          </span>
+          <span className="font-medium" aria-live="polite">
+            {percentage}%
+          </span>
         </div>
 
         {/* Progress bar */}
-        <div className="h-2 w-full rounded-full bg-gray-200">
+        <div
+          className="bg-muted h-2 w-full"
+          role="progressbar"
+          aria-labelledby="progress-label"
+          aria-valuenow={percentage}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuetext={`${percentage}% complete, ${progress.requestsFinished} of ${progress.requestsTotal} pages crawled`}
+        >
           <div
-            className="h-full rounded-full bg-blue-500 transition-all duration-300"
+            className="bg-primary h-full transition-all duration-300"
             style={{ width: `${percentage}%` }}
           />
         </div>
 
         {/* Stats */}
-        <div className="flex items-center justify-between text-xs text-muted-foreground">
-          <span>
+        <div className="text-muted-foreground flex items-center justify-between text-xs">
+          <span aria-live="polite">
             {progress.requestsFinished} / {progress.requestsTotal} pages
           </span>
           {progress.requestsFailed > 0 && (
-            <span className="text-red-500">{progress.requestsFailed} failed</span>
+            <span className="text-destructive" role="alert">
+              {progress.requestsFailed} failed
+            </span>
           )}
         </div>
 
         {/* Current URL */}
         {progress.currentUrl && (
-          <div className="flex items-center gap-2 rounded border border-gray-200 bg-gray-50 p-2">
-            <Loader2 className="h-3 w-3 flex-shrink-0 animate-spin text-blue-500" />
-            <span className="truncate font-mono text-xs text-muted-foreground">
-              {progress.currentUrl}
+          <div
+            className="border-border bg-muted flex items-center gap-2 border p-2"
+            aria-live="polite"
+          >
+            <Loader2
+              className="text-muted-foreground h-3 w-3 flex-shrink-0 animate-spin"
+              aria-hidden="true"
+            />
+            <span className="text-muted-foreground truncate font-mono text-xs">
+              Currently crawling: {progress.currentUrl}
             </span>
           </div>
         )}

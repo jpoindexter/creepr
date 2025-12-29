@@ -24,39 +24,27 @@ export async function GET(
       });
     }
 
-    return NextResponse.json(
-      { error: "Crawl session not found or expired" },
-      { status: 404 }
-    );
+    return NextResponse.json({ error: "Crawl session not found or expired" }, { status: 404 });
   }
 
-  // Get statistics from crawler
+  // Get direct progress counts (more accurate than rate-based stats)
+  const progress = crawlSession.crawler.getProgress();
   const stats = crawlSession.crawler.getStats();
   const currentUrl = crawlSession.crawler.getCurrentUrl();
 
-  if (!stats) {
-    return NextResponse.json({
-      isComplete: false,
-      requestsFinished: 0,
-      requestsTotal: 0,
-      requestsFailed: 0,
-      currentUrl: currentUrl || "",
-    });
-  }
-
-  // Crawlee stats object has different property names
-  // Calculate finished and failed from available stats
-  const requestsFinished = Math.round(
-    (stats.requestsFinishedPerMinute * stats.crawlerRuntimeMillis) / 60000
-  );
+  // Use direct page counts for accurate progress display
+  // requestsTotal from Crawlee represents queued requests, which grows as new links are discovered
+  // We estimate total based on queued URLs vs actual progress ratio
+  const estimatedTotal = stats?.requestsTotal
+    ? Math.max(stats.requestsTotal, progress.pagesProcessed + 5) // At least 5 more expected
+    : Math.max(progress.pagesQueued, progress.pagesProcessed + 10); // Estimate if no stats
 
   return NextResponse.json({
     isComplete: false,
-    requestsFinished: requestsFinished,
-    requestsTotal: stats.requestsTotal,
-    requestsFailed: Math.round((stats.requestsFailedPerMinute * stats.crawlerRuntimeMillis) / 60000),
-    requestsRetries: 0, // Not directly available
-    crawlerRuntimeMillis: stats.crawlerRuntimeMillis,
+    requestsFinished: progress.pagesProcessed,
+    requestsTotal: estimatedTotal,
+    requestsFailed: progress.pagesFailed,
+    crawlerRuntimeMillis: stats?.crawlerRuntimeMillis || 0,
     currentUrl: currentUrl || "",
   });
 }

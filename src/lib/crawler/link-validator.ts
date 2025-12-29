@@ -1,6 +1,41 @@
 import { LinkStatus } from "@/types/sitemap";
 import { normalizeUrl } from "../utils";
 
+/**
+ * Detect if a URL is likely an API endpoint based on URL patterns and content type
+ */
+export function isApiEndpoint(url: string, contentType?: string): boolean {
+  try {
+    const parsedUrl = new URL(url);
+    const pathname = parsedUrl.pathname.toLowerCase();
+
+    // URL pattern detection
+    const apiPatterns = [
+      /^\/api\//, // Common API prefix
+      /^\/v\d+\//, // Versioned API (v1, v2, etc.)
+      /^\/rest\//, // REST API prefix
+      /^\/graphql/, // GraphQL endpoint
+      /^\/webhook/, // Webhook endpoints
+      /\.json$/, // JSON file endpoints
+      /\.xml$/, // XML endpoints
+      /\/rpc\//, // RPC endpoints
+    ];
+
+    const isApiPath = apiPatterns.some((pattern) => pattern.test(pathname));
+
+    // Content type detection (if provided)
+    const isApiContentType = contentType
+      ? contentType.includes("application/json") ||
+        contentType.includes("application/xml") ||
+        contentType.includes("text/xml")
+      : false;
+
+    return isApiPath || isApiContentType;
+  } catch {
+    return false;
+  }
+}
+
 export function getLinkStatus(statusCode: number): LinkStatus {
   if (statusCode >= 200 && statusCode < 300) return "success";
   if (statusCode >= 300 && statusCode < 400) return "redirect";

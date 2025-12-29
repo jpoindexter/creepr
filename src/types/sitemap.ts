@@ -1,11 +1,16 @@
 import { z } from "zod";
-import { PageStyles } from "@/lib/crawler/types";
+import {
+  PageStyles,
+  SecurityHeaders,
+  KeywordDensity,
+  MobileResponsiveness,
+} from "@/lib/crawler/types";
 
 // Link status types
 export type LinkStatus = "success" | "redirect" | "client-error" | "server-error" | "unknown";
 
 // Node types for different elements
-export type NodeType = "page" | "tab" | "modal" | "accordion" | "dropdown" | "button";
+export type NodeType = "page" | "api" | "tab" | "modal" | "accordion" | "dropdown" | "button";
 
 // Meta tag information
 export interface MetaInfo {
@@ -75,6 +80,15 @@ export interface CrawledPage {
   contentMetrics?: ContentMetrics;
   // Full style extraction for design system analysis
   styles?: PageStyles;
+  // API endpoint detection
+  isApiEndpoint?: boolean;
+  contentType?: string;
+  // Security headers analysis
+  securityHeaders?: SecurityHeaders;
+  // Keyword density analysis
+  keywordDensity?: KeywordDensity;
+  // Mobile responsiveness analysis
+  mobileResponsiveness?: MobileResponsiveness;
 }
 
 // Sitemap node (hierarchical structure)
@@ -94,6 +108,11 @@ export interface SitemapNode {
   parentPageUrl?: string; // Original page URL for interactive elements
   // Virtual folder flag (for intermediate paths that weren't actually crawled)
   isVirtual?: boolean;
+  // API endpoint detection
+  isApiEndpoint?: boolean;
+  contentType?: string;
+  // Security headers analysis
+  securityHeaders?: SecurityHeaders;
 }
 
 // Failed URL info
@@ -117,6 +136,7 @@ export interface CrawlResult {
   pages: CrawledPage[];
   totalPages: number;
   brokenLinks: number;
+  apiEndpoints: number;
   crawlTime: number; // in milliseconds
   tree: SitemapNode;
   failedUrls?: FailedUrl[];

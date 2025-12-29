@@ -378,7 +378,8 @@ const AUDIT_PATTERNS = {
   layout: {
     display: {
       pattern: "display classes",
-      regex: /\b(block|inline-block|inline|flex|inline-flex|grid|inline-grid|hidden|contents|flow-root)\b/g,
+      regex:
+        /\b(block|inline-block|inline|flex|inline-flex|grid|inline-grid|hidden|contents|flow-root)\b/g,
       description: "Display classes",
     },
     flex: {
@@ -393,7 +394,8 @@ const AUDIT_PATTERNS = {
     },
     position: {
       pattern: "position classes",
-      regex: /\b(static|fixed|absolute|relative|sticky)\b|\b(top|right|bottom|left|inset)-[a-z0-9-]+\b/g,
+      regex:
+        /\b(static|fixed|absolute|relative|sticky)\b|\b(top|right|bottom|left|inset)-[a-z0-9-]+\b/g,
       description: "Position classes",
     },
     zIndex: {
@@ -464,19 +466,22 @@ const AUDIT_PATTERNS = {
     },
     sizing: {
       pattern: "inline sizing styles",
-      regex: /(width|height|maxWidth|maxHeight|minWidth|minHeight)\s*[:=]\s*['"`]?\d+[a-z%]*['"`]?/gi,
+      regex:
+        /(width|height|maxWidth|maxHeight|minWidth|minHeight)\s*[:=]\s*['"`]?\d+[a-z%]*['"`]?/gi,
       description: "Inline style sizing",
     },
     fonts: {
       pattern: "inline font styles",
-      regex: /(fontSize|fontWeight|fontFamily|lineHeight|letterSpacing)\s*[:=]\s*['"`]?[^,;}]+['"`]?/gi,
+      regex:
+        /(fontSize|fontWeight|fontFamily|lineHeight|letterSpacing)\s*[:=]\s*['"`]?[^,;}]+['"`]?/gi,
       description: "Inline style fonts",
     },
   },
   interactivity: {
     cursor: {
       pattern: "cursor-* classes",
-      regex: /\bcursor-(pointer|default|wait|text|move|not-allowed|grab|grabbing|auto|none|crosshair|help)\b/g,
+      regex:
+        /\bcursor-(pointer|default|wait|text|move|not-allowed|grab|grabbing|auto|none|crosshair|help)\b/g,
       description: "Cursor classes",
     },
     pointerEvents: {
@@ -491,7 +496,8 @@ const AUDIT_PATTERNS = {
     },
     scroll: {
       pattern: "scroll-* classes",
-      regex: /\bscroll-(auto|smooth|snap-[a-z]+|m[trblxy]?-\d+|p[trblxy]?-\d+)\b|\bsnap-(start|end|center|align-none|normal|always)\b|\boverscroll-(auto|contain|none)\b/g,
+      regex:
+        /\bscroll-(auto|smooth|snap-[a-z]+|m[trblxy]?-\d+|p[trblxy]?-\d+)\b|\bsnap-(start|end|center|align-none|normal|always)\b|\boverscroll-(auto|contain|none)\b/g,
       description: "Scroll behavior classes",
     },
   },
@@ -508,7 +514,8 @@ const AUDIT_PATTERNS = {
     },
     truncate: {
       pattern: "truncate/whitespace classes",
-      regex: /\b(truncate|whitespace-(normal|nowrap|pre|pre-line|pre-wrap|break-spaces))\b|\btext-(ellipsis|clip)\b|\bline-clamp-\d+\b/g,
+      regex:
+        /\b(truncate|whitespace-(normal|nowrap|pre|pre-line|pre-wrap|break-spaces))\b|\btext-(ellipsis|clip)\b|\bline-clamp-\d+\b/g,
       description: "Text truncation classes",
     },
   },
@@ -535,7 +542,8 @@ const AUDIT_PATTERNS = {
     },
     origin: {
       pattern: "origin-* classes",
-      regex: /\borigin-(center|top|top-right|right|bottom-right|bottom|bottom-left|left|top-left)\b/g,
+      regex:
+        /\borigin-(center|top|top-right|right|bottom-right|bottom|bottom-left|left|top-left)\b/g,
       description: "Transform origin classes",
     },
   },
@@ -596,7 +604,8 @@ const AUDIT_PATTERNS = {
   textStyles: {
     decoration: {
       pattern: "text decoration classes",
-      regex: /\b(underline|overline|line-through|no-underline)\b|\bdecoration-(solid|double|dotted|dashed|wavy)\b|\bdecoration-[a-z]+-\d+\b|\bdecoration-\d+\b/g,
+      regex:
+        /\b(underline|overline|line-through|no-underline)\b|\bdecoration-(solid|double|dotted|dashed|wavy)\b|\bdecoration-[a-z]+-\d+\b|\bdecoration-\d+\b/g,
       description: "Text decoration classes",
     },
     transform: {
@@ -623,7 +632,8 @@ const AUDIT_PATTERNS = {
     },
     position: {
       pattern: "object-position classes",
-      regex: /\bobject-(bottom|center|left|left-bottom|left-top|right|right-bottom|right-top|top)\b/g,
+      regex:
+        /\bobject-(bottom|center|left|left-bottom|left-top|right|right-bottom|right-top|top)\b/g,
       description: "Object position classes",
     },
   },
@@ -693,7 +703,8 @@ const AUDIT_PATTERNS = {
   dynamicClasses: {
     templateLiterals: {
       pattern: "template literal classes",
-      regex: /`[^`]*\$\{[^}]*(color|bg|text|border|p-|m-|w-|h-|rounded|shadow|font|flex|grid)[^}]*\}[^`]*`/gi,
+      regex:
+        /`[^`]*\$\{[^}]*(color|bg|text|border|p-|m-|w-|h-|rounded|shadow|font|flex|grid)[^}]*\}[^`]*`/gi,
       description: "Dynamic template literal classes",
     },
     clsxCn: {
@@ -703,7 +714,8 @@ const AUDIT_PATTERNS = {
     },
     conditionalClasses: {
       pattern: "ternary class conditionals",
-      regex: /\?\s*['"`][^'"`]*(?:bg-|text-|border-|p-|m-|w-|h-|rounded|shadow|flex|grid)[^'"`]*['"`]\s*:/g,
+      regex:
+        /\?\s*['"`][^'"`]*(?:bg-|text-|border-|p-|m-|w-|h-|rounded|shadow|flex|grid)[^'"`]*['"`]\s*:/g,
       description: "Ternary conditional classes",
     },
   },
@@ -715,7 +727,8 @@ const AUDIT_PATTERNS = {
     },
     spacingVars: {
       pattern: "JS spacing variables",
-      regex: /\b(const|let|var)\s+\w*(spacing|padding|margin|gap|Spacing|Padding|Margin|Gap)\w*\s*=\s*['"`\d][^;]*/gi,
+      regex:
+        /\b(const|let|var)\s+\w*(spacing|padding|margin|gap|Spacing|Padding|Margin|Gap)\w*\s*=\s*['"`\d][^;]*/gi,
       description: "JavaScript spacing variable declarations",
     },
     sizeVars: {
@@ -748,11 +761,7 @@ const AUDIT_PATTERNS = {
   },
 };
 
-function findPatterns(
-  content: string,
-  filePath: string,
-  regex: RegExp
-): AuditViolation[] {
+function findPatterns(content: string, filePath: string, regex: RegExp): AuditViolation[] {
   const patterns: AuditViolation[] = [];
   const lines = content.split("\n");
 
@@ -794,7 +803,8 @@ function countUniquePatterns(violations: AuditViolation[]): Record<string, numbe
  * Groups patterns by their "base" type to detect inconsistencies.
  * For example, "rounded-lg", "rounded-md", "rounded-sm" all belong to "rounded" group.
  */
-function groupPatternsByBase(violations: AuditViolation[]): Map<string, AuditViolation[]> {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function _groupPatternsByBase(violations: AuditViolation[]): Map<string, AuditViolation[]> {
   const groups = new Map<string, AuditViolation[]>();
 
   for (const v of violations) {
@@ -929,7 +939,7 @@ function detectCategoryInconsistencies(
     //    b. OR the distribution is too fragmented (no pattern > 40% and many variants)
     const outlierPatterns = sortedPatterns.slice(1);
     const hasSignificantOutliers = outlierPatterns.some(
-      p => patternCounts[p] >= 2 // At least 2 occurrences to be significant
+      (p) => patternCounts[p] >= 2 // At least 2 occurrences to be significant
     );
 
     if (!hasSignificantOutliers) continue;
@@ -948,8 +958,8 @@ function detectCategoryInconsistencies(
 
     // Build outliers list
     const outliers = outlierPatterns
-      .filter(p => patternCounts[p] >= 2)
-      .map(pattern => {
+      .filter((p) => patternCounts[p] >= 2)
+      .map((pattern) => {
         const count = patternCounts[pattern];
         const percentage = Math.round((count / groupTotal) * 100);
         const patternViolations = violationsByPattern.get(pattern) || [];
@@ -958,10 +968,10 @@ function detectCategoryInconsistencies(
           pattern,
           count,
           percentage,
-          files: patternViolations.slice(0, 5).map(v => ({
+          files: patternViolations.slice(0, 5).map((v) => ({
             file: v.file,
-            line: v.line
-          }))
+            line: v.line,
+          })),
         };
       });
 
@@ -983,7 +993,7 @@ function detectCategoryInconsistencies(
       dominantPercentage,
       outliers,
       severity,
-      recommendation
+      recommendation,
     });
   }
 
@@ -1036,10 +1046,10 @@ function detectAllInconsistencies(
 
   return {
     totalInconsistencies: allInconsistencies.length,
-    critical: allInconsistencies.filter(i => i.severity === "critical").length,
-    warning: allInconsistencies.filter(i => i.severity === "warning").length,
-    info: allInconsistencies.filter(i => i.severity === "info").length,
-    inconsistencies: allInconsistencies
+    critical: allInconsistencies.filter((i) => i.severity === "critical").length,
+    warning: allInconsistencies.filter((i) => i.severity === "warning").length,
+    info: allInconsistencies.filter((i) => i.severity === "info").length,
+    inconsistencies: allInconsistencies,
   };
 }
 
@@ -1180,9 +1190,17 @@ export function createEmptyReport(): DesignSystemAuditReport {
         style: { ...AUDIT_PATTERNS.divide.style, count: 0, violations: [] },
       },
       dynamicClasses: {
-        templateLiterals: { ...AUDIT_PATTERNS.dynamicClasses.templateLiterals, count: 0, violations: [] },
+        templateLiterals: {
+          ...AUDIT_PATTERNS.dynamicClasses.templateLiterals,
+          count: 0,
+          violations: [],
+        },
         clsxCn: { ...AUDIT_PATTERNS.dynamicClasses.clsxCn, count: 0, violations: [] },
-        conditionalClasses: { ...AUDIT_PATTERNS.dynamicClasses.conditionalClasses, count: 0, violations: [] },
+        conditionalClasses: {
+          ...AUDIT_PATTERNS.dynamicClasses.conditionalClasses,
+          count: 0,
+          violations: [],
+        },
       },
       jsVariables: {
         colorVars: { ...AUDIT_PATTERNS.jsVariables.colorVars, count: 0, violations: [] },
@@ -1192,7 +1210,11 @@ export function createEmptyReport(): DesignSystemAuditReport {
       },
       themeConfig: {
         tailwindExtend: { ...AUDIT_PATTERNS.themeConfig.tailwindExtend, count: 0, violations: [] },
-        cssVariableDeclarations: { ...AUDIT_PATTERNS.themeConfig.cssVariableDeclarations, count: 0, violations: [] },
+        cssVariableDeclarations: {
+          ...AUDIT_PATTERNS.themeConfig.cssVariableDeclarations,
+          count: 0,
+          violations: [],
+        },
         scssVariables: { ...AUDIT_PATTERNS.themeConfig.scssVariables, count: 0, violations: [] },
       },
     },
@@ -1347,9 +1369,17 @@ export function runDesignSystemAudit(
         style: { ...AUDIT_PATTERNS.divide.style, count: 0, violations: [] },
       },
       dynamicClasses: {
-        templateLiterals: { ...AUDIT_PATTERNS.dynamicClasses.templateLiterals, count: 0, violations: [] },
+        templateLiterals: {
+          ...AUDIT_PATTERNS.dynamicClasses.templateLiterals,
+          count: 0,
+          violations: [],
+        },
         clsxCn: { ...AUDIT_PATTERNS.dynamicClasses.clsxCn, count: 0, violations: [] },
-        conditionalClasses: { ...AUDIT_PATTERNS.dynamicClasses.conditionalClasses, count: 0, violations: [] },
+        conditionalClasses: {
+          ...AUDIT_PATTERNS.dynamicClasses.conditionalClasses,
+          count: 0,
+          violations: [],
+        },
       },
       jsVariables: {
         colorVars: { ...AUDIT_PATTERNS.jsVariables.colorVars, count: 0, violations: [] },
@@ -1359,7 +1389,11 @@ export function runDesignSystemAudit(
       },
       themeConfig: {
         tailwindExtend: { ...AUDIT_PATTERNS.themeConfig.tailwindExtend, count: 0, violations: [] },
-        cssVariableDeclarations: { ...AUDIT_PATTERNS.themeConfig.cssVariableDeclarations, count: 0, violations: [] },
+        cssVariableDeclarations: {
+          ...AUDIT_PATTERNS.themeConfig.cssVariableDeclarations,
+          count: 0,
+          violations: [],
+        },
         scssVariables: { ...AUDIT_PATTERNS.themeConfig.scssVariables, count: 0, violations: [] },
       },
     },
@@ -1377,10 +1411,22 @@ export function runDesignSystemAudit(
   // Scan all files - iterate through all category groups dynamically
   for (const file of files) {
     for (const [groupName, categoryGroup] of Object.entries(report.categories)) {
-      for (const [key, category] of Object.entries(categoryGroup as Record<string, AuditCategory>)) {
+      for (const [key, category] of Object.entries(
+        categoryGroup as Record<string, AuditCategory>
+      )) {
         const patterns = findPatterns(file.content, file.path, category.regex);
-        (report.categories[groupName as keyof typeof report.categories] as Record<string, AuditCategory>)[key].violations.push(...patterns);
-        (report.categories[groupName as keyof typeof report.categories] as Record<string, AuditCategory>)[key].count += patterns.length;
+        (
+          report.categories[groupName as keyof typeof report.categories] as Record<
+            string,
+            AuditCategory
+          >
+        )[key].violations.push(...patterns);
+        (
+          report.categories[groupName as keyof typeof report.categories] as Record<
+            string,
+            AuditCategory
+          >
+        )[key].count += patterns.length;
       }
     }
   }
@@ -1401,7 +1447,7 @@ export function runDesignSystemAudit(
 
   // Create summary with unique pattern counts per category group
   const getGroupUniqueCount = (group: Record<string, AuditCategory>) => {
-    const allCodes = Object.values(group).flatMap(cat => cat.violations.map(v => v.code));
+    const allCodes = Object.values(group).flatMap((cat) => cat.violations.map((v) => v.code));
     return new Set(allCodes).size;
   };
 
@@ -1417,17 +1463,27 @@ export function runDesignSystemAudit(
   const uniqueCssVars = getGroupUniqueCount(report.categories.cssVariables);
   const uniqueInline = getGroupUniqueCount(report.categories.inlineStyles);
 
-  const totalUnique = uniqueColors + uniqueSpacing + uniqueSizing + uniqueRadius +
-    uniqueBorders + uniqueShadows + uniqueTypography + uniqueLayout + uniqueEffects +
-    uniqueCssVars + uniqueInline;
+  const totalUnique =
+    uniqueColors +
+    uniqueSpacing +
+    uniqueSizing +
+    uniqueRadius +
+    uniqueBorders +
+    uniqueShadows +
+    uniqueTypography +
+    uniqueLayout +
+    uniqueEffects +
+    uniqueCssVars +
+    uniqueInline;
 
   // Detect actual inconsistencies
   report.inconsistencies = detectAllInconsistencies(report.categories);
 
   // Update summary to include inconsistency info
-  const inconsistencyInfo = report.inconsistencies.totalInconsistencies > 0
-    ? ` Found ${report.inconsistencies.totalInconsistencies} inconsistencies (${report.inconsistencies.critical} critical, ${report.inconsistencies.warning} warnings).`
-    : " No significant inconsistencies detected.";
+  const inconsistencyInfo =
+    report.inconsistencies.totalInconsistencies > 0
+      ? ` Found ${report.inconsistencies.totalInconsistencies} inconsistencies (${report.inconsistencies.critical} critical, ${report.inconsistencies.warning} warnings).`
+      : " No significant inconsistencies detected.";
 
   report.summary = `Scanned ${files.length} files. Found ${totalUnique} unique patterns: ${uniqueColors} colors, ${uniqueSpacing} spacing, ${uniqueSizing} sizing, ${uniqueTypography} typography, ${uniqueLayout} layout, ${uniqueEffects} effects, ${uniqueCssVars} CSS vars, ${uniqueInline} inline styles.${inconsistencyInfo}`;
 
@@ -1469,11 +1525,13 @@ export function exportAuditToMarkdown(report: DesignSystemAuditReport): string {
     const severityOrder = ["critical", "warning", "info"] as const;
 
     for (const severity of severityOrder) {
-      const items = report.inconsistencies.inconsistencies.filter(i => i.severity === severity);
+      const items = report.inconsistencies.inconsistencies.filter((i) => i.severity === severity);
       if (items.length === 0) continue;
 
       const emoji = severity === "critical" ? "🔴" : severity === "warning" ? "🟡" : "🔵";
-      lines.push(`### ${emoji} ${severity.charAt(0).toUpperCase() + severity.slice(1)} (${items.length})`);
+      lines.push(
+        `### ${emoji} ${severity.charAt(0).toUpperCase() + severity.slice(1)} (${items.length})`
+      );
       lines.push("");
 
       for (const inc of items) {
@@ -1481,7 +1539,9 @@ export function exportAuditToMarkdown(report: DesignSystemAuditReport): string {
         lines.push("");
         lines.push(`**Recommendation:** ${inc.recommendation}`);
         lines.push("");
-        lines.push(`**Dominant pattern:** \`${inc.dominantPattern}\` (${inc.dominantCount}x, ${inc.dominantPercentage}%)`);
+        lines.push(
+          `**Dominant pattern:** \`${inc.dominantPattern}\` (${inc.dominantCount}x, ${inc.dominantPercentage}%)`
+        );
         lines.push("");
         lines.push("**Outliers to fix:**");
         lines.push("");
@@ -1489,9 +1549,14 @@ export function exportAuditToMarkdown(report: DesignSystemAuditReport): string {
         lines.push("|---------|-------|---|-----------|");
 
         for (const outlier of inc.outliers) {
-          const locations = outlier.files.slice(0, 3).map(f => `${f.file}:${f.line}`).join(", ");
+          const locations = outlier.files
+            .slice(0, 3)
+            .map((f) => `${f.file}:${f.line}`)
+            .join(", ");
           const more = outlier.files.length > 3 ? ` (+${outlier.files.length - 3} more)` : "";
-          lines.push(`| \`${outlier.pattern}\` | ${outlier.count} | ${outlier.percentage}% | ${locations}${more} |`);
+          lines.push(
+            `| \`${outlier.pattern}\` | ${outlier.count} | ${outlier.percentage}% | ${locations}${more} |`
+          );
         }
         lines.push("");
       }
@@ -1502,7 +1567,9 @@ export function exportAuditToMarkdown(report: DesignSystemAuditReport): string {
   } else {
     lines.push("## Design System Inconsistencies");
     lines.push("");
-    lines.push("✅ **No significant inconsistencies detected.** Your design system patterns are consistent.");
+    lines.push(
+      "✅ **No significant inconsistencies detected.** Your design system patterns are consistent."
+    );
     lines.push("");
     lines.push("---");
     lines.push("");
@@ -1524,10 +1591,7 @@ export function exportAuditToMarkdown(report: DesignSystemAuditReport): string {
   lines.push("");
 
   // Helper to add category section
-  const addCategorySection = (
-    title: string,
-    categories: Record<string, AuditCategory>
-  ) => {
+  const addCategorySection = (title: string, categories: Record<string, AuditCategory>) => {
     const hasItems = Object.values(categories).some((cat) => cat.count > 0);
     if (!hasItems) return;
 

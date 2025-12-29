@@ -1,14 +1,9 @@
 import { Page } from "playwright";
-import {
-  PageStyles,
-  InlineStyle,
-  ExternalStylesheet,
-  CSSVariables,
-  ElementStyles,
-} from "./types";
+import { PageStyles, InlineStyle, ExternalStylesheet, CSSVariables, ElementStyles } from "./types";
 
-// Key selectors for design system elements
-const KEY_SELECTORS = [
+// Key selectors for design system elements (reserved for future use)
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const _KEY_SELECTORS = [
   // Buttons
   "button",
   'button[type="submit"]',
@@ -65,8 +60,9 @@ const KEY_SELECTORS = [
   ".accordion",
 ];
 
-// Extract computed styles for a given element
-function getComputedStylesForElement(el: Element): ElementStyles["computedStyles"] {
+// Extract computed styles for a given element (reserved for future use)
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function _getComputedStylesForElement(el: Element): ElementStyles["computedStyles"] {
   const styles = window.getComputedStyle(el);
   return {
     // Typography
@@ -179,12 +175,12 @@ export async function extractPageStyles(page: Page): Promise<PageStyles> {
     );
 
     // Get all linked stylesheet URLs
-    const stylesheetLinks = Array.from(
-      document.querySelectorAll('link[rel="stylesheet"]')
-    ).map((link) => ({
-      href: link.getAttribute("href") || "",
-      mediaQuery: link.getAttribute("media") || undefined,
-    }));
+    const stylesheetLinks = Array.from(document.querySelectorAll('link[rel="stylesheet"]')).map(
+      (link) => ({
+        href: link.getAttribute("href") || "",
+        mediaQuery: link.getAttribute("media") || undefined,
+      })
+    );
 
     // Get CSS custom properties from :root
     const cssVariables: CSSVariables = {};
@@ -197,17 +193,51 @@ export async function extractPageStyles(page: Page): Promise<PageStyles> {
 
     // Get computed styles for key UI elements
     const keySelectors = [
-      "button", 'button[type="submit"]', ".btn", ".button",
-      "h1", "h2", "h3", "h4", "h5", "h6",
-      "p", "a", "span", "label",
-      "input", "textarea", "select",
-      ".card", ".container", ".wrapper", ".modal", ".dialog",
-      "nav", "header", "footer", ".nav", ".navbar",
-      "ul", "ol", "li",
-      "table", "th", "td",
-      ".badge", ".tag", ".chip", ".alert", ".toast",
-      ".tooltip", ".dropdown", ".menu", ".tabs", ".tab",
-      ".panel", ".accordion",
+      "button",
+      'button[type="submit"]',
+      ".btn",
+      ".button",
+      "h1",
+      "h2",
+      "h3",
+      "h4",
+      "h5",
+      "h6",
+      "p",
+      "a",
+      "span",
+      "label",
+      "input",
+      "textarea",
+      "select",
+      ".card",
+      ".container",
+      ".wrapper",
+      ".modal",
+      ".dialog",
+      "nav",
+      "header",
+      "footer",
+      ".nav",
+      ".navbar",
+      "ul",
+      "ol",
+      "li",
+      "table",
+      "th",
+      "td",
+      ".badge",
+      ".tag",
+      ".chip",
+      ".alert",
+      ".toast",
+      ".tooltip",
+      ".dropdown",
+      ".menu",
+      ".tabs",
+      ".tab",
+      ".panel",
+      ".accordion",
     ];
 
     const elementStyles: ElementStyles[] = [];

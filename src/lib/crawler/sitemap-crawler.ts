@@ -1,6 +1,9 @@
 import { PlaywrightCrawler, Configuration, RequestQueue } from "@crawlee/playwright";
 import { CrawlerOptions, PageInfo } from "./types";
-import { shouldCrawlUrl } from "./link-validator";
+import { shouldCrawlUrl, isApiEndpoint } from "./link-validator";
+import { analyzeSecurityHeaders } from "./security-analyzer";
+import { analyzePageKeywords } from "./keyword-analyzer";
+import { analyzeMobileResponsiveness } from "./mobile-analyzer";
 import { normalizeUrl } from "../utils";
 import { detectInteractiveElements, groupElementsByType } from "./interactive-detector";
 import { extractAllPageData } from "./page-extractors";
@@ -12,7 +15,12 @@ import { Page } from "playwright";
 export class SitemapCrawler {
   private visitedUrls = new Set<string>();
   private pageInfos: PageInfo[] = [];
-  private failedUrls: Array<{ url: string; errorType: string; errorMessage: string; retryCount: number }> = [];
+  private failedUrls: Array<{
+    url: string;
+    errorType: string;
+    errorMessage: string;
+    retryCount: number;
+  }> = [];
   private baseUrl: string;
   private options: Required<CrawlerOptions>;
   private signal?: AbortSignal;
@@ -70,17 +78,30 @@ export class SitemapCrawler {
 
         try {
           const statusCode = response?.status() ?? 200;
+          const contentType = response?.headers()?.["content-type"] ?? undefined;
           const isRedirect = request.loadedUrl !== request.url;
           if (isRedirect && response) {
             log.info(`Redirect detected: ${request.url} → ${request.loadedUrl} (${statusCode})`);
           }
 
+          // Detect if this is an API endpoint
+          const apiEndpoint = isApiEndpoint(url, contentType);
+          if (apiEndpoint) {
+            log.info(`API endpoint detected: ${url} (${contentType || "no content-type"})`);
+          }
+
+          // Analyze security headers
+          const responseHeaders = response?.headers() ?? null;
+          const securityHeaders = analyzeSecurityHeaders(responseHeaders);
+
           await page.waitForLoadState("networkidle", { timeout: 15000 });
 
           const title = await page.title();
-          const [pageData, styles] = await Promise.all([
+          const [pageData, styles, keywordDensity, mobileResponsiveness] = await Promise.all([
             extractAllPageData(page, url),
             extractPageStyles(page),
+            analyzePageKeywords(page),
+            analyzeMobileResponsiveness(page),
           ]);
           const { links, linksWithText, meta, headings, images, contentMetrics } = pageData;
 
@@ -91,13 +112,18 @@ export class SitemapCrawler {
             links,
             depth: request.userData.depth ?? 0,
             parentUrl: request.userData.parentUrl,
-            nodeType: "page",
+            nodeType: apiEndpoint ? "api" : "page",
             meta,
             headings,
             images,
             linksWithText,
             contentMetrics,
             styles,
+            isApiEndpoint: apiEndpoint,
+            contentType,
+            securityHeaders,
+            keywordDensity,
+            mobileResponsiveness,
           };
 
           pageInfos.push(pageInfo);
@@ -135,7 +161,7 @@ export class SitemapCrawler {
         }
       },
 
-      failedRequestHandler({ request, log }, error) {
+      failedRequestHandler({ request }, error) {
         const url = normalizeUrl(request.url);
         const errorMessage = error.message || "Unknown error";
         const errorType = getErrorType(errorMessage);
@@ -183,6 +209,17 @@ export class SitemapCrawler {
     return this.crawler?.stats.calculate() ?? null;
   }
 
+  /**
+   * Get direct progress counts (more accurate than rate-based Crawlee stats)
+   */
+  getProgress(): { pagesProcessed: number; pagesQueued: number; pagesFailed: number } {
+    return {
+      pagesProcessed: this.pageInfos.length,
+      pagesQueued: this.visitedUrls.size,
+      pagesFailed: this.failedUrls.length,
+    };
+  }
+
   getVisitedUrls(): Set<string> {
     return new Set(Array.from(this.visitedUrls).map(normalizeUrl));
   }
@@ -215,8 +252,10 @@ function getErrorStatusCode(errorMessage: string): number {
 }
 
 function getErrorType(errorMessage: string): string {
-  if (errorMessage.includes("timeout") || errorMessage.includes("Navigation timed out")) return "timeout";
-  if (errorMessage.includes("REDIRECT") || errorMessage.includes("TOO_MANY_REDIRECTS")) return "redirect";
+  if (errorMessage.includes("timeout") || errorMessage.includes("Navigation timed out"))
+    return "timeout";
+  if (errorMessage.includes("REDIRECT") || errorMessage.includes("TOO_MANY_REDIRECTS"))
+    return "redirect";
   if (errorMessage.includes("404") || errorMessage.includes("Not Found")) return "not-found";
   if (errorMessage.includes("net::ERR_")) return "network";
   return "other";

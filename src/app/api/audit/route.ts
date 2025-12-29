@@ -9,6 +9,9 @@ import {
   AuditResult,
 } from "@/lib/source-auditor";
 
+// Route segment config - set max duration for audit operations
+export const maxDuration = 120; // 2 minutes for large codebases
+
 interface FileInput {
   path: string;
   content: string;
@@ -51,14 +54,7 @@ async function getAllFiles(
 
         if (entry.isDirectory()) {
           // Skip excluded directories and common non-source dirs
-          const skipDirs = [
-            "node_modules",
-            ".next",
-            ".git",
-            "dist",
-            "build",
-            ...excludeDirs,
-          ];
+          const skipDirs = ["node_modules", ".next", ".git", "dist", "build", ...excludeDirs];
           if (!skipDirs.includes(entry.name)) {
             await walk(fullPath);
           }
@@ -120,10 +116,7 @@ export async function POST(request: NextRequest) {
 
     // Mode 2: Path-based scanning (legacy/server-side mode)
     if (!body.path) {
-      return NextResponse.json(
-        { error: "Either 'files' or 'path' is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Either 'files' or 'path' is required" }, { status: 400 });
     }
 
     // Resolve path relative to project root
